@@ -44,10 +44,14 @@
 
 ### Prérequis
 
-- **Node.js** v18+ et **npm** v9+
-- **MongoDB** (local ou MongoDB Atlas)
-- Un compte **Cloudinary** (gratuit)
-- Un compte **Google Cloud** (pour OAuth, optionnel)
+- **Node.js** v18+ et **npm** v9+ ([télécharger ici](https://nodejs.org/))
+- **MongoDB** — l'une des options suivantes :
+  - [MongoDB Community](https://www.mongodb.com/try/download/community) installé localement
+  - [MongoDB Atlas](https://www.mongodb.com/atlas) (gratuit, hébergé dans le cloud)
+- Un compte [Cloudinary](https://cloudinary.com) (gratuit — pour l'upload d'images)
+- Un compte **Google Cloud** (optionnel — pour OAuth Google)
+
+> **Windows :** Après l'installation de Node.js, **redémarrez votre terminal** (PowerShell ou CMD) pour que les commandes `node` et `npm` soient reconnues.
 
 ### 1. Cloner le projet
 
@@ -56,40 +60,53 @@ git clone <url-du-repo>
 cd crepe-time-tunisia
 ```
 
-### 2. Configuration du Backend
+### 2. Installer et configurer le Backend
+
+Ouvrez un **premier terminal** :
 
 ```bash
 cd food-ordering-backend
-cp .env.example .env
 npm install
 ```
 
-Remplir le fichier `.env` :
+> `npm install` installe toutes les dépendances (Express, Mongoose, etc.). Cette étape est **obligatoire** avant le premier lancement.
+
+Créer le fichier `.env` à partir de l'exemple :
+
+```bash
+# Linux/Mac :
+cp .env.example .env
+
+# Windows PowerShell :
+Copy-Item .env.example .env
+```
+
+Ouvrir `.env` et remplir les valeurs :
 
 ```env
-# MongoDB
+# MongoDB — URI locale ou MongoDB Atlas
 MONGODB_URI=mongodb://localhost:27017/crepe-time-tunisia
 
-# JWT — Générer un secret unique
+# JWT — Utilisez n'importe quel texte aléatoire long (ex: "monSuperSecret123!")
 JWT_SECRET_KEY=votre_secret_jwt_ici
 
-# URLs
+# URLs (ne pas modifier pour le développement local)
 FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:5000
 
-# Google OAuth (optionnel)
-GOOGLE_ID=votre_google_client_id
-GOOGLE_SECRET=votre_google_client_secret
+# Google OAuth (optionnel — laisser vide si non utilisé)
+GOOGLE_ID=
+GOOGLE_SECRET=
 
-# Cloudinary
+# Cloudinary (obligatoire pour l'upload d'images restaurant)
 CLOUDINARY_CLOUD_NAME=votre_cloud_name
 CLOUDINARY_API_KEY=votre_api_key
 CLOUDINARY_API_SECRET=votre_api_secret
 
-# WhatsApp — Numéro du restaurant
+# WhatsApp — Numéro du restaurant au format international
 WHATSAPP_RESTAURANT_PHONE=+216XXXXXXXX
 
-# WhatsApp Business API (optionnel — pour envoi automatique)
+# WhatsApp Business API (optionnel — laisser vide pour utiliser wa.me)
 WHATSAPP_API_TOKEN=
 WHATSAPP_API_PHONE_ID=
 ```
@@ -100,29 +117,50 @@ Lancer le serveur backend :
 npm run dev
 ```
 
-Le serveur démarre sur `http://localhost:5000`.
+Vous devriez voir :
 
-### 3. Initialiser le menu (optionnel)
+```
+Connected to database!
+Crêpe Time Tunisia API started on port 5000
+```
+
+> **Si le backend ne démarre pas :** Vérifiez que MongoDB est lancé et que `MONGODB_URI` est correct. Pour MongoDB Atlas, utilisez l'URI fournie dans le dashboard Atlas.
+
+### 3. Initialiser le menu (optionnel mais recommandé)
+
+Dans le même terminal backend :
 
 ```bash
-cd food-ordering-backend
 npx ts-node ../scripts/seed-restaurant.ts
 ```
 
-Cette commande crée :
-- Un compte admin (`admin@crepetime.tn` / `CrepeTime2026!`)
+Cette commande crée automatiquement :
+- Un compte admin : `admin@crepetime.tn` / `CrepeTime2026!`
 - Le restaurant "Crêpe Time Tunisia" avec les 12 crêpes artisanales
 - Frais de livraison : 3.00 TND, durée estimée : 30 min
 
-### 4. Configuration du Frontend
+### 4. Installer et configurer le Frontend
+
+Ouvrez un **deuxième terminal** :
 
 ```bash
 cd food-ordering-frontend
-cp .env.example .env
 npm install
 ```
 
-Remplir le fichier `.env` :
+> `npm install` installe toutes les dépendances (React, Vite, Tailwind, etc.). Sans cette étape, la commande `npm run dev` échouera avec l'erreur "vite n'est pas reconnu".
+
+Créer le fichier `.env` :
+
+```bash
+# Linux/Mac :
+cp .env.example .env
+
+# Windows PowerShell :
+Copy-Item .env.example .env
+```
+
+Le fichier `.env` contient :
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
@@ -134,7 +172,23 @@ Lancer le serveur frontend :
 npm run dev
 ```
 
-L'application est accessible sur `http://localhost:5173`.
+Vous devriez voir :
+
+```
+VITE v7.x.x  ready in XXX ms
+➜  Local:   http://localhost:5173/
+```
+
+### 5. Ouvrir l'application
+
+Ouvrez votre navigateur et allez sur **http://localhost:5173**
+
+> **Résumé des deux terminaux :**
+>
+> | Terminal | Dossier | Commande | Port |
+> |----------|---------|----------|------|
+> | Terminal 1 | `food-ordering-backend` | `npm run dev` | 5000 |
+> | Terminal 2 | `food-ordering-frontend` | `npm run dev` | 5173 |
 
 ---
 

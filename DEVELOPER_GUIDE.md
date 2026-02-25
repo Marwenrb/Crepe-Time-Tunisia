@@ -299,11 +299,24 @@ L'application utilise des chaînes de caractères codées en dur (pas d'i18n lib
 
 ## Dépannage
 
+### "vite n'est pas reconnu" / "nodemon n'est pas reconnu"
+
+- **Cause :** `npm install` n'a pas été exécuté dans le dossier concerné
+- **Fix :** Exécutez `npm install` dans `food-ordering-frontend/` ou `food-ordering-backend/`
+- **Windows :** Après l'installation de Node.js, **redémarrez le terminal** (PowerShell/CMD)
+
 ### Le backend ne démarre pas
 
-- Vérifier que MongoDB est accessible (`MONGODB_URI`)
-- Vérifier que le port 5000 n'est pas occupé
-- Vérifier que toutes les variables d'environnement sont configurées
+- Vérifier que `npm install` a été exécuté dans `food-ordering-backend/`
+- Vérifier que MongoDB est lancé et accessible (`MONGODB_URI`)
+- Vérifier que le fichier `.env` existe (copier `.env.example`)
+- Vérifier que le port 5000 n'est pas occupé (`netstat -an | findstr :5000` sous Windows)
+
+### Le frontend affiche une page blanche
+
+- Ouvrir les DevTools (F12) et vérifier la console pour les erreurs
+- Vérifier que le backend est lancé sur le port 5000
+- Vérifier que `VITE_API_BASE_URL` dans `.env` pointe vers le backend
 
 ### Les images ne s'uploadent pas
 
@@ -319,6 +332,12 @@ L'application utilise des chaînes de caractères codées en dur (pas d'i18n lib
 
 - Vérifier que `WHATSAPP_RESTAURANT_PHONE` est au format international (`+216XXXXXXXX`)
 - Sur desktop, WhatsApp Web doit être connecté
+
+### Notes Windows / PowerShell
+
+- Utiliser `Copy-Item .env.example .env` au lieu de `cp`
+- Si les ports sont occupés, fermer les anciens terminaux ou redémarrer
+- Pour tuer un processus sur un port : `Stop-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess`
 
 ---
 
