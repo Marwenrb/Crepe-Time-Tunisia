@@ -44,7 +44,7 @@ const HomePage = () => {
                 </div>
               ) : (
                 <SearchBar
-                  placeHolder="Search by Cuisine or Restaurant Name"
+                  placeHolder="Rechercher par cuisine ou nom de restaurant"
                   onSubmit={handleSearchSubmit}
                 />
               )}
@@ -53,8 +53,9 @@ const HomePage = () => {
         </div>
         <div className="grid md:grid-cols-2 gap-5">
           <img
-            src="/landing.png"
-            alt="Food delivery illustration"
+            src="/hero.png"
+            alt="Crêpe Time — Crêpes artisanales"
+            className="rounded-lg shadow-lg"
             loading="lazy"
           />
           <div className="flex flex-col items-center justify-center gap-4 text-center">

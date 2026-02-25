@@ -215,7 +215,35 @@ Les images sont uploadées vers **Cloudinary** via le backend :
 
 ## Ajout de fonctionnalités
 
-### Ajouter une nouvelle crêpe au menu (via code)
+### Script de seed
+
+Le script `scripts/seed-restaurant.ts` crée automatiquement le restaurant avec les 12 crêpes :
+
+```bash
+cd food-ordering-backend
+npx ts-node ../scripts/seed-restaurant.ts
+```
+
+**Menu complet (12 crêpes) :**
+
+| # | Crêpe | Prix (TND) | Image de référence |
+|---|-------|------------|-------------------|
+| 1 | Crêpe Nutella Banane | 12.00 | `nutella-banane.jpg` |
+| 2 | Crêpe Fraise Crème | 14.00 | `fraise-creme.jpg` |
+| 3 | Crêpe Lotus Biscoff | 15.00 | `lotus-biscoff.jpg` |
+| 4 | Crêpe Kinder Bueno | 16.00 | `kinder-bueno.jpg` |
+| 5 | Crêpe Oréo Crème | 14.00 | `oreo-creme.jpg` |
+| 6 | Crêpe Caramel Noix de Pécan | 15.00 | `caramel-noix-pecan.jpg` |
+| 7 | Crêpe Fruits des Bois | 13.00 | `fruits-des-bois.jpg` |
+| 8 | Crêpe Pistache Rose | 17.00 | `pistache-rose.jpg` |
+| 9 | Crêpe Coco Mangue | 14.00 | `coco-mangue.jpg` |
+| 10 | Crêpe Miel & Noix | 11.00 | `miel-noix.jpg` |
+| 11 | Crêpe Sucre & Citron | 9.00 | `sucre-citron.jpg` |
+| 12 | Crêpe Time Signature | 19.00 | `crepe-time-signature.jpg` |
+
+Les images de référence sont dans `food-ordering-frontend/src/assets/menu-items/`.
+
+### Ajouter une nouvelle crêpe au menu (via admin)
 
 Les crêpes sont gérées dynamiquement via le panel admin. Aucun code n'est nécessaire.
 

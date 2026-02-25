@@ -102,7 +102,19 @@ npm run dev
 
 Le serveur démarre sur `http://localhost:5000`.
 
-### 3. Configuration du Frontend
+### 3. Initialiser le menu (optionnel)
+
+```bash
+cd food-ordering-backend
+npx ts-node ../scripts/seed-restaurant.ts
+```
+
+Cette commande crée :
+- Un compte admin (`admin@crepetime.tn` / `CrepeTime2026!`)
+- Le restaurant "Crêpe Time Tunisia" avec les 12 crêpes artisanales
+- Frais de livraison : 3.00 TND, durée estimée : 30 min
+
+### 4. Configuration du Frontend
 
 ```bash
 cd food-ordering-frontend
@@ -156,10 +168,10 @@ crepe-time-tunisia/
 │   │   ├── lib/                    # Utilitaires (API client)
 │   │   ├── pages/                  # Pages de l'application
 │   │   ├── assets/                 # Assets organisés
-│   │   │   ├── logo/
-│   │   │   ├── hero/
-│   │   │   ├── menu-items/
-│   │   │   └── icons/
+│   │   │   ├── logo/               # Logo Crêpe Time
+│   │   │   ├── hero/               # Bannière hero 4K
+│   │   │   ├── menu-items/         # 12 photos de crêpes HD
+│   │   │   └── icons/              # Icônes personnalisées
 │   │   ├── AppRoutes.tsx
 │   │   ├── global.css
 │   │   ├── main.tsx
