@@ -96,10 +96,10 @@ const SearchBar = ({
           variant="outline"
           className="rounded-full"
         >
-          Reset
+          Effacer
         </Button>
         <Button type="submit" className="rounded-full bg-crepe-purple">
-          Search
+          Rechercher
         </Button>
       </form>
     </Form>

@@ -48,7 +48,7 @@ const CityDropdown = ({ value, onChange }: CityDropdownProps) => {
           if (inputValue.length >= 2) setShowDropdown(true);
         }}
         onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-        placeholder="Type or select a city"
+        placeholder="Nabeul"
         className="w-full px-2 py-1 focus:outline-none focus:ring-0 focus:border-crepe-purple text-gray-700"
       />
       {showDropdown && (
@@ -64,7 +64,7 @@ const CityDropdown = ({ value, onChange }: CityDropdownProps) => {
               </li>
             ))
           ) : (
-            <li className="px-3 py-2 text-gray-500">No city found</li>
+            <li className="px-3 py-2 text-gray-500">Aucune ville trouvée</li>
           )}
         </ul>
       )}

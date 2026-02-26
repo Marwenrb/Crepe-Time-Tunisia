@@ -78,7 +78,7 @@ async function main() {
       email: "admin@crepetime.tn",
       password: "CrepeTime2026!",
       name: "Marouan Rabai",
-      city: "Tunis",
+      city: "Nabeul",
       country: "Tunisia",
     });
     await owner.save();
@@ -101,7 +101,7 @@ async function main() {
     const restaurant = new Restaurant({
       user: owner._id,
       restaurantName: "Crêpe Time Tunisia",
-      city: "Tunis",
+      city: "Nabeul",
       country: "Tunisia",
       deliveryPrice: 300,
       estimatedDeliveryTime: 30,

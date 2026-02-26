@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+const DEFAULT_CITY = "Nabeul";
+
 export const useCitySearch = () => {
-  const [cities, setCities] = useState<string[]>([]);
-  const [filteredCities, setFilteredCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([DEFAULT_CITY]);
+  const [filteredCities, setFilteredCities] = useState<string[]>([DEFAULT_CITY]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,12 +15,15 @@ export const useCitySearch = () => {
     fetch(`${API_BASE_URL}/api/restaurant/cities/all`)
       .then((res) => res.json())
       .then((data) => {
-        setCities(data.cities || []);
-        setFilteredCities(data.cities || []);
+        const fetchedCities = data.cities?.length ? data.cities : [DEFAULT_CITY];
+        setCities(fetchedCities);
+        setFilteredCities(fetchedCities);
         setLoading(false);
       })
-      .catch((_error) => {
-        setError("Failed to fetch cities");
+      .catch(() => {
+        setCities([DEFAULT_CITY]);
+        setFilteredCities([DEFAULT_CITY]);
+        setError(null);
         setLoading(false);
       });
   }, []);

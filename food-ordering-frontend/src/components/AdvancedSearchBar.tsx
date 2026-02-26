@@ -159,7 +159,7 @@ const AdvancedSearchBar = ({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Search className="h-5 w-5 text-crepe-purple" />
-                Find Your Perfect Meal
+                Trouvez Votre Crêpe Parfaite
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -196,10 +196,10 @@ const AdvancedSearchBar = ({
                   variant="outline"
                   className="rounded-full"
                 >
-                  Reset
+                  Effacer
                 </Button>
                 <Button type="submit" className="rounded-full bg-crepe-purple">
-                  Search
+                  Rechercher
                 </Button>
               </div>
 

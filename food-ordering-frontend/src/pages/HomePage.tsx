@@ -1,17 +1,14 @@
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
-import { useCitySearch } from "@/api/CityApi";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { loading: citiesLoading } = useCitySearch();
 
   const handleSearchSubmit = (formValues: SearchForm) => {
     const cityParam =
       formValues.city && formValues.city.trim() !== ""
         ? formValues.city
-        : "all";
+        : "Nabeul";
     navigate({
       pathname: `/search/${cityParam}`,
       search: formValues.searchQuery
@@ -28,26 +25,15 @@ const HomePage = () => {
             Découvrez Nos Crêpes Artisanales
           </h1>
           <span className="text-xl">
-            Crêperie premium — Livraison à domicile à Tunis
+            Crêperie premium — Livraison à domicile à Nabeul
           </span>
           <div className="flex flex-row gap-3 items-center justify-center">
             <div className="w-full">
-              {citiesLoading ? (
-                <div className="flex items-center gap-3 justify-between flex-row border-2 rounded-full p-3">
-                  <Skeleton className="h-8 w-32 ml-1" />
-                  <div className="flex flex-1 items-center gap-2">
-                    <Skeleton className="h-8 flex-1" />
-                    <Skeleton className="h-8 flex-1" />
-                  </div>
-                  <Skeleton className="h-10 w-20 rounded-full" />
-                  <Skeleton className="h-10 w-20 rounded-full" />
-                </div>
-              ) : (
-                <SearchBar
-                  placeHolder="Rechercher par cuisine ou nom de restaurant"
-                  onSubmit={handleSearchSubmit}
-                />
-              )}
+              <SearchBar
+                placeHolder="Rechercher une crêpe..."
+                onSubmit={handleSearchSubmit}
+                city="Nabeul"
+              />
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@
 
 ## Aperçu
 
-**Crêpe Time Tunisia** est une application web complète de commande de crêpes artisanales, conçue pour offrir une expérience premium aux clients de Tunis. Les clients peuvent parcourir le menu, ajouter des crêpes à leur panier, passer commande avec paiement à la livraison, et suivre l'état de leur commande en temps réel. Le restaurant reçoit chaque commande via une notification WhatsApp automatique.
+**Crêpe Time Tunisia** est une application web complète de commande de crêpes artisanales, conçue pour offrir une expérience premium aux clients de Nabeul. Les clients peuvent parcourir le menu, ajouter des crêpes à leur panier, passer commande avec paiement à la livraison, et suivre l'état de leur commande en temps réel. Le restaurant reçoit chaque commande via une notification WhatsApp automatique.
 
 ### Fonctionnalités principales
 
@@ -377,14 +377,29 @@ Configurez uniquement `WHATSAPP_RESTAURANT_PHONE` dans le `.env` backend avec le
 | **Devise** | TND (Dinar Tunisien) |
 | **Langue principale** | Français |
 | **Notifications** | Arabe tunisien |
+| **Localisation** | Nabeul, Tunisia |
+
+---
+
+## Contact & Réseaux sociaux
+
+Les informations de contact sont définies dans `food-ordering-frontend/src/components/Footer.tsx` :
+
+| Canal | Placeholder | Comment modifier |
+|-------|-------------|-----------------|
+| Téléphone | `+216 XX XXX XXX` | Modifier `CONTACT.phone` dans `Footer.tsx` |
+| WhatsApp | `+216XXXXXXXX` | Modifier `CONTACT.whatsapp` dans `Footer.tsx` + `WHATSAPP_RESTAURANT_PHONE` dans `.env` |
+| Instagram | `@crepetime_tunisia` | Modifier `CONTACT.instagram` dans `Footer.tsx` |
+| Facebook | `crepetimetunisia` | Modifier `CONTACT.facebook` dans `Footer.tsx` |
+| Adresse | `Nabeul, Tunisia` | Modifier `CONTACT.address` dans `Footer.tsx` |
 
 ---
 
 ## Crédits
 
-Conçu et développé avec passion par **[Marouan Rabai](https://marwenrabai.netlify.app)**.
+**Crêpe Time Tunisia** — *The Sweetest Escape*
 
-**Crêpe Time Tunisia** — *The Sweetest Escape* 🧇
+© 2026 Crêpe Time Tunisia — Conçu avec passion par [Marouan Rabai](https://marwenrabai.netlify.app)
 
 ---
 
