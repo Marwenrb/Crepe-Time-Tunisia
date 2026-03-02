@@ -79,6 +79,9 @@ bun.lockb
 uploads/
 temp/
 
+# Screenshots (may contain sensitive info)
+screenshots/
+
 # Misc
 *.bak
 *.tmp
