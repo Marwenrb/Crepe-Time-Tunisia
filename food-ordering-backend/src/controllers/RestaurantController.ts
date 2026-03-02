@@ -1,24 +1,30 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
-import Restaurant from "../models/restaurant";
+import { supabase } from "../lib/supabase";
+import { transformRestaurant } from "../lib/transform";
+
+const isValidUuid = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
 
 const getRestaurant = async (req: Request, res: Response) => {
   try {
     const restaurantId = req.params.restaurantId;
 
-    // Validate that restaurantId is a valid MongoDB ObjectId
-    if (!restaurantId || !mongoose.Types.ObjectId.isValid(restaurantId)) {
+    if (!restaurantId || !isValidUuid(restaurantId)) {
       return res.status(400).json({
         message: "Invalid restaurant ID format",
       });
     }
 
-    const restaurant = await Restaurant.findById(restaurantId);
-    if (!restaurant) {
+    const { data: restaurant, error } = await supabase
+      .from("restaurants")
+      .select("*")
+      .eq("id", restaurantId)
+      .single();
+
+    if (error || !restaurant) {
       return res.status(404).json({ message: "restaurant not found" });
     }
 
-    res.json(restaurant);
+    res.json(transformRestaurant(restaurant as Record<string, unknown>));
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "something went wrong" });
@@ -30,62 +36,79 @@ const searchRestaurant = async (req: Request, res: Response) => {
     const city = req.params.city;
     const searchQuery = (req.query.searchQuery as string) || "";
     const selectedCuisines = (req.query.selectedCuisines as string) || "";
-    const sortOption = (req.query.sortOption as string) || "lastUpdated";
+    const sortOption = (req.query.sortOption as string) || "last_updated";
     const page = parseInt(req.query.page as string) || 1;
 
-    let query: any = {};
+    let query = supabase.from("restaurants").select("*", { count: "exact" });
 
-    // If city is 'all' or empty, do not filter by city
     if (city && city.toLowerCase() !== "all") {
-      query["city"] = new RegExp(city, "i");
+      query = query.ilike("city", `%${city}%`);
     }
 
     if (selectedCuisines) {
-      const cuisinesArray = selectedCuisines
-        .split(",")
-        .map((cuisine) => new RegExp(cuisine, "i"));
-      query["cuisines"] = { $all: cuisinesArray };
+      const cuisinesArray = selectedCuisines.split(",").map((c) => c.trim()).filter(Boolean);
+      if (cuisinesArray.length > 0) {
+        query = query.overlaps("cuisines", cuisinesArray);
+      }
     }
 
     if (searchQuery) {
-      const searchRegex = new RegExp(searchQuery, "i");
-      query["$or"] = [
-        { restaurantName: searchRegex },
-        { cuisines: { $in: [searchRegex] } },
-      ];
+      query = query.ilike("restaurant_name", `%${searchQuery}%`);
     }
 
+    const sortCol = sortOption === "lastUpdated" ? "last_updated" : sortOption;
     const pageSize = 10;
-    const skip = (page - 1) * pageSize;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
 
-    const restaurants = await Restaurant.find(query)
-      .sort({ [sortOption]: 1 })
-      .skip(skip)
-      .limit(pageSize)
-      .lean();
+    const { data: restaurants, error, count } = await query
+      .order(sortCol, { ascending: true })
+      .range(from, to);
 
-    const total = await Restaurant.countDocuments(query);
+    if (error) throw error;
 
-    const response = {
-      data: restaurants,
+    const transformed = (restaurants || []).map((r) => transformRestaurant(r as Record<string, unknown>));
+
+    res.json({
+      data: transformed,
       pagination: {
-        total,
+        total: count || 0,
         page,
-        pages: Math.ceil(total / pageSize),
+        pages: Math.ceil((count || 0) / pageSize),
       },
-    };
-
-    res.json(response);
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-// New endpoint to get all unique cities for dropdown
+const getDefaultRestaurant = async (req: Request, res: Response) => {
+  try {
+    const city = req.params.city || "Nabeul";
+    const { data: restaurant, error } = await supabase
+      .from("restaurants")
+      .select("*")
+      .ilike("city", `%${city}%`)
+      .limit(1)
+      .single();
+
+    if (error || !restaurant) {
+      return res.status(404).json({ message: "No restaurant found" });
+    }
+
+    res.json(transformRestaurant(restaurant as Record<string, unknown>));
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 const getAllCities = async (req: Request, res: Response) => {
   try {
-    const cities = await Restaurant.distinct("city");
+    const { data: restaurants, error } = await supabase.from("restaurants").select("city");
+    if (error) throw error;
+    const cities = [...new Set((restaurants || []).map((r) => r.city).filter(Boolean))];
     res.json({ cities });
   } catch (error) {
     console.log(error);
@@ -97,4 +120,5 @@ export default {
   getRestaurant,
   searchRestaurant,
   getAllCities,
+  getDefaultRestaurant,
 };

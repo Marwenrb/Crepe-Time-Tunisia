@@ -1,5 +1,5 @@
 import { Order, Restaurant } from "@/types";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { axiosInstance } from "@/lib/api-client";
@@ -96,6 +96,7 @@ export const useGetMyRestaurantOrders = (
 type UpdateOrderStatusRequest = { orderId: string; status: string };
 
 export const useUpdateMyRestaurantOrder = () => {
+  const queryClient = useQueryClient();
   const updateMyRestaurantOrder = async (
     req: UpdateOrderStatusRequest
   ) => {
@@ -117,14 +118,16 @@ export const useUpdateMyRestaurantOrder = () => {
 
   useEffect(() => {
     if (isSuccess && updatedOrder) {
+      const details = updatedOrder.deliveryDetails || updatedOrder.delivery_details;
       showOrderStatusToast({
         status: updatedOrder.status,
-        customerName: updatedOrder.deliveryDetails.name,
-        orderId: updatedOrder._id,
+        customerName: details?.name ?? "Client",
+        orderId: updatedOrder._id ?? updatedOrder.id ?? "",
       });
+      queryClient.invalidateQueries("fetchMyRestaurantOrders");
       reset();
     }
-  }, [isSuccess, updatedOrder, reset]);
+  }, [isSuccess, updatedOrder, reset, queryClient]);
 
   useEffect(() => {
     if (isError) {

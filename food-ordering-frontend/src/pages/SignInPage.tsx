@@ -4,6 +4,7 @@ import * as authApi from "@/api/authApi";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 const testAccounts = {
+  admin: { email: "admin@crepetime.tn", password: "CrepeTime2026!" },
   "guest-user": { email: "test@user.com", password: "12345678" },
 };
 
@@ -28,7 +30,9 @@ const SignInPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>();
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
 
   const handleRoleSelect = (value: string) => {
     if (value === "clear") {
@@ -54,21 +58,24 @@ const SignInPage = () => {
       navigate((location.state as { from?: { pathname: string } })?.from?.pathname || "/");
       window.location.reload();
     } catch (err: unknown) {
-      toast.error((err as Error)?.message || "Invalid credentials");
+      const ax = err as { message?: string };
+      toast.error(ax.message || "Invalid credentials");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = () => {
-    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-    window.location.href = `${apiUrl}/api/auth/google`;
+    authApi.signInWithGoogle();
   };
 
   return (
-    <div className="flex min-h-[60vh] items-center justify-center px-4">
-      <div className="w-full max-w-md space-y-6 rounded-lg border bg-white p-8 shadow-lg">
-        <h1 className="text-2xl font-bold text-center">Sign In</h1>
+    <div className="flex min-h-[60vh] items-center justify-center px-4 sm:px-6 py-8">
+      <div className="w-full max-w-md space-y-5 sm:space-y-6 rounded-xl border bg-white p-5 sm:p-6 md:p-8 shadow-xl">
+        <div className="flex flex-col items-center gap-4">
+          <Logo size="lg" showTagline={true} asLink={true} />
+          <h1 className="text-xl sm:text-2xl font-bold text-crepe-purple">Connexion</h1>
+        </div>
 
         <div className="space-y-2">
           <Label>Test Accounts To Login With</Label>
@@ -81,6 +88,7 @@ const SignInPage = () => {
               <SelectValue placeholder="Select Role Based Test Account" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="admin">Admin (admin@crepetime.tn)</SelectItem>
               <SelectItem value="guest-user">Guest User (test@user.com)</SelectItem>
               {selectedRole && (
                 <SelectItem value="clear" className="text-gray-400 opacity-60">
@@ -97,7 +105,9 @@ const SignInPage = () => {
             <Input
               id="email"
               type="email"
+              value={emailValue ?? ""}
               {...register("email", { required: "Email is required" })}
+              onChange={(e) => setValue("email", e.target.value)}
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -108,7 +118,9 @@ const SignInPage = () => {
             <Input
               id="password"
               type="password"
+              value={passwordValue ?? ""}
               {...register("password", { required: "Password is required", minLength: 6 })}
+              onChange={(e) => setValue("password", e.target.value)}
             />
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password.message}</p>

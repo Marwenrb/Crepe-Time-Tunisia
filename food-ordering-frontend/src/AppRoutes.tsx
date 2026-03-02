@@ -6,8 +6,10 @@ import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import AdminRoute from "./auth/AdminRoute";
 import ManageRestaurantPage from "./pages/ManageRestaurantPage";
 import SearchPage from "./pages/SearchPage";
+import MenuPage from "./pages/MenuPage";
 import DetailPage from "./pages/DetailPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
 import ApiDocsPage from "./pages/ApiDocsPage";
@@ -43,6 +45,14 @@ const AppRoutes = () => {
         }
       />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route
+        path="/menu"
+        element={
+          <Layout showHero={false}>
+            <MenuPage />
+          </Layout>
+        }
+      />
       <Route
         path="/search/:city"
         element={
@@ -83,22 +93,6 @@ const AppRoutes = () => {
           </Layout>
         }
       />
-      <Route
-        path="/business-insights"
-        element={
-          <Layout showHero={false}>
-            <AnalyticsDashboardPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/optimization"
-        element={
-          <Layout showHero={false}>
-            <PerformancePage />
-          </Layout>
-        }
-      />
       <Route element={<ProtectedRoute />}>
         <Route
           path="/user-profile"
@@ -108,11 +102,29 @@ const AppRoutes = () => {
             </Layout>
           }
         />
+      </Route>
+      <Route element={<AdminRoute />}>
         <Route
           path="/manage-restaurant"
           element={
             <Layout>
               <ManageRestaurantPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/business-insights"
+          element={
+            <Layout showHero={false}>
+              <AnalyticsDashboardPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/optimization"
+          element={
+            <Layout showHero={false}>
+              <PerformancePage />
             </Layout>
           }
         />

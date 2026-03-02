@@ -1,0 +1,24 @@
+{
+  "name": "crepe-time-tunisia",
+  "version": "1.0.0",
+  "description": "Crêpe Time Tunisia — Premium crêperie ordering platform",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd food-ordering-backend && npm run dev",
+    "dev:frontend": "cd food-ordering-frontend && npm run dev",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd food-ordering-backend && npm run build",
+    "build:frontend": "cd food-ordering-frontend && npm run build",
+    "seed": "cd food-ordering-backend && npm run seed",
+    "start": "cd food-ordering-backend && npm start",
+    "lint": "cd food-ordering-frontend && npm run lint",
+    "type-check": "cd food-ordering-frontend && npx tsc --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

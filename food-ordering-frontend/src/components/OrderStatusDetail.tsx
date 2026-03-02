@@ -1,6 +1,6 @@
 import { Order } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Building2, MapPin, User, Mail, Clock } from "lucide-react";
+import { Building2, MapPin, User, Mail, Clock, Phone } from "lucide-react";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 
 type Props = {
@@ -78,13 +78,21 @@ const OrderStatusDetail = ({ order }: Props) => {
             <div className="space-y-3">
               <div className="space-y-1">
                 <div className="text-muted-foreground text-sm">
-                  Customer Name
+                  Client
                 </div>
                 <div className="font-medium">{order.deliveryDetails.name}</div>
               </div>
+              {(order.deliveryDetails as { phone?: string }).phone && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone className="h-4 w-4" />
+                  <a href={`tel:${(order.deliveryDetails as { phone?: string }).phone?.replace(/\s/g, "")}`} className="text-crepe-purple hover:underline">
+                    {(order.deliveryDetails as { phone?: string }).phone}
+                  </a>
+                </div>
+              )}
               <div className="flex items-center gap-2 text-sm">
                 <Mail className="h-4 w-4" />
-                <span>{order.deliveryDetails.email}</span>
+                <span>{(order.deliveryDetails as { email?: string }).email || "—"}</span>
               </div>
             </div>
 

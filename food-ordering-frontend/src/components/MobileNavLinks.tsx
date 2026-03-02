@@ -1,54 +1,25 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import {
-  FileText,
-  Activity,
-  UtensilsCrossed,
-  Package,
-  BarChart3,
-  Zap,
-  LogIn,
-} from "lucide-react";
+import { UtensilsCrossed, Package, LogIn } from "lucide-react";
 import UsernameMenu from "./UsernameMenu";
 import { useAppContext } from "@/contexts/AppContext";
 
 const linkClass =
-  "flex items-center gap-2 w-full py-3 font-bold hover:text-crepe-gold transition-colors";
+  "flex items-center gap-3 w-full py-3 px-3 rounded-lg font-semibold text-crepe-purple hover:text-crepe-gold hover:bg-crepe-gold/10 transition-all duration-200";
 
 const MobileNavLinks = () => {
   const { isLoggedIn } = useAppContext();
 
   return (
     <div className="flex flex-col gap-1">
-      <Link to="/search/all" className={linkClass}>
+      <Link to="/menu" className={linkClass}>
         <UtensilsCrossed className="h-4 w-4" />
-        Restaurants
+        Menu
       </Link>
       <Link to="/order-status" className={linkClass}>
         <Package className="h-4 w-4" />
-        Order Status
+        Suivi de commande
       </Link>
-      <Link to="/business-insights" className={linkClass}>
-        <BarChart3 className="h-4 w-4" />
-        Business Insights
-      </Link>
-      <Link to="/optimization" className={linkClass}>
-        <Zap className="h-4 w-4" />
-        Optimization
-      </Link>
-      <div className="py-2">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1 mb-2">
-          API
-        </p>
-        <Link to="/api-docs" className={`${linkClass} pl-4`}>
-          <FileText className="h-4 w-4" />
-          API Docs
-        </Link>
-        <Link to="/api-status" className={`${linkClass} pl-4`}>
-          <Activity className="h-4 w-4" />
-          API Status
-        </Link>
-      </div>
 
       <div className="h-px bg-border my-4" />
 
@@ -59,7 +30,7 @@ const MobileNavLinks = () => {
           <Link to="/sign-in" className="w-full">
             <Button className="w-full font-bold bg-crepe-purple hover:bg-crepe-purple-light">
               <LogIn className="h-4 w-4 mr-2" />
-              Log In
+              Connexion
             </Button>
           </Link>
         )}

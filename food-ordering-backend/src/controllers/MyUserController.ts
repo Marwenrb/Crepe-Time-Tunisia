@@ -1,29 +1,69 @@
 import { Request, Response } from "express";
-import User from "../models/user";
+import { supabase } from "../lib/supabase";
+import { toApiFormat } from "../lib/transform";
 
 const getCurrentUser = async (req: Request, res: Response) => {
   try {
-    const currentUser = await User.findOne({ _id: req.userId });
-    if (!currentUser) {
+    let { data: user, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", req.userId)
+      .single();
+
+    if (error || !user) {
+      const { data: authUser } = await supabase.auth.admin.getUserById(req.userId);
+      if (authUser?.user) {
+        const { id, email, user_metadata } = authUser.user;
+        await supabase.from("profiles").upsert(
+          {
+            id,
+            email: email || undefined,
+            name: user_metadata?.name || user_metadata?.full_name,
+            image: user_metadata?.picture,
+          },
+          { onConflict: "id" }
+        );
+        const { data: newProfile } = await supabase.from("profiles").select("*").eq("id", req.userId).single();
+        user = newProfile;
+      }
+    }
+
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(currentUser);
+    res.json(toApiFormat(user as Record<string, unknown>));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
 const createCurrentUser = async (req: Request, res: Response) => {
   try {
-    const existingUser = await User.findById(req.userId);
+    const { data: existingUser } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", req.userId)
+      .single();
+
     if (existingUser) {
       return res.status(200).send();
     }
+
+    const { data: authUser } = await supabase.auth.admin.getUserById(req.userId);
+    if (authUser?.user) {
+      const { id, email, user_metadata } = authUser.user;
+      await supabase.from("profiles").upsert(
+        { id, email: email || undefined, name: user_metadata?.name || user_metadata?.full_name, image: user_metadata?.picture },
+        { onConflict: "id" }
+      );
+      return res.status(200).send();
+    }
+
     res.status(404).json({ message: "User not found" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Error creating user" });
   }
 };
@@ -31,22 +71,21 @@ const createCurrentUser = async (req: Request, res: Response) => {
 const updateCurrentUser = async (req: Request, res: Response) => {
   try {
     const { name, addressLine1, country, city } = req.body;
-    const user = await User.findById(req.userId);
 
-    if (!user) {
+    const { data: user, error } = await supabase
+      .from("profiles")
+      .update({ name, address_line1: addressLine1, city, country })
+      .eq("id", req.userId)
+      .select()
+      .single();
+
+    if (error || !user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.name = name;
-    user.addressLine1 = addressLine1;
-    user.city = city;
-    user.country = country;
-
-    await user.save();
-
-    res.send(user);
+    res.send(toApiFormat(user as Record<string, unknown>));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: "Error updating user" });
   }
 };

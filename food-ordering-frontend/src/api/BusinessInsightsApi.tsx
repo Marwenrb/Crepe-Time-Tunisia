@@ -25,14 +25,11 @@ export const useGetAnalytics = (timeRange: string = "30d") => {
   return useQuery(
     ["business-insights", timeRange],
     async (): Promise<AnalyticsData> => {
-      const endpoint = isLoggedIn
-        ? `/api/business-insights?timeRange=${timeRange}`
-        : `/api/business-insights/public?timeRange=${timeRange}`;
-      const res = await axiosInstance.get(endpoint);
+      const res = await axiosInstance.get(`/api/business-insights?timeRange=${timeRange}`);
       return res.data;
     },
     {
-      enabled: true,
+      enabled: isLoggedIn,
       staleTime: 5 * 60 * 1000,
       refetchInterval: 30 * 1000,
     },

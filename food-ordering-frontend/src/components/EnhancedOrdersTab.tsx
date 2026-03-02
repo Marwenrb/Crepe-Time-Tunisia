@@ -30,9 +30,11 @@ import {
   Eye,
   Phone,
   Mail,
+  Printer,
   TrendingUp,
   BarChart3,
 } from "lucide-react";
+import { printOrders } from "@/lib/printOrders";
 
 interface EnhancedOrdersTabProps {
   orders: Order[];
@@ -85,6 +87,17 @@ const EnhancedOrdersTab = ({
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const getDeliveryDetails = (order: Order) => {
+    const d = order.deliveryDetails || (order as { delivery_details?: Record<string, unknown> }).delivery_details;
+    return {
+      name: String(d?.name ?? "N/A"),
+      addressLine1: String(d?.addressLine1 ?? (d as Record<string, unknown>)?.address_line1 ?? ""),
+      city: String(d?.city ?? ""),
+      email: String(d?.email ?? ""),
+      phone: String(d?.phone ?? ""),
+    };
   };
 
   const getStatusIcon = (status: OrderStatus) => {
@@ -158,13 +171,10 @@ const EnhancedOrdersTab = ({
   };
 
   const filteredOrders = localOrders.filter((order) => {
+    const d = getDeliveryDetails(order);
     const matchesSearch =
-      order.deliveryDetails.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      order.deliveryDetails.addressLine1
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      d.addressLine1.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || order.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -194,29 +204,10 @@ const EnhancedOrdersTab = ({
     b[0].localeCompare(a[0])
   );
 
-  // Debug logging for date grouping
-  console.log("Filtered orders:", filteredOrders);
-  console.log("Grouped orders:", groupedOrders);
-  console.log("Sorted grouped orders:", sortedGroupedOrders);
-  console.log(
-    "Order dates:",
-    filteredOrders.map((order) => ({
-      id: order._id,
-      createdAt: order.createdAt,
-      formattedDate: `${new Date(order.createdAt).getFullYear()}-${String(
-        new Date(order.createdAt).getMonth() + 1
-      ).padStart(2, "0")}-${String(
-        new Date(order.createdAt).getDate()
-      ).padStart(2, "0")}`,
-      status: order.status,
-      customer: order.deliveryDetails.name,
-    }))
-  );
-
   return (
     <div className="space-y-6">
       {/* Header with Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
@@ -375,7 +366,7 @@ const EnhancedOrdersTab = ({
               <div
                 className={
                   viewMode === "grid"
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4"
                     : "space-y-4"
                 }
               >
@@ -389,7 +380,7 @@ const EnhancedOrdersTab = ({
                         <div className="flex items-center gap-2">
                           <User className="h-4 w-4 text-muted-foreground" />
                           <span className="font-medium">
-                            {order.deliveryDetails.name}
+                            {getDeliveryDetails(order).name}
                           </span>
                         </div>
                         <Badge className={getStatusColor(order.status)}>
@@ -407,10 +398,19 @@ const EnhancedOrdersTab = ({
                       <div className="flex items-center gap-2 text-sm">
                         <MapPin className="h-4 w-4 text-muted-foreground" />
                         <span>
-                          {order.deliveryDetails.addressLine1},{" "}
-                          {order.deliveryDetails.city}
+                          {getDeliveryDetails(order).addressLine1},{" "}
+                          {getDeliveryDetails(order).city}
                         </span>
                       </div>
+
+                      {getDeliveryDetails(order).phone && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <a href={`tel:${getDeliveryDetails(order).phone.replace(/\s/g, "")}`} className="text-crepe-purple hover:underline">
+                            {getDeliveryDetails(order).phone}
+                          </a>
+                        </div>
+                      )}
 
                       <div className="flex items-center gap-2 text-sm">
                         <Clock className="h-4 w-4 text-muted-foreground" />
@@ -442,26 +442,47 @@ const EnhancedOrdersTab = ({
                       </div>
 
                       {showStatusSelector && (
-                        <div className="pt-3 border-t">
+                        <div className="pt-3 border-t space-y-2">
+                          <div className="text-sm font-medium text-muted-foreground">
+                            Changer le statut / Marquer comme livrée
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {ORDER_STATUS.filter((s) => s.value !== order.status).map((status) => (
+                              <Button
+                                key={status.value}
+                                variant={status.value === "delivered" ? "default" : "outline"}
+                                size="sm"
+                                disabled={isLoading}
+                                onClick={() =>
+                                  handleStatusChange(order._id, status.value as OrderStatus)
+                                }
+                                className={
+                                  status.value === "delivered"
+                                    ? "bg-green-600 hover:bg-green-700"
+                                    : ""
+                                }
+                              >
+                                {getStatusIcon(status.value)}
+                                <span className="ml-1">{status.label}</span>
+                              </Button>
+                            ))}
+                          </div>
                           <Select
                             value={order.status}
                             disabled={isLoading}
                             onValueChange={(value) =>
-                              handleStatusChange(
-                                order._id,
-                                value as OrderStatus
-                              )
+                              handleStatusChange(order._id, value as OrderStatus)
                             }
                           >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Update status" />
+                            <SelectTrigger className="mt-1">
+                              <SelectValue placeholder="Ou choisir un statut..." />
                             </SelectTrigger>
                             <SelectContent>
                               {ORDER_STATUS.map((status) => (
                                 <SelectItem
                                   key={status.value}
                                   value={status.value}
-                                  disabled={status.value === "placed"}
+                                  disabled={status.value === order.status}
                                 >
                                   {status.label}
                                 </SelectItem>
@@ -471,7 +492,7 @@ const EnhancedOrdersTab = ({
                         </div>
                       )}
 
-                      <div className="flex gap-2 pt-3 border-t">
+                      <div className="flex flex-wrap gap-2 pt-3 border-t">
                         <Button
                           variant="outline"
                           size="sm"
@@ -479,14 +500,38 @@ const EnhancedOrdersTab = ({
                           className="flex-1"
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Details
+                          Détails
                         </Button>
-                        <Button variant="outline" size="sm">
-                          <Phone className="h-4 w-4" />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => printOrders([order], `Commande #${(order._id ?? "").slice(-6)}`)}
+                          title="Imprimer cette commande"
+                        >
+                          <Printer className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
-                          <Mail className="h-4 w-4" />
-                        </Button>
+                        {getDeliveryDetails(order).phone ? (
+                          <Button variant="outline" size="sm" title="Appeler" asChild>
+                            <a href={`tel:${getDeliveryDetails(order).phone.replace(/\s/g, "")}`}>
+                              <Phone className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" title="Aucun numéro" disabled>
+                            <Phone className="h-4 w-4" />
+                          </Button>
+                        )}
+                        {getDeliveryDetails(order).email ? (
+                          <Button variant="outline" size="sm" title="Envoyer un email" asChild>
+                            <a href={`mailto:${getDeliveryDetails(order).email}`}>
+                              <Mail className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" title="Aucun email" disabled>
+                            <Mail className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -502,14 +547,24 @@ const EnhancedOrdersTab = ({
         <Card className="fixed inset-4 z-50 overflow-auto bg-white">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Order Details</CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedOrder(null)}
-              >
-                Close
-              </Button>
+              <CardTitle>Détails de la commande</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => printOrders([selectedOrder], `Commande #${(selectedOrder._id ?? "").slice(-6)}`)}
+                >
+                  <Printer className="h-4 w-4 mr-2" />
+                  Imprimer
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedOrder(null)}
+                >
+                  Fermer
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -517,18 +572,28 @@ const EnhancedOrdersTab = ({
               <div>
                 <h3 className="font-medium mb-2">Customer Information</h3>
                 <div className="space-y-2 text-sm">
-                  <div>
-                    <strong>Name:</strong> {selectedOrder.deliveryDetails.name}
-                  </div>
-                  <div>
-                    <strong>Email:</strong>{" "}
-                    {selectedOrder.deliveryDetails.email}
-                  </div>
-                  <div>
-                    <strong>Address:</strong>{" "}
-                    {selectedOrder.deliveryDetails.addressLine1},{" "}
-                    {selectedOrder.deliveryDetails.city}
-                  </div>
+                <div>
+                  <strong>Nom:</strong> {getDeliveryDetails(selectedOrder).name}
+                </div>
+                <div>
+                  <strong>Téléphone:</strong>{" "}
+                  {getDeliveryDetails(selectedOrder).phone ? (
+                    <a href={`tel:${getDeliveryDetails(selectedOrder).phone.replace(/\s/g, "")}`} className="text-crepe-purple hover:underline">
+                      {getDeliveryDetails(selectedOrder).phone}
+                    </a>
+                  ) : (
+                    "—"
+                  )}
+                </div>
+                <div>
+                  <strong>Email:</strong>{" "}
+                  {getDeliveryDetails(selectedOrder).email || "—"}
+                </div>
+                <div>
+                  <strong>Adresse:</strong>{" "}
+                  {getDeliveryDetails(selectedOrder).addressLine1},{" "}
+                  {getDeliveryDetails(selectedOrder).city}
+                </div>
                 </div>
               </div>
               <div>

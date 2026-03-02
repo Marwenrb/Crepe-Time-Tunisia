@@ -1,4 +1,5 @@
-import { useGetMyOrders } from "@/api/OrderApi";
+import { useGetMyOrders, useGetOrderById } from "@/api/OrderApi";
+import { useGetMyRestaurantOrders } from "@/api/MyRestaurantApi";
 import OrderStatusDetail from "@/components/OrderStatusDetail";
 import OrderStatusHeader from "@/components/OrderStatusHeader";
 import OrderRightColumn from "@/components/OrderRightColumn";
@@ -6,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { toast } from "sonner";
 import {
@@ -26,11 +27,38 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
+import type { Order } from "@/types";
 
 const OrderStatusPage = () => {
-  const { isLoggedIn } = useAppContext();
-  const { orders, isLoading } = useGetMyOrders();
+  const { isLoggedIn, isAdmin } = useAppContext();
   const [searchParams, setSearchParams] = useSearchParams();
+  const orderIdFromUrl = searchParams.get("orderId");
+
+  const { orders: myOrders = [], isLoading: myOrdersLoading } = useGetMyOrders();
+  const { order: orderById, isLoading: orderByIdLoading } = useGetOrderById(orderIdFromUrl);
+  const { orders: restaurantOrders = [], isLoading: restaurantOrdersLoading } = useGetMyRestaurantOrders(!!isAdmin);
+
+  const visibleStatuses = ["placed", "confirmed", "inProgress", "outForDelivery", "delivered"];
+
+  const allOrders = useMemo(() => {
+    const seen = new Set<string>();
+    const result: Order[] = [];
+    const add = (o: Order) => {
+      const id = o._id ?? (o as { id?: string }).id;
+      if (id && !seen.has(id)) {
+        seen.add(id);
+        result.push(o);
+      }
+    };
+    if (orderById && visibleStatuses.includes(orderById.status)) add(orderById);
+    myOrders.filter((o) => visibleStatuses.includes(o.status)).forEach(add);
+    if (isAdmin) restaurantOrders.filter((o) => visibleStatuses.includes(o.status)).forEach(add);
+    return result.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }, [orderById, myOrders, restaurantOrders, isAdmin]);
+
+  const isLoading = myOrdersLoading || orderByIdLoading || (isAdmin && restaurantOrdersLoading);
   // Group visible orders by date with expand/collapse
   const [expandedDates, setExpandedDates] = useState<{
     [date: string]: boolean;
@@ -69,8 +97,8 @@ const OrderStatusPage = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  // Not logged in – show friendly login prompt
-  if (!isLoggedIn) {
+  // Not logged in and no orderId to track – show login prompt
+  if (!isLoggedIn && !orderIdFromUrl) {
     return (
       <div className="flex items-center justify-center min-h-[400px] px-4">
         <Card className="max-w-lg w-full">
@@ -80,32 +108,31 @@ const OrderStatusPage = () => {
                 <Package className="h-8 w-8 text-crepe-purple" />
               </div>
               <div>
-                <CardTitle className="text-xl">Order Status</CardTitle>
+                <CardTitle className="text-xl">Suivi de commande</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Track your orders and delivery status
+                  Suivez vos commandes et leur statut de livraison
                 </p>
               </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-muted-foreground">
-              To view your order status, please sign in with your test
-              credentials or your personal account.
+              Pour voir vos commandes, connectez-vous. Si vous venez de commander en tant qu&apos;invité, votre commande s&apos;affichera automatiquement.
             </p>
             <div className="flex flex-col gap-2 text-sm mb-4">
               <div className="flex items-center gap-2">
                 <UserCircle className="h-4 w-4 text-crepe-purple" />
-                <span>Test credentials: test@user.com / 12345678</span>
+                <span>Identifiants test : test@user.com / 12345678</span>
               </div>
               <div className="flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-crepe-purple" />
-                <span>Or use your own registered account</span>
+                <span>Ou utilisez votre compte personnel</span>
               </div>
             </div>
             <Link to="/sign-in">
               <Button className="w-full font-bold bg-crepe-purple hover:bg-crepe-purple-light mt-4">
                 <LogIn className="h-4 w-4 mr-2" />
-                Sign In to View Orders
+                Se connecter pour voir mes commandes
               </Button>
             </Link>
           </CardContent>
@@ -172,28 +199,32 @@ const OrderStatusPage = () => {
     );
   }
 
-  const visibleStatuses = [
-    "placed",
-    "confirmed",
-    "inProgress",
-    "outForDelivery",
-    "delivered",
-  ];
-  const visibleOrders = orders?.filter((order) =>
-    visibleStatuses.includes(order.status),
-  );
-
   // Enhanced empty state
-  if (!visibleOrders || visibleOrders.length === 0) {
+  if (!allOrders || allOrders.length === 0) {
+    const stillLoading = orderIdFromUrl && orderByIdLoading;
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center space-y-4">
-          <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground" />
-          <div className="text-xl font-semibold">No Orders Found</div>
-          <div className="text-muted-foreground max-w-md">
-            You haven't placed any orders yet. Start exploring our restaurants
-            and place your first order!
+          {stillLoading ? (
+            <Loader2 className="h-12 w-12 mx-auto text-crepe-purple animate-spin" />
+          ) : (
+            <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground" />
+          )}
+          <div className="text-xl font-semibold">
+            {stillLoading ? "Chargement de votre commande..." : "Aucune commande trouvée"}
           </div>
+          <div className="text-muted-foreground max-w-md">
+            {stillLoading
+              ? "Vérification du statut de votre commande..."
+              : isAdmin
+                ? "Aucune commande dans votre restaurant pour le moment. Les commandes apparaîtront ici."
+                : "Vous n'avez pas encore passé de commande. Explorez nos restaurants et passez votre première commande !"}
+          </div>
+          {orderIdFromUrl && !stillLoading && (
+            <p className="text-sm text-amber-600">
+              Commande #{orderIdFromUrl.slice(-6)} introuvable ou expirée.
+            </p>
+          )}
         </div>
       </div>
     );
@@ -257,9 +288,9 @@ const OrderStatusPage = () => {
 
       {/* Orders by Date */}
       {(() => {
-        if (!visibleOrders || visibleOrders.length === 0) return null;
-        const grouped: { [date: string]: typeof visibleOrders } = {};
-        visibleOrders.forEach((order) => {
+        if (!allOrders || allOrders.length === 0) return null;
+        const grouped: { [date: string]: Order[] } = {};
+        allOrders.forEach((order) => {
           const d = new Date(order.createdAt);
           const dateStr = `${d.getFullYear()}-${String(
             d.getMonth() + 1,
@@ -319,9 +350,9 @@ const OrderStatusPage = () => {
                             new Date(b.createdAt).getTime() -
                             new Date(a.createdAt).getTime(),
                         )
-                        .map((order) => (
+                        .map((order, idx) => (
                           <Card
-                            key={order._id}
+                            key={order._id ?? (order as { id?: string }).id ?? idx}
                             className="border-2 hover:border-primary/20 transition-colors"
                           >
                             <CardContent className="p-6 space-y-6">
@@ -331,16 +362,23 @@ const OrderStatusPage = () => {
                                   <div className="flex items-center gap-2">
                                     <User className="h-4 w-4 text-muted-foreground" />
                                     <span className="font-medium">
-                                      {order.deliveryDetails.name}
+                                      {(order.deliveryDetails as { name?: string })?.name ?? (order as { delivery_details?: { name?: string } }).delivery_details?.name ?? "—"}
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <MapPin className="h-3 w-3" />
                                     <span>
-                                      {order.deliveryDetails.addressLine1},{" "}
-                                      {order.deliveryDetails.city}
+                                      {(order.deliveryDetails as { addressLine1?: string; address_line1?: string; city?: string })?.addressLine1 ?? (order.deliveryDetails as { address_line1?: string })?.address_line1 ?? ""},{" "}
+                                      {(order.deliveryDetails as { city?: string })?.city ?? ""}
                                     </span>
                                   </div>
+                                  {(order.deliveryDetails as { phone?: string })?.phone && (
+                                    <div className="flex items-center gap-2 text-sm">
+                                      <a href={`tel:${(order.deliveryDetails as { phone?: string }).phone?.replace(/\s/g, "")}`} className="text-crepe-purple hover:underline">
+                                        {(order.deliveryDetails as { phone?: string }).phone}
+                                      </a>
+                                    </div>
+                                  )}
                                 </div>
                                 <Badge
                                   className={`${getStatusColor(

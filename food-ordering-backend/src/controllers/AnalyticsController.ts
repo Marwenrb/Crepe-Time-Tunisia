@@ -1,167 +1,98 @@
 import { Request, Response } from "express";
-import Order from "../models/order";
-import Restaurant from "../models/restaurant";
-import User from "../models/user";
+import { supabase } from "../lib/supabase";
 
 const getAnalyticsData = async (req: Request, res: Response) => {
   try {
-    console.log("Analytics API called with timeRange:", req.query.timeRange);
-
-    // Get time range from query params (default to 30 days)
     const timeRange = req.query.timeRange || "30d";
     const days =
-      timeRange === "7d"
-        ? 7
-        : timeRange === "90d"
-        ? 90
-        : timeRange === "1y"
-        ? 365
-        : 30;
+      timeRange === "7d" ? 7 : timeRange === "90d" ? 90 : timeRange === "1y" ? 365 : 30;
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    console.log("Fetching orders from:", startDate.toISOString());
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*, restaurant:restaurants(*)")
+      .gte("created_at", startDate.toISOString());
 
-    // Get all orders within the time range
-    const orders = await Order.find({
-      createdAt: { $gte: startDate },
-    })
-      .populate("restaurant")
-      .populate("user");
+    if (error) throw error;
 
-    console.log("Found orders:", orders.length);
-    console.log("Orders count:", orders.length);
+    const ordersList = orders || [];
 
-    // Calculate total orders
-    const totalOrders = orders.length;
-
-    // Calculate total revenue (sum of totalAmount)
-    const totalRevenue = orders.reduce((sum: number, order: any) => {
-      const amount = order.totalAmount || 0;
-      return sum + amount;
-    }, 0);
-
-    // Calculate average order value
+    const totalOrders = ordersList.length;
+    const totalRevenue = ordersList.reduce((sum: number, o: Record<string, unknown>) => sum + (Number(o.total_amount) || 0), 0);
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    console.log("Total revenue:", totalRevenue);
-    console.log("Average order value:", averageOrderValue);
-
-    // Get unique customers
     const uniqueCustomers = new Set(
-      orders
-        .filter((order: any) => order.user)
-        .map((order: any) => order.user.toString())
+      ordersList
+        .filter((o: Record<string, unknown>) => o.user_id)
+        .map((o: Record<string, unknown>) => String(o.user_id))
     ).size;
 
-    console.log("Unique customers:", uniqueCustomers);
-
-    // Get top cities by orders
-    const cityStats = orders
-      .filter(
-        (order: any) => order.deliveryDetails && order.deliveryDetails.city
-      )
-      .reduce((acc, order: any) => {
-        const city = order.deliveryDetails.city;
-        if (!acc[city]) {
-          acc[city] = { orders: 0, revenue: 0 };
-        }
-        acc[city].orders += 1;
-        acc[city].revenue += order.totalAmount || 0;
-        return acc;
-      }, {} as Record<string, { orders: number; revenue: number }>);
+    const cityStats: Record<string, { orders: number; revenue: number }> = {};
+    ordersList.forEach((o: Record<string, unknown>) => {
+      const details = o.delivery_details as { city?: string } | null;
+      const city = details?.city || "Unknown";
+      if (!cityStats[city]) cityStats[city] = { orders: 0, revenue: 0 };
+      cityStats[city].orders += 1;
+      cityStats[city].revenue += Number(o.total_amount) || 0;
+    });
 
     const topCities = Object.entries(cityStats)
-      .map(([city, stats]) => ({
-        city,
-        orders: stats.orders,
-        revenue: stats.revenue,
-      }))
+      .map(([city, stats]) => ({ city, orders: stats.orders, revenue: stats.revenue }))
       .sort((a, b) => b.orders - a.orders)
       .slice(0, 5);
 
-    console.log("Top cities:", topCities);
-
-    // Get top cuisines from restaurants (real calculation)
     const cuisineStats: Record<string, number> = {};
-
-    // Count orders by cuisine - each order counts once per cuisine
-    orders.forEach((order: any) => {
-      if (order.restaurant && order.restaurant.cuisines) {
-        // For each order, count it once for each cuisine the restaurant offers
-        order.restaurant.cuisines.forEach((cuisine: string) => {
-          cuisineStats[cuisine] = (cuisineStats[cuisine] || 0) + 1;
+    ordersList.forEach((o: Record<string, unknown>) => {
+      const rest = o.restaurant as { cuisines?: string[] } | null;
+      if (rest?.cuisines) {
+        rest.cuisines.forEach((c: string) => {
+          cuisineStats[c] = (cuisineStats[c] || 0) + 1;
         });
       }
     });
 
-    // Convert to array and sort by order count
     const topCuisines = Object.entries(cuisineStats)
       .map(([cuisine, count]) => ({
         cuisine,
         orders: count,
-        percentage: Math.round((count / totalOrders) * 100 * 100) / 100, // Round to 2 decimal places
+        percentage: Math.round((count / totalOrders) * 100 * 100) / 100,
       }))
       .sort((a, b) => b.orders - a.orders);
-    // Removed .slice(0, 10) to show ALL cuisines
 
-    console.log("Top cuisines:", topCuisines);
-
-    // Get recent orders - show ALL orders within the time range, not just 5
-    const recentOrders = orders
-      .filter((order: any) => order.deliveryDetails)
+    const recentOrders = ordersList
+      .filter((o: Record<string, unknown>) => o.delivery_details)
       .sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
       )
-      // Removed .slice(0, 5) to show ALL orders within the time range
-      .map((order: any) => ({
-        id: order._id.toString(),
-        customer: order.deliveryDetails.name,
-        amount: order.totalAmount || 0,
-        status: order.status,
-        date: order.createdAt.toISOString().split("T")[0],
-      }));
+      .map((o: Record<string, unknown>) => {
+        const details = o.delivery_details as { name?: string };
+        return {
+          id: o.id,
+          customer: details?.name || "",
+          amount: o.total_amount || 0,
+          status: o.status,
+          date: (o.created_at as string)?.split("T")[0] || "",
+        };
+      });
 
-    console.log("Recent orders:", recentOrders);
-
-    // Calculate monthly data
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthlyData = [];
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
     for (let i = 0; i < 12; i++) {
       const monthStart = new Date();
       monthStart.setMonth(monthStart.getMonth() - (11 - i));
       monthStart.setDate(1);
-
       const monthEnd = new Date(monthStart);
       monthEnd.setMonth(monthEnd.getMonth() + 1);
       monthEnd.setDate(0);
 
-      const monthOrders = orders.filter((order: any) => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= monthStart && orderDate <= monthEnd;
+      const monthOrders = ordersList.filter((o: Record<string, unknown>) => {
+        const d = new Date(o.created_at as string);
+        return d >= monthStart && d <= monthEnd;
       });
-
-      const monthRevenue = monthOrders.reduce((sum: number, order: any) => {
-        const amount = order.totalAmount || 0;
-        return sum + amount;
-      }, 0);
-
+      const monthRevenue = monthOrders.reduce((s, o) => s + (Number((o as Record<string, unknown>).total_amount) || 0), 0);
       monthlyData.push({
         month: months[monthStart.getMonth()],
         orders: monthOrders.length,
@@ -169,131 +100,80 @@ const getAnalyticsData = async (req: Request, res: Response) => {
       });
     }
 
-    console.log("Monthly data:", monthlyData);
-
-    // Calculate growth by comparing current period with previous period
     const previousStartDate = new Date(startDate);
     previousStartDate.setDate(previousStartDate.getDate() - days);
 
-    const previousOrders = await Order.find({
-      createdAt: {
-        $gte: previousStartDate,
-        $lt: startDate,
-      },
-    });
+    const { data: previousOrders } = await supabase
+      .from("orders")
+      .select("total_amount")
+      .gte("created_at", previousStartDate.toISOString())
+      .lt("created_at", startDate.toISOString());
 
-    const previousTotalRevenue = previousOrders.reduce(
-      (sum: number, order: any) => {
-        return sum + (order.totalAmount || 0);
-      },
-      0
-    );
+    const previousTotalRevenue = (previousOrders || []).reduce((s, o) => s + (Number(o.total_amount) || 0), 0);
+    const previousTotalOrders = (previousOrders || []).length;
 
-    const previousTotalOrders = previousOrders.length;
-
-    // More intelligent growth calculation
     let orderGrowth = 0;
     let revenueGrowth = 0;
 
-    // Check if this is a new business (less than 60 days of data)
-    const firstOrder = await Order.findOne().sort({ createdAt: 1 });
+    const { data: firstOrder } = await supabase
+      .from("orders")
+      .select("created_at")
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .single();
+
     const businessAge = firstOrder
       ? Math.floor(
-          (new Date().getTime() - new Date(firstOrder.createdAt).getTime()) /
-            (1000 * 60 * 60 * 24)
+          (Date.now() - new Date(firstOrder.created_at).getTime()) / (1000 * 60 * 60 * 24)
         )
       : 0;
 
     if (businessAge < 60) {
-      // For new businesses, show month-over-month comparison instead
-      const currentMonth = new Date().getMonth();
-      const currentYear = new Date().getFullYear();
-      const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-      const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+      const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
-      const currentMonthOrders = await Order.find({
-        createdAt: {
-          $gte: new Date(currentYear, currentMonth, 1),
-          $lt: new Date(currentYear, currentMonth + 1, 1),
-        },
-      });
+      const { data: currentMonthOrders } = await supabase
+        .from("orders")
+        .select("total_amount")
+        .gte("created_at", new Date(currentYear, currentMonth, 1).toISOString())
+        .lt("created_at", new Date(currentYear, currentMonth + 1, 1).toISOString());
 
-      const previousMonthOrders = await Order.find({
-        createdAt: {
-          $gte: new Date(previousYear, previousMonth, 1),
-          $lt: new Date(previousYear, previousMonth + 1, 1),
-        },
-      });
+      const { data: previousMonthOrders } = await supabase
+        .from("orders")
+        .select("total_amount")
+        .gte("created_at", new Date(prevYear, prevMonth, 1).toISOString())
+        .lt("created_at", new Date(prevYear, prevMonth + 1, 1).toISOString());
 
-      const currentMonthRevenue = currentMonthOrders.reduce(
-        (sum: number, order: any) => sum + (order.totalAmount || 0),
-        0
-      );
-      const previousMonthRevenue = previousMonthOrders.reduce(
-        (sum: number, order: any) => sum + (order.totalAmount || 0),
-        0
-      );
+      const currentMonthRevenue = (currentMonthOrders || []).reduce((s, o) => s + (Number(o.total_amount) || 0), 0);
+      const previousMonthRevenue = (previousMonthOrders || []).reduce((s, o) => s + (Number(o.total_amount) || 0), 0);
 
-      if (previousMonthOrders.length === 0 && currentMonthOrders.length > 0) {
-        orderGrowth = 100; // New month with orders
+      if ((previousMonthOrders || []).length === 0 && (currentMonthOrders || []).length > 0) {
+        orderGrowth = 100;
         revenueGrowth = 100;
-      } else if (previousMonthOrders.length > 0) {
+      } else if ((previousMonthOrders || []).length > 0) {
         orderGrowth = Math.round(
-          ((currentMonthOrders.length - previousMonthOrders.length) /
-            previousMonthOrders.length) *
+          (((currentMonthOrders || []).length - (previousMonthOrders || []).length) /
+            (previousMonthOrders || []).length) *
             100
         );
         revenueGrowth = Math.round(
-          ((currentMonthRevenue - previousMonthRevenue) /
-            previousMonthRevenue) *
-            100
+          ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100
         );
-      } else {
-        orderGrowth = 0;
-        revenueGrowth = 0;
       }
-
-      console.log("Month-over-month comparison:", {
-        currentMonth: `${currentYear}-${currentMonth + 1}`,
-        previousMonth: `${previousYear}-${previousMonth + 1}`,
-        currentOrders: currentMonthOrders.length,
-        previousOrders: previousMonthOrders.length,
-        currentRevenue: currentMonthRevenue,
-        previousRevenue: previousMonthRevenue,
-      });
     } else {
-      // For established businesses, use period-over-period comparison
       if (previousTotalOrders === 0 && totalOrders > 0) {
         orderGrowth = 100;
         revenueGrowth = 100;
       } else if (previousTotalOrders > 0) {
-        orderGrowth = Math.round(
-          ((totalOrders - previousTotalOrders) / previousTotalOrders) * 100
-        );
-        revenueGrowth = Math.round(
-          ((totalRevenue - previousTotalRevenue) / previousTotalRevenue) * 100
-        );
-      } else {
-        orderGrowth = 0;
-        revenueGrowth = 0;
+        orderGrowth = Math.round(((totalOrders - previousTotalOrders) / previousTotalOrders) * 100);
+        revenueGrowth = Math.round(((totalRevenue - previousTotalRevenue) / previousTotalRevenue) * 100);
       }
     }
 
-    console.log("Current period:", {
-      startDate: startDate.toISOString(),
-      endDate: new Date().toISOString(),
-      orders: totalOrders,
-      revenue: totalRevenue,
-    });
-    console.log("Previous period:", {
-      startDate: previousStartDate.toISOString(),
-      endDate: startDate.toISOString(),
-      orders: previousTotalOrders,
-      revenue: previousTotalRevenue,
-    });
-    console.log("Growth calculations:", { orderGrowth, revenueGrowth });
-
-    const analyticsData = {
+    res.json({
       totalOrders,
       totalRevenue,
       averageOrderValue,
@@ -304,16 +184,9 @@ const getAnalyticsData = async (req: Request, res: Response) => {
       topCuisines,
       recentOrders,
       monthlyData,
-    };
-
-    console.log("Sending analytics response:", analyticsData);
-    res.json(analyticsData);
+    });
   } catch (error) {
-    console.log("Analytics error:", error);
-    console.log(
-      "Error stack:",
-      error instanceof Error ? error.stack : "No stack trace"
-    );
+    console.error("Analytics error:", error);
     res.status(500).json({ message: "Error fetching analytics data" });
   }
 };

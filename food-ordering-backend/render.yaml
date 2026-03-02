@@ -1,0 +1,33 @@
+# Render Blueprint — Crêpe Time Tunisia Backend
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: crepe-time-api
+    runtime: node
+    region: frankfurt
+
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: WHATSAPP_RESTAURANT_PHONE
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false

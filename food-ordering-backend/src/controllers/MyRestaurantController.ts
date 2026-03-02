@@ -1,14 +1,19 @@
 import { Request, Response } from "express";
-import Restaurant from "../models/restaurant";
+import { supabase } from "../lib/supabase";
 import cloudinary from "cloudinary";
-import mongoose from "mongoose";
-import Order from "../models/order";
+import { transformRestaurant, transformOrder } from "../lib/transform";
 
 const getMyRestaurant = async (req: Request, res: Response) => {
   try {
-    const restaurant = await Restaurant.findOne({ user: req.userId });
-    // Return null when no restaurant (allows frontend to show create form)
-    res.json(restaurant ?? null);
+    const { data: restaurant, error } = await supabase
+      .from("restaurants")
+      .select("*")
+      .eq("user_id", req.userId)
+      .single();
+
+    if (error && error.code !== "PGRST116") throw error;
+
+    res.json(restaurant ? transformRestaurant(restaurant as Record<string, unknown>) : null);
   } catch (error) {
     console.log("error", error);
     res.status(500).json({ message: "Error fetching restaurant" });
@@ -17,12 +22,14 @@ const getMyRestaurant = async (req: Request, res: Response) => {
 
 const createMyRestaurant = async (req: Request, res: Response) => {
   try {
-    const existingRestaurant = await Restaurant.findOne({ user: req.userId });
+    const { data: existingRestaurant } = await supabase
+      .from("restaurants")
+      .select("id")
+      .eq("user_id", req.userId)
+      .single();
 
     if (existingRestaurant) {
-      return res
-        .status(409)
-        .json({ message: "User restaurant already exists" });
+      return res.status(409).json({ message: "User restaurant already exists" });
     }
 
     const imageUrl = await uploadImage(req.file as Express.Multer.File);
@@ -31,23 +38,34 @@ const createMyRestaurant = async (req: Request, res: Response) => {
       ? Math.round(parseFloat(req.body.deliveryPrice) * 100)
       : 0;
     const menuItems = Array.isArray(req.body.menuItems)
-      ? req.body.menuItems.map((item: any) => ({
-          ...item,
-          price: item.price ? Math.round(parseFloat(item.price) * 100) : 0,
+      ? req.body.menuItems.map((item: Record<string, unknown>) => ({
+          id: item._id || item.id || crypto.randomUUID(),
+          name: item.name,
+          price: item.price ? Math.round(parseFloat(String(item.price)) * 100) : 0,
+          imageUrl: item.imageUrl,
         }))
       : [];
 
-    const restaurant = new Restaurant({
-      ...req.body,
-      deliveryPrice,
-      menuItems,
-    });
-    restaurant.imageUrl = imageUrl;
-    restaurant.user = new mongoose.Types.ObjectId(req.userId);
-    restaurant.lastUpdated = new Date();
-    await restaurant.save();
+    const { data: restaurant, error } = await supabase
+      .from("restaurants")
+      .insert({
+        user_id: req.userId,
+        restaurant_name: req.body.restaurantName,
+        city: req.body.city,
+        country: req.body.country,
+        delivery_price: deliveryPrice,
+        estimated_delivery_time: req.body.estimatedDeliveryTime,
+        cuisines: req.body.cuisines || [],
+        menu_items: menuItems,
+        image_url: imageUrl,
+        last_updated: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
-    res.status(201).send(restaurant);
+    if (error) throw error;
+
+    res.status(201).send(transformRestaurant(restaurant as Record<string, unknown>));
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
@@ -56,37 +74,53 @@ const createMyRestaurant = async (req: Request, res: Response) => {
 
 const updateMyRestaurant = async (req: Request, res: Response) => {
   try {
-    const restaurant = await Restaurant.findOne({
-      user: req.userId,
-    });
+    const { data: restaurant, error: fetchErr } = await supabase
+      .from("restaurants")
+      .select("*")
+      .eq("user_id", req.userId)
+      .single();
 
-    if (!restaurant) {
+    if (fetchErr || !restaurant) {
       return res.status(404).json({ message: "restaurant not found" });
     }
 
-    restaurant.restaurantName = req.body.restaurantName;
-    restaurant.city = req.body.city;
-    restaurant.country = req.body.country;
-    restaurant.deliveryPrice = req.body.deliveryPrice
+    const deliveryPrice = req.body.deliveryPrice
       ? Math.round(parseFloat(req.body.deliveryPrice) * 100)
-      : 0;
-    restaurant.estimatedDeliveryTime = req.body.estimatedDeliveryTime;
-    restaurant.cuisines = req.body.cuisines;
-    restaurant.menuItems = Array.isArray(req.body.menuItems)
-      ? req.body.menuItems.map((item: any) => ({
-          ...item,
-          price: item.price ? Math.round(parseFloat(item.price) * 100) : 0,
+      : restaurant.delivery_price;
+    const menuItems = Array.isArray(req.body.menuItems)
+      ? req.body.menuItems.map((item: Record<string, unknown>) => ({
+          id: item._id || item.id || crypto.randomUUID(),
+          name: item.name,
+          price: item.price ? Math.round(parseFloat(String(item.price)) * 100) : 0,
+          imageUrl: item.imageUrl,
         }))
-      : [];
-    restaurant.lastUpdated = new Date();
+      : restaurant.menu_items;
+
+    const updateData: Record<string, unknown> = {
+      restaurant_name: req.body.restaurantName,
+      city: req.body.city,
+      country: req.body.country,
+      delivery_price: deliveryPrice,
+      estimated_delivery_time: req.body.estimatedDeliveryTime,
+      cuisines: req.body.cuisines,
+      menu_items: menuItems,
+      last_updated: new Date().toISOString(),
+    };
 
     if (req.file) {
-      const imageUrl = await uploadImage(req.file as Express.Multer.File);
-      restaurant.imageUrl = imageUrl;
+      updateData.image_url = await uploadImage(req.file as Express.Multer.File);
     }
 
-    await restaurant.save();
-    res.status(200).send(restaurant);
+    const { data: updated, error } = await supabase
+      .from("restaurants")
+      .update(updateData)
+      .eq("id", restaurant.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.status(200).send(transformRestaurant(updated as Record<string, unknown>));
   } catch (error) {
     console.log("error", error);
     res.status(500).json({ message: "Something went wrong" });
@@ -95,18 +129,31 @@ const updateMyRestaurant = async (req: Request, res: Response) => {
 
 const getMyRestaurantOrders = async (req: Request, res: Response) => {
   try {
-    const restaurant = await Restaurant.findOne({ user: req.userId });
+    const { data: restaurant } = await supabase
+      .from("restaurants")
+      .select("id")
+      .eq("user_id", req.userId)
+      .single();
+
     if (!restaurant) {
       return res.json([]);
     }
 
-    const orders = await Order.find({
-      restaurant: restaurant._id,
-    })
-      .populate("restaurant")
-      .populate("user");
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*, restaurant:restaurants(*), user:profiles(*)")
+      .eq("restaurant_id", restaurant.id)
+      .order("created_at", { ascending: false });
 
-    res.json(orders);
+    if (error) throw error;
+
+    const transformed = (orders || []).map((o: Record<string, unknown>) => {
+      const rest = o.restaurant as Record<string, unknown>;
+      const usr = o.user as Record<string, unknown>;
+      return transformOrder(o, rest, usr);
+    });
+
+    res.json(transformed);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "something went wrong" });
@@ -118,28 +165,36 @@ const updateOrderStatus = async (req: Request, res: Response) => {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    // Validate that orderId is a valid MongoDB ObjectId
-    if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
-      return res.status(400).json({
-        message: "Invalid order ID format",
-      });
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!orderId || !uuidRegex.test(orderId)) {
+      return res.status(400).json({ message: "Invalid order ID format" });
     }
 
-    const order = await Order.findById(orderId);
-    if (!order) {
+    const { data: order, error: orderErr } = await supabase
+      .from("orders")
+      .select("*, restaurant:restaurants(user_id)")
+      .eq("id", orderId)
+      .single();
+
+    if (orderErr || !order) {
       return res.status(404).json({ message: "order not found" });
     }
 
-    const restaurant = await Restaurant.findById(order.restaurant);
-
-    if (restaurant?.user?._id.toString() !== req.userId) {
+    const rest = order.restaurant as { user_id?: string } | null;
+    if (rest?.user_id !== req.userId) {
       return res.status(401).send();
     }
 
-    order.status = status;
-    await order.save();
+    const { data: updated, error } = await supabase
+      .from("orders")
+      .update({ status })
+      .eq("id", orderId)
+      .select()
+      .single();
 
-    res.status(200).json(order);
+    if (error) throw error;
+
+    res.status(200).json(transformOrder(updated as Record<string, unknown>, null, null));
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "unable to update order status" });
@@ -147,13 +202,11 @@ const updateOrderStatus = async (req: Request, res: Response) => {
 };
 
 const uploadImage = async (file: Express.Multer.File) => {
-  const image = file;
-  // Ensure image.buffer is a Buffer or Uint8Array for Buffer.from
-  const buffer: Buffer = Buffer.isBuffer(image.buffer)
-    ? image.buffer
-    : Buffer.from(image.buffer as ArrayBuffer);
+  const buffer: Buffer = Buffer.isBuffer(file.buffer)
+    ? file.buffer
+    : Buffer.from(file.buffer as ArrayBuffer);
   const base64Image = buffer.toString("base64");
-  const dataURI = `data:${image.mimetype};base64,${base64Image}`;
+  const dataURI = `data:${file.mimetype};base64,${base64Image}`;
 
   const uploadResponse = await cloudinary.v2.uploader.upload(dataURI);
   return uploadResponse.url;

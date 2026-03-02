@@ -50,14 +50,15 @@ export const useSearchRestaurants = (
     return response.json();
   };
 
-  const { data: results, isLoading } = useQuery(
+  const { data: results, isLoading, isError } = useQuery(
     ["searchRestaurants", searchState],
     createSearchRequest,
-    { enabled: !!city }
+    { enabled: !!city, retry: false }
   );
 
   return {
     results,
     isLoading,
+    isError,
   };
 };

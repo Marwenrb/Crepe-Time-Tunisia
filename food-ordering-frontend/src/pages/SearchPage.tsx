@@ -29,7 +29,7 @@ const SearchPage = () => {
   });
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const city = cityParam || "all";
-  const { results, isLoading } = useSearchRestaurants(searchState, city);
+  const { results, isLoading, isError } = useSearchRestaurants(searchState, city);
 
   const setSortOption = (sortOption: string) => {
     setSearchState((prevState) => ({
@@ -86,6 +86,22 @@ const SearchPage = () => {
     }));
   };
 
+  // API error (backend not running, network issue)
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px] gap-4 p-6 text-center">
+        <span className="text-lg font-semibold text-gray-700">
+          Impossible de charger le menu.
+        </span>
+        <span className="text-sm text-muted-foreground max-w-md">
+          Démarrez le serveur backend : <code className="bg-muted px-2 py-1 rounded">cd food-ordering-backend && npm run dev</code>
+          <br />
+          Puis exécutez le seed : <code className="bg-muted px-2 py-1 rounded">cd food-ordering-backend && npm run seed</code>
+        </span>
+      </div>
+    );
+  }
+
   // If city is not in the list, show no results
   if (
     city !== "all" &&
@@ -94,7 +110,7 @@ const SearchPage = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px]">
         <span className="text-lg font-semibold text-gray-700">
-          Sorry, there is no restaurant near to your search area.
+          Aucun restaurant dans cette zone.
         </span>
       </div>
     );
@@ -103,15 +119,15 @@ const SearchPage = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[200px]">
         <span className="text-lg font-semibold text-gray-700">
-          Sorry, there is no restaurant near to your search area.
+          Aucun restaurant dans cette zone.
         </span>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
-      <div id="cuisines-list">
+    <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[250px_1fr] gap-4 sm:gap-5">
+      <div id="cuisines-list" className="w-full">
         <CuisineFilter
           selectedCuisines={searchState.selectedCuisines}
           onChange={setSelectedCuisines}

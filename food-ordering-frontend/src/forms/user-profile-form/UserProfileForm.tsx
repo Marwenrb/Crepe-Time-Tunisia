@@ -18,10 +18,11 @@ import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().optional(),
-  name: z.string().min(1, "name is required"),
-  addressLine1: z.string().min(1, "Address Line 1 is required"),
-  city: z.string().min(1, "City is required"),
-  country: z.string().min(1, "Country is required"),
+  name: z.string().min(1, "Le nom est requis"),
+  phone: z.string().min(8, "Le numéro de téléphone est requis (min. 8 chiffres)"),
+  addressLine1: z.string().min(1, "L'adresse est requise"),
+  city: z.string().min(1, "La ville est requise"),
+  country: z.string().min(1, "Le pays est requis"),
 });
 
 export type UserFormData = z.infer<typeof formSchema>;
@@ -43,7 +44,10 @@ const UserProfileForm = ({
 }: Props) => {
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: currentUser,
+    defaultValues: {
+      ...currentUser,
+      phone: currentUser.phone ?? "",
+    },
   });
 
   useEffect(() => {
@@ -85,12 +89,32 @@ const UserProfileForm = ({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Nom</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   value={field.value ?? ""}
                   className="bg-white"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Téléphone / WhatsApp *</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  value={field.value ?? ""}
+                  className="bg-white"
+                  type="tel"
+                  placeholder="+216 XX XXX XXX"
                 />
               </FormControl>
               <FormMessage />

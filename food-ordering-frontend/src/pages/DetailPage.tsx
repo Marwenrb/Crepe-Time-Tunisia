@@ -11,7 +11,8 @@ import { useParams } from "react-router-dom";
 import { MenuItem as MenuItemType } from "../types";
 import CheckoutButton from "@/components/CheckoutButton";
 import { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
-import { useCreateOrder } from "@/api/OrderApi";
+import { GuestFormData } from "@/forms/guest-checkout-form/GuestCheckoutForm";
+import { useCreateOrder, useCreateGuestOrder } from "@/api/OrderApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -27,6 +28,7 @@ const DetailPage = () => {
   const navigate = useNavigate();
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
   const { createOrder, isLoading: isOrderLoading } = useCreateOrder();
+  const { createGuestOrder, isLoading: isGuestOrderLoading } = useCreateGuestOrder();
 
   // Helper to clear cart for this restaurant
   function clearCart(restaurantId: string | undefined) {
@@ -35,10 +37,7 @@ const DetailPage = () => {
   }
   // Clear cart when leaving DetailPage (unmount)
   useEffect(() => {
-    return () => {
-      clearCart(restaurantId);
-      setCartItems([]);
-    };
+    return () => clearCart(restaurantId);
   }, [restaurantId]);
 
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
@@ -111,9 +110,7 @@ const DetailPage = () => {
   };
 
   const onCheckout = async (userFormData: UserFormData) => {
-    if (!restaurant) {
-      return;
-    }
+    if (!restaurant) return;
 
     const orderData = {
       cartItems: cartItems.map((cartItem) => ({
@@ -128,18 +125,44 @@ const DetailPage = () => {
         city: userFormData.city,
         country: userFormData.country,
         email: userFormData.email as string,
+        phone: userFormData.phone ?? "",
       },
       paymentMethod: "cash" as const,
     };
 
     const data = await createOrder(orderData);
-
-    if (data.whatsappUrl) {
-      window.open(data.whatsappUrl, "_blank");
-    }
-
+    if (data.whatsappUrl) window.open(data.whatsappUrl, "_blank");
     toast.success("Commande confirmée ! Paiement à la livraison.");
-    navigate("/order-status?success=true");
+    const orderId = data?.order?._id ?? data?.order?.id;
+    navigate(orderId ? `/order-status?success=true&orderId=${orderId}` : "/order-status?success=true");
+  };
+
+  const onGuestCheckout = async (guestFormData: GuestFormData) => {
+    if (!restaurant) return;
+
+    const orderData = {
+      cartItems: cartItems.map((cartItem) => ({
+        menuItemId: cartItem._id,
+        name: cartItem.name,
+        quantity: cartItem.quantity.toString(),
+      })),
+      restaurantId: restaurant._id,
+      deliveryDetails: {
+        name: guestFormData.name,
+        addressLine1: guestFormData.addressLine1,
+        city: guestFormData.city,
+        country: guestFormData.country,
+        email: guestFormData.email,
+        phone: guestFormData.phone,
+      },
+      paymentMethod: "cash" as const,
+    };
+
+    const data = await createGuestOrder(orderData);
+    if (data.whatsappUrl) window.open(data.whatsappUrl, "_blank");
+    toast.success("Commande confirmée ! Paiement à la livraison.");
+    const orderId = data?.order?._id ?? data?.order?.id;
+    navigate(orderId ? `/order-status?success=true&orderId=${orderId}` : "/order-status?success=true");
   };
 
   if (isLoading || !restaurant) {
@@ -190,27 +213,32 @@ const DetailPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <AspectRatio ratio={8 / 2}>
-        <img
-          src={restaurant.imageUrl}
-          className="rounded-md object-cover h-full w-full"
-        />
-      </AspectRatio>
-      <div className="grid md:grid-cols-[4fr_2fr] gap-5 md:px-0">
-        <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
+      <div className="rounded-lg sm:rounded-xl overflow-hidden -mx-4 sm:mx-0">
+        <AspectRatio ratio={8 / 2}>
+          <img
+            src={restaurant.imageUrl}
+            alt={restaurant.restaurantName}
+            className="object-cover h-full w-full"
+          />
+        </AspectRatio>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[4fr_2fr] gap-6 lg:gap-8">
+        <div className="flex flex-col gap-4 order-2 lg:order-1">
           <RestaurantInfo restaurant={restaurant} />
-          <span className="text-2xl font-bold tracking-tight">Notre Menu</span>
-          {restaurant.menuItems.map((menuItem) => (
-            <MenuItem
-              key={menuItem._id}
-              menuItem={menuItem}
-              addToCart={() => addToCart(menuItem)}
-            />
-          ))}
+          <span className="text-xl sm:text-2xl font-bold tracking-tight">Notre Menu</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+            {restaurant.menuItems.map((menuItem) => (
+              <MenuItem
+                key={menuItem._id}
+                menuItem={menuItem}
+                addToCart={() => addToCart(menuItem)}
+              />
+            ))}
+          </div>
         </div>
 
-        <div>
+        <div className="order-1 lg:order-2 lg:sticky lg:top-24 lg:self-start">
           <Card>
             <OrderSummary
               restaurant={restaurant}
@@ -222,7 +250,9 @@ const DetailPage = () => {
               <CheckoutButton
                 disabled={cartItems.length === 0}
                 onCheckout={onCheckout}
+                onGuestCheckout={onGuestCheckout}
                 isLoading={isOrderLoading}
+                isGuestLoading={isGuestOrderLoading}
               />
             </CardFooter>
           </Card>

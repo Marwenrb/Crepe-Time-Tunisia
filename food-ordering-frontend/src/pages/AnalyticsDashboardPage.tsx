@@ -94,6 +94,54 @@ const AnalyticsDashboardPage = () => {
     return new Intl.NumberFormat("en-US").format(num);
   };
 
+  const handleExportCSV = () => {
+    if (!analyticsData) return;
+    const rows: string[][] = [
+      ["Business Insights Export", ""],
+      ["Exported", new Date().toISOString()],
+      ["Time Range", timeRange],
+      [],
+      ["Key Metrics", ""],
+      ["Total Orders", String(analyticsData.totalOrders)],
+      ["Total Revenue", formatCurrency(analyticsData.totalRevenue)],
+      ["Average Order Value", formatCurrency(analyticsData.averageOrderValue)],
+      ["Total Customers", String(analyticsData.totalCustomers)],
+      ["Order Growth %", String(analyticsData.orderGrowth)],
+      ["Revenue Growth %", String(analyticsData.revenueGrowth)],
+      [],
+      ["Top Cities", "Orders", "Revenue"],
+      ...(analyticsData.topCities ?? []).map((c) => [
+        c.city,
+        String(c.orders),
+        formatCurrency(c.revenue),
+      ]),
+      [],
+      ["Top Cuisines", "Orders", "Percentage"],
+      ...(analyticsData.topCuisines ?? []).map((c) => [
+        c.cuisine,
+        String(c.orders),
+        `${c.percentage}%`,
+      ]),
+      [],
+      ["Recent Orders", "Customer", "Amount", "Status", "Date"],
+      ...(analyticsData.recentOrders ?? []).map((o) => [
+        o.id,
+        o.customer,
+        formatCurrency(o.amount),
+        o.status,
+        o.date,
+      ]),
+    ];
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `business-insights-${timeRange}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
@@ -127,9 +175,14 @@ const AnalyticsDashboardPage = () => {
               />
               Refresh
             </Button>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+              onClick={handleExportCSV}
+              disabled={!analyticsData || isLoading}
+            >
               <Download className="h-4 w-4" />
-              Export
+              Export CSV
             </Button>
           </div>
         </div>
@@ -280,6 +333,7 @@ const AnalyticsDashboardPage = () => {
                                       width: `${
                                         (data.orders /
                                           Math.max(
+                                            1,
                                             ...analyticsData.monthlyData.map(
                                               (d: any) => d.orders
                                             )
@@ -327,6 +381,7 @@ const AnalyticsDashboardPage = () => {
                                       width: `${
                                         (data.revenue /
                                           Math.max(
+                                            1,
                                             ...analyticsData.monthlyData.map(
                                               (d: any) => d.revenue
                                             )
@@ -384,10 +439,12 @@ const AnalyticsDashboardPage = () => {
                               {formatCurrency(city.revenue)}
                             </p>
                             <p className="text-sm text-gray-600">
-                              {(
-                                (city.revenue / analyticsData.totalRevenue) *
-                                100
-                              ).toFixed(1)}
+                              {analyticsData.totalRevenue
+                                ? (
+                                    (city.revenue / analyticsData.totalRevenue) *
+                                    100
+                                  ).toFixed(1)
+                                : "0"}
                               % of total
                             </p>
                           </div>

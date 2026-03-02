@@ -6,6 +6,12 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 263 67% 35%;
+    --crepe-primary: #4C1D95;
+    --crepe-accent: #D4AF37;
+    --crepe-dark: #0F0A1F;
+    --crepe-text: #FFFFFF;
+    --crepe-text-muted: #E5E5E5;
+    --font-heading: 'Playfair Display', Georgia, serif;
 
     --card: 0 0% 100%;
     --card-foreground: 263 67% 35%;
@@ -70,7 +76,37 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    overflow-x: hidden;
+  }
+}
+
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.05); }
+}
+
+/* CTA premium animations — respects reduced motion */
+@keyframes cta-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+  50% { box-shadow: 0 0 32px rgba(212, 175, 55, 0.35); }
+}
+
+@keyframes cta-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-reduce-motion *,
+  .cta-reduce-motion *::before,
+  .cta-reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

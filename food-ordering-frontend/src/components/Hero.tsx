@@ -14,19 +14,18 @@ const Hero = () => {
     <div className="relative w-full">
       {isLoading && (
         <div
-          className="absolute inset-0 w-full max-h-[600px] bg-muted animate-pulse rounded-none"
+          className="absolute inset-0 w-full h-40 sm:h-56 md:h-72 lg:max-h-[500px] xl:max-h-[600px] bg-muted animate-pulse rounded-none"
           aria-hidden="true"
         />
       )}
       <img
         ref={imgRef}
-        src="/hero.png"
+        src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?w=1200&q=90"
         alt="Crêpe Time — The Sweetest Escape"
-        className={`w-full max-h-[600px] object-cover transition-opacity duration-300 ${
+        className={`w-full h-40 sm:h-56 md:h-72 lg:max-h-[500px] xl:max-h-[600px] object-cover object-center transition-opacity duration-500 ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
         loading="eager"
-        fetchPriority="high"
         onLoad={() => setIsLoading(false)}
       />
     </div>

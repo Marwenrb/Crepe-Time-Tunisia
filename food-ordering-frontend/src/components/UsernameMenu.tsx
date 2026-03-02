@@ -9,6 +9,7 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import * as authApi from "@/api/authApi";
+import { useAppContext } from "@/contexts/AppContext";
 
 const getAvatarUrl = () => {
   const image = localStorage.getItem("user_image");
@@ -20,6 +21,7 @@ const getAvatarUrl = () => {
 };
 
 const UsernameMenu = () => {
+  const { isAdmin } = useAppContext();
   const [isOpen, setIsOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
 
@@ -45,7 +47,7 @@ const UsernameMenu = () => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full border-2 border-crepe-gold p-0.5 focus:outline-none focus:ring-2 focus:ring-crepe-purple">
+        <button className="flex items-center gap-2 rounded-full border-2 border-crepe-gold/80 p-0.5 focus:outline-none focus:ring-2 focus:ring-crepe-purple hover:border-crepe-gold hover:shadow-[0_0_16px_rgba(212,175,55,0.25)] transition-all duration-300">
           <img
             src={avatarUrl}
             alt={name || email || "User"}
@@ -61,23 +63,35 @@ const UsernameMenu = () => {
           <p className="text-xs text-muted-foreground">{email}</p>
         </div>
         <Separator className="my-2" />
-        <DropdownMenuItem
-          onClick={handleMenuClick}
-          className="py-1.5 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
-        >
-          <Link
-            to="/manage-restaurant"
-            className="font-bold hover:text-crepe-gold"
-          >
-            Manage Restaurant
-          </Link>
-        </DropdownMenuItem>
+        {isAdmin && (
+          <>
+            <DropdownMenuItem
+              onClick={handleMenuClick}
+              className="py-1.5 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
+            >
+              <Link
+                to="/manage-restaurant"
+                className="font-bold hover:text-crepe-gold"
+              >
+                Gérer le restaurant
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleMenuClick}
+              className="py-1.5 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
+            >
+              <Link to="/business-insights" className="font-bold hover:text-crepe-gold">
+                Tableau de bord
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuItem
           onClick={handleMenuClick}
           className="py-1.5 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-100"
         >
           <Link to="/user-profile" className="font-bold hover:text-crepe-gold">
-            User Profile
+            Mon profil
           </Link>
         </DropdownMenuItem>
         <Separator className="my-2" />
@@ -86,7 +100,7 @@ const UsernameMenu = () => {
             onClick={handleLogout}
             className="w-full font-bold bg-crepe-purple hover:bg-crepe-purple-light"
           >
-            Log Out
+            Déconnexion
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,5 +1,9 @@
 import type { MenuItem } from "../types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { AspectRatio } from "./ui/aspect-ratio";
+import { Button } from "./ui/button";
+import { ShoppingCart } from "lucide-react";
+import { MENU_ITEM_IMAGES } from "@/config/menu-images";
 
 type Props = {
   menuItem: MenuItem;
@@ -7,15 +11,35 @@ type Props = {
 };
 
 const MenuItem = ({ menuItem, addToCart }: Props) => {
+  const imageUrl = MENU_ITEM_IMAGES[menuItem.name] || menuItem.imageUrl;
   return (
-    <Card className="cursor-pointer hover:bg-crepe-purple/10" onClick={addToCart}>
+    <Card className="overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-fade-in">
+      <AspectRatio ratio={16 / 9}>
+        <img
+          src={imageUrl}
+          alt={menuItem.name}
+          className="object-cover w-full h-full"
+        />
+      </AspectRatio>
       <CardHeader>
         <CardTitle className="font-bold text-gray-800">
           {menuItem.name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="font-bold text-gray-800">
-        {(menuItem.price / 100).toFixed(2)} TND
+      <CardContent className="space-y-3">
+        <div className="font-bold text-gray-800">
+          {(menuItem.price / 100).toFixed(2)} TND
+        </div>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            addToCart();
+          }}
+          className="w-full bg-crepe-purple hover:bg-crepe-purple/90"
+        >
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          Ajouter au panier
+        </Button>
       </CardContent>
     </Card>
   );

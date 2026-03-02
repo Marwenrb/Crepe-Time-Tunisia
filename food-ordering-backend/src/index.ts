@@ -1,9 +1,10 @@
+import "dotenv/config";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
-import "dotenv/config";
-import mongoose from "mongoose";
+import rateLimit from "express-rate-limit";
+import { connectDatabase } from "./lib/db";
 import myUserRoute from "./routes/MyUserRoute";
 import authRoute from "./routes/auth";
 import { v2 as cloudinary } from "cloudinary";
@@ -12,8 +13,8 @@ import restaurantRoute from "./routes/RestaurantRoute";
 import orderRoute from "./routes/OrderRoute";
 import analyticsRoute from "./routes/AnalyticsRoute";
 
-const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_CONNECTION_STRING;
-mongoose.connect(MONGODB_URI as string).then(() => console.log("Connected to database!"));
+(async () => {
+  await connectDatabase();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -26,6 +27,16 @@ const app = express();
 const serverStartTime = Date.now();
 
 app.use(helmet({ contentSecurityPolicy: false }));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/api/", limiter);
+
 app.use(
   cors({
     origin: [
@@ -71,3 +82,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Crêpe Time Tunisia API started on port ${PORT}`);
 });
+})();

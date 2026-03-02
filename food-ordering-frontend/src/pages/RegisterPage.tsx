@@ -4,13 +4,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { axiosInstance } from "@/lib/api-client";
+import * as authApi from "@/api/authApi";
+import { useQueryClient } from "react-query";
 import { toast } from "sonner";
 
 type FormData = { email: string; password: string; name: string };
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
@@ -18,18 +20,14 @@ const RegisterPage = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance.post("/api/auth/register", data);
-      if (res.data?.token) {
-        localStorage.setItem("session_id", res.data.token);
-        localStorage.setItem("user_id", res.data.userId);
-        if (res.data.user?.email) localStorage.setItem("user_email", res.data.user.email);
-        if (res.data.user?.name) localStorage.setItem("user_name", res.data.user.name);
-      }
+      await authApi.signUp(data);
+      await queryClient.invalidateQueries("validateToken");
       toast.success("Account created! Signed in.");
       navigate("/");
       window.location.reload();
     } catch (err: unknown) {
-      toast.error((err as { response?: { data?: { message?: string } } })?.response?.data?.message || "Registration failed");
+      const ax = err as { message?: string };
+      toast.error(ax.message || "Registration failed");
     } finally {
       setIsLoading(false);
     }

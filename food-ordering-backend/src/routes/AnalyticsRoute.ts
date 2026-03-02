@@ -1,31 +1,24 @@
 import express from "express";
 import verifyToken from "../middleware/auth";
+import requireAdmin from "../middleware/requireAdmin";
 import AnalyticsController from "../controllers/AnalyticsController";
-import Order from "../models/order";
-import Restaurant from "../models/restaurant";
+import { supabase } from "../lib/supabase";
 
 const router = express.Router();
 
-// /api/business-insights
-router.get("/", verifyToken, AnalyticsController.getAnalyticsData);
+router.get("/", verifyToken, requireAdmin, AnalyticsController.getAnalyticsData);
 
-// Public endpoint – analytics data for both logged-in and anonymous users
-router.get("/public", AnalyticsController.getAnalyticsData);
-
-// Development endpoint for testing (remove in production)
-router.get("/test", AnalyticsController.getAnalyticsData);
-
-// Simple test endpoint to check database connection
-router.get("/db-test", async (req, res) => {
+router.get("/db-test", verifyToken, requireAdmin, async (req, res) => {
   try {
-    const orderCount = await Order.countDocuments();
+    const { count, error } = await supabase.from("orders").select("*", { count: "exact", head: true });
+    if (error) throw error;
     res.json({
       message: "Database connection OK",
-      orderCount,
+      orderCount: count ?? 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.log("DB test error:", error);
+    console.error("DB test error:", error);
     res.status(500).json({
       message: "Database error",
       error: error instanceof Error ? error.message : "Unknown error",
@@ -33,31 +26,32 @@ router.get("/db-test", async (req, res) => {
   }
 });
 
-// Debug endpoint to check raw order data
-router.get("/debug-orders", async (req, res) => {
+router.get("/debug-orders", verifyToken, requireAdmin, async (req, res) => {
   try {
-    const orders = await Order.find({})
-      .populate("restaurant", "restaurantName cuisines")
-      .sort({ createdAt: -1 });
-    const orderData = orders.map((order: any) => ({
-      id: order._id,
-      city: order.deliveryDetails?.city || "NO CITY",
-      amount: order.totalAmount || 0,
-      createdAt: order.createdAt,
-      restaurant: order.restaurant
-        ? {
-            id: order.restaurant._id,
-            name: order.restaurant.restaurantName,
-            cuisines: order.restaurant.cuisines,
-          }
-        : null,
-    }));
-    res.json({
-      totalOrders: orders.length,
-      orders: orderData,
+    const { data: orders, error } = await supabase
+      .from("orders")
+      .select("*, restaurant:restaurants(restaurant_name, cuisines)")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    const orderData = (orders || []).map((o: Record<string, unknown>) => {
+      const details = o.delivery_details as { city?: string } | null;
+      const rest = o.restaurant as { id?: string; restaurant_name?: string; cuisines?: string[] } | null;
+      return {
+        id: o.id,
+        city: details?.city || "NO CITY",
+        amount: o.total_amount || 0,
+        createdAt: o.created_at,
+        restaurant: rest
+          ? { id: rest.id, name: rest.restaurant_name, cuisines: rest.cuisines }
+          : null,
+      };
     });
+
+    res.json({ totalOrders: orderData.length, orders: orderData });
   } catch (error) {
-    console.log("Debug orders error:", error);
+    console.error("Debug orders error:", error);
     res.status(500).json({
       message: "Database error",
       error: error instanceof Error ? error.message : "Unknown error",
@@ -65,22 +59,21 @@ router.get("/debug-orders", async (req, res) => {
   }
 });
 
-// Debug endpoint to check restaurants and their cuisines
-router.get("/debug-restaurants", async (req, res) => {
+router.get("/debug-restaurants", verifyToken, requireAdmin, async (req, res) => {
   try {
-    const restaurants = await Restaurant.find({});
-    const restaurantData = restaurants.map((restaurant: any) => ({
-      id: restaurant._id,
-      name: restaurant.restaurantName,
-      cuisines: restaurant.cuisines,
-      city: restaurant.city,
+    const { data: restaurants, error } = await supabase.from("restaurants").select("*");
+    if (error) throw error;
+
+    const restaurantData = (restaurants || []).map((r: Record<string, unknown>) => ({
+      id: r.id,
+      name: r.restaurant_name,
+      cuisines: r.cuisines,
+      city: r.city,
     }));
-    res.json({
-      totalRestaurants: restaurants.length,
-      restaurants: restaurantData,
-    });
+
+    res.json({ totalRestaurants: restaurantData.length, restaurants: restaurantData });
   } catch (error) {
-    console.log("Debug restaurants error:", error);
+    console.error("Debug restaurants error:", error);
     res.status(500).json({
       message: "Database error",
       error: error instanceof Error ? error.message : "Unknown error",

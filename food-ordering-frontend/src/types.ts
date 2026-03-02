@@ -5,12 +5,14 @@ export type User = {
   addressLine1: string;
   city: string;
   country: string;
+  phone?: string;
 };
 
 export type MenuItem = {
   _id: string;
   name: string;
   price: number;
+  imageUrl?: string;
 };
 
 export type Restaurant = {
@@ -48,6 +50,7 @@ export type Order = {
     addressLine1: string;
     city: string;
     email: string;
+    phone?: string;
   };
   totalAmount?: number;
   status: OrderStatus;

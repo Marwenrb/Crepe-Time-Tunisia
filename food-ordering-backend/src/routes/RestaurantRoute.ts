@@ -7,6 +7,9 @@ const router = express.Router();
 // Endpoint to get all unique cities for dropdown
 router.get("/cities/all", RestaurantController.getAllCities);
 
+// Default restaurant for a city (single-store: redirects to menu)
+router.get("/default/:city", RestaurantController.getDefaultRestaurant);
+
 router.get(
   "/:restaurantId",
   param("restaurantId")

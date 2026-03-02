@@ -63,26 +63,26 @@ const SearchBar = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={`flex items-center gap-3 justify-between flex-row border-2 rounded-full p-3 ${
-          form.formState.errors.searchQuery && "border-red-500"
+        className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 border-2 rounded-xl sm:rounded-full p-2 sm:p-3 ${
+          form.formState.errors.searchQuery ? "border-red-500" : "border-crepe-purple/20"
         }`}
       >
         <Search
           strokeWidth={2.5}
-          size={30}
-          className="ml-1 text-crepe-purple hidden md:block"
+          size={24}
+          className="text-crepe-purple shrink-0 hidden sm:block"
         />
-        <div className="flex flex-1 items-center gap-2">
+        <div className="flex flex-1 items-center gap-2 min-w-0">
           <CityDropdown value={selectedCity} onChange={handleCityChange} />
           <FormField
             control={form.control}
             name="searchQuery"
             render={({ field }) => (
-              <FormItem className="flex-1">
+              <FormItem className="flex-1 min-w-0">
                 <FormControl>
                   <Input
                     {...field}
-                    className="border-none shadow-none text-xl focus-visible:ring-0"
+                    className="border-none shadow-none text-base sm:text-xl focus-visible:ring-0 min-w-0"
                     placeholder={placeHolder}
                   />
                 </FormControl>
@@ -90,17 +90,19 @@ const SearchBar = ({
             )}
           />
         </div>
-        <Button
-          onClick={handleReset}
-          type="button"
-          variant="outline"
-          className="rounded-full"
-        >
-          Effacer
-        </Button>
-        <Button type="submit" className="rounded-full bg-crepe-purple">
-          Rechercher
-        </Button>
+        <div className="flex gap-2 sm:gap-0 sm:flex-shrink-0">
+          <Button
+            onClick={handleReset}
+            type="button"
+            variant="outline"
+            className="rounded-full flex-1 sm:flex-none text-sm"
+          >
+            Effacer
+          </Button>
+          <Button type="submit" className="rounded-full bg-crepe-purple flex-1 sm:flex-none text-sm">
+            Rechercher
+          </Button>
+        </div>
       </form>
     </Form>
   );

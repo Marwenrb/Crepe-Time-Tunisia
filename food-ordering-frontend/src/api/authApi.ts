@@ -1,26 +1,85 @@
+import { supabase } from "@/lib/supabase";
 import { axiosInstance } from "@/lib/api-client";
 
-export const signIn = async (data: { email: string; password: string }) => {
-  const res = await axiosInstance.post("/api/auth/login", data);
-  const token = res.data?.token;
-  if (token) localStorage.setItem("session_id", token);
-  if (res.data?.userId) localStorage.setItem("user_id", res.data.userId);
-  if (res.data?.user) {
-    const { email, name } = res.data.user;
-    if (email) localStorage.setItem("user_email", email);
-    if (name) localStorage.setItem("user_name", name);
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+function storeSession(session: { access_token: string; user: { id: string; email?: string; user_metadata?: { name?: string; picture?: string } } }) {
+  if (session?.access_token) {
+    localStorage.setItem("session_id", session.access_token);
+    localStorage.setItem("user_id", session.user.id);
+    if (session.user.email) localStorage.setItem("user_email", session.user.email);
+    if (session.user.user_metadata?.name) localStorage.setItem("user_name", session.user.user_metadata.name);
+    if (session.user.user_metadata?.picture) localStorage.setItem("user_image", session.user.user_metadata.picture);
   }
-  return res.data;
+}
+
+export const signIn = async (data: { email: string; password: string }) => {
+  const { data: authData, error } = await supabase.auth.signInWithPassword(data);
+  if (error) throw error;
+  if (authData.session) {
+    storeSession(authData.session);
+    const isAdmin = await fetchIsAdmin(authData.session.access_token);
+    localStorage.setItem("is_admin", isAdmin ? "1" : "0");
+  }
+  return { userId: authData.user?.id, isAdmin: localStorage.getItem("is_admin") === "1", user: authData.user };
 };
 
+export const signUp = async (data: { email: string; password: string; name: string }) => {
+  const { data: authData, error } = await supabase.auth.signUp({
+    email: data.email,
+    password: data.password,
+    options: { data: { name: data.name } },
+  });
+  if (error) throw error;
+  if (authData.session) {
+    storeSession(authData.session);
+    const isAdmin = await fetchIsAdmin(authData.session.access_token);
+    localStorage.setItem("is_admin", isAdmin ? "1" : "0");
+  }
+  return { userId: authData.user?.id, isAdmin: false, user: authData.user };
+};
+
+export const signInWithGoogle = () => {
+  const redirectTo = `${window.location.origin}/auth/callback`;
+  supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo },
+  });
+};
+
+async function fetchIsAdmin(token: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    return !!data?.isAdmin;
+  } catch {
+    return false;
+  }
+}
+
 export const validateToken = async () => {
-  const res = await axiosInstance.get("/api/auth/validate-token");
-  return res.data;
+  const session = await supabase.auth.getSession();
+  const token = session.data.session?.access_token || localStorage.getItem("session_id");
+  if (!token) return { userId: null, isAdmin: false };
+
+  try {
+    const res = await axiosInstance.get("/api/auth/validate-token");
+    const data = res.data;
+    if (data?.isAdmin !== undefined) {
+      localStorage.setItem("is_admin", data.isAdmin ? "1" : "0");
+    }
+    return data;
+  } catch {
+    return { userId: null, isAdmin: false };
+  }
 };
 
 export const signOut = async () => {
-  await axiosInstance.post("/api/auth/logout");
-  ["session_id", "user_id", "user_email", "user_name", "user_image"].forEach((k) =>
+  await supabase.auth.signOut();
+  await axiosInstance.post("/api/auth/logout").catch(() => {});
+  ["session_id", "user_id", "user_email", "user_name", "user_image", "is_admin"].forEach((k) =>
     localStorage.removeItem(k)
   );
 };

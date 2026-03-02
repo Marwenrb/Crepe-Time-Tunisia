@@ -1,4 +1,5 @@
 import axios from "axios";
+import { supabase } from "@/lib/supabase";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -8,10 +9,16 @@ export const axiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-axiosInstance.interceptors.request.use((config: import("axios").InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem("session_id");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+axiosInstance.interceptors.request.use(async (config: import("axios").InternalAxiosRequestConfig) => {
+  let token: string | null = localStorage.getItem("session_id");
+  if (!token) {
+    const { data } = await supabase.auth.getSession();
+    const accessToken = data.session?.access_token;
+    if (accessToken) {
+      token = accessToken;
+      localStorage.setItem("session_id", accessToken);
+    }
   }
+  config.headers.Authorization = token ? `Bearer ${token}` : null;
   return config;
 });
