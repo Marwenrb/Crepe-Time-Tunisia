@@ -26,27 +26,67 @@ Exécuter dans **Supabase SQL Editor** :
 
 Ou copier-coller le contenu de `003_realtime_and_email_logs.sql`.
 
-### Étape 2 : Secrets Supabase
+### Étape 2 : Secrets Supabase (⚠️ terminal / CLI, pas le SQL Editor)
 
-```bash
-# Lier le projet (une fois)
-supabase link --project-ref VOTRE_PROJECT_REF
+Ces commandes s'exécutent dans un **terminal** (PowerShell, CMD ou Git Bash), **pas** dans le Supabase SQL Editor.
 
-# Définir les secrets avec la clé Resend (remplacer par votre clé si différente)
-supabase secrets set RESEND_API_KEY=re_RsP4yV6h_4ohUx8EZM9pHnVoT92YZ1mHH
-supabase secrets set FRONTEND_URL=http://localhost:5173
+#### Installer la CLI Supabase (Windows)
+
+L’installation globale (`npm install -g supabase`) n’est plus supportée. Deux options :
+
+**Option A — Dans le projet (recommandé)**  
+À la racine du projet :
+
+```powershell
+npm install
 ```
 
-**Production :** remplacer `FRONTEND_URL` par l'URL Vercel :
+Le projet inclut `supabase` en devDependency. Utilise ensuite `npx supabase` (voir commandes ci‑dessous).
 
-```bash
-supabase secrets set FRONTEND_URL=https://crepe-time.vercel.app
+**Option B — Scoop (CLI disponible partout)**  
+PowerShell (admin) :
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+iwr -useb get.scoop.sh | iex
+scoop install supabase
 ```
 
-### Étape 3 : Déployer l'Edge Function
+Puis tu pourras taper `supabase` directement.
 
-```bash
-supabase functions deploy notify-client
+#### Connexion Supabase (obligatoire, une fois)
+
+Avant `link` ou `secrets set`, il faut être connecté :
+
+```powershell
+npx supabase login
+```
+
+Une page web s’ouvre : connecte-toi avec ton compte Supabase (créateur du projet). Ensuite reviens dans le terminal.
+
+#### Lier le projet et définir les secrets
+
+À la racine du projet, dans le terminal :
+
+```powershell
+# 1. Lier le projet (une fois)
+npx supabase link --project-ref kjhuwmbddxuyrtycdezr
+
+# 2. Définir les secrets
+npx supabase secrets set RESEND_API_KEY=re_YZJN6ZKx_7gehQiuioN6oARuADRfPT1pP
+npx supabase secrets set FRONTEND_URL=http://localhost:5173
+```
+
+**Production :** remplacer par ton URL Netlify/Vercel :
+
+```powershell
+npx supabase secrets set FRONTEND_URL=https://crepe-time-tunisia.netlify.app
+```
+
+### Étape 3 : Déployer l'Edge Function (dans le terminal)
+
+```powershell
+npx supabase functions deploy notify-client
 ```
 
 ### Étape 4 : Database Webhook

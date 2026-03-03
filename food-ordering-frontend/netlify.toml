@@ -1,6 +1,8 @@
+# Netlify configuration — Crêpe Time Tunisia
+# Base directory: food-ordering-frontend (à configurer dans Netlify UI)
 
-# Netlify configuration for SPA routing
 [build]
+  command = "npm run build"
   publish = "dist"
 
 # Redirect all requests to index.html for client-side routing (SPA)

@@ -2,6 +2,7 @@
   "name": "crepe-time-frontend",
   "private": true,
   "version": "1.0.0",
+  "author": "Marwen Rabai (https://marwen-rabai.netlify.app)",
   "type": "module",
   "scripts": {
     "dev": "vite",

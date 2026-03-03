@@ -98,7 +98,7 @@ const Footer = () => {
               <span className="text-white/40">•</span>
               <a href="https://marwen-rabai.netlify.app" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-crepe-gold hover:text-crepe-gold-light font-medium transition-colors" title="Digital Architect & Event Designer">
                 <Heart className="h-3 w-3 fill-current" />
-                Marouan Rabai
+                Marwen Rabai
               </a>
             </div>
           </div>

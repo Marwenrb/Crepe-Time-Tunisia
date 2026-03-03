@@ -12,7 +12,7 @@
 > Livraison à domicile & retrait en boutique | Notification WhatsApp | Google OAuth
 
 **Repository:** [github.com/Marwenrb/Crepe-Time-Tunisia](https://github.com/Marwenrb/Crepe-Time-Tunisia)  
-**Contact:** rbmarwenrb@gmail.com
+**Développeur:** [Marwen Rabai](https://marwen-rabai.netlify.app) — rbmarwenrb@gmail.com
 
 ---
 
@@ -124,15 +124,17 @@ crepe-time-tunisia/
 | Plateforme | Frontend | Backend |
 |------------|----------|---------|
 | **Vercel** | ✅ | — |
+| **Netlify** | ✅ | — |
 | **Render** | — | ✅ |
 | **Coolify** | ✅ | ✅ |
 
-### Frontend (Vercel)
+### Frontend (Vercel / Netlify)
 
 - Root Directory : `food-ordering-frontend`
 - Build : `npm run build`
 - Output : `dist`
 - Variables : `VITE_API_BASE_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+- Netlify : voir [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md)
 
 ### Backend (Render)
 
@@ -141,7 +143,8 @@ crepe-time-tunisia/
 - Start : `npm start`
 - Variables : `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET_KEY`, `FRONTEND_URL`, etc.
 
-Voir [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) pour les détails.
+Voir [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) pour Vercel + Render.  
+Voir [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md) pour le déploiement Netlify.
 
 ---
 
@@ -152,15 +155,18 @@ Voir [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) pour les détails.
 | [GUIDE_DEMARRAGE.md](./GUIDE_DEMARRAGE.md) | Guide complet de démarrage |
 | [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) | Architecture et conventions |
 | [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) | Déploiement Vercel + Render |
+| [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md) | Déploiement Netlify (env complet) |
 | [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) | Configuration Google OAuth |
 | [NOTIFICATIONS_SETUP.md](./NOTIFICATIONS_SETUP.md) | Realtime + Resend emails |
 | [CREDENTIALS.md](./CREDENTIALS.md) | Comptes de test (seed) |
+| [CREDENTIALS_BACKUP.md](./CREDENTIALS_BACKUP.md) | Backup credentials (hors projet) |
 
 ---
 
 ## Auteurs & Contact
 
 - **Crêpe Time Tunisia** — [GitHub](https://github.com/Marwenrb/Crepe-Time-Tunisia)
+- **Développeur:** [Marwen Rabai](https://marwen-rabai.netlify.app) — Portfolio
 - **Email:** rbmarwenrb@gmail.com
 
 ---

@@ -17,7 +17,7 @@
     "food-ordering",
     "mern"
   ],
-  "author": "Marouan Rabai <marwenrabai.netlify.app>",
+  "author": "Marwen Rabai (https://marwen-rabai.netlify.app)",
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

@@ -682,6 +682,6 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess
 
 ---
 
-© 2026 Crêpe Time Tunisia — Conçu avec passion par Marouan Rabai
+© 2026 Crêpe Time Tunisia — Conçu avec passion par Marwen Rabai
 
-*Guide technique avancé — [marwenrabai.netlify.app](https://marwenrabai.netlify.app)*
+*Guide technique avancé — [marwen-rabai.netlify.app](https://marwen-rabai.netlify.app)*

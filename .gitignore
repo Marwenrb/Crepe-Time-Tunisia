@@ -24,6 +24,9 @@ out/
 .env.test.local
 .env.production.local
 .env.*.local
+.env.netlify
+CREDENTIALS_BACKUP.env
+CREDENTIALS_BACKUP_FILLED.env
 
 # Logs
 logs/
