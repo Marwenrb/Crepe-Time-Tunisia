@@ -117,6 +117,20 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
   `https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback`
 - Pas d'espace, pas de slash final
 
+### Redirection vers la page de connexion après Google (pas de session)
+
+- **Supabase Dashboard** → **Authentication** → **URL Configuration**
+- **Redirect URLs** : ajouter **exactement** :
+  - `http://localhost:5173/auth/callback` (dev)
+  - `https://votre-domaine.com/auth/callback` (prod)
+- Si l'URL n'est pas dans la liste, Supabase redirige vers la Site URL et la session est perdue
+
+### "PKCE code verifier not found in storage"
+
+- Le projet utilise le **flux implicite** (`flowType: "implicit"`) pour éviter cette erreur
+- Les tokens sont renvoyés dans le hash de l'URL (`#access_token=...`) — pas de code_verifier requis
+- Si vous voyez encore cette erreur, vérifiez que `flowType: "implicit"` est bien défini dans `lib/supabase.ts`
+
 ### "Invalid OAuth client"
 
 - Vérifier Client ID et Client Secret dans Supabase

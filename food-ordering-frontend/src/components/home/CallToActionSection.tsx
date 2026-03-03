@@ -63,8 +63,6 @@ const ParticleBurst = memo(function ParticleBurst({
   active: boolean;
   reducedMotion: boolean;
 }) {
-  if (reducedMotion) return null;
-
   const particles = useMemo(
     () =>
       Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
@@ -73,6 +71,8 @@ const ParticleBurst = memo(function ParticleBurst({
       })),
     []
   );
+
+  if (reducedMotion) return null;
 
   return (
     <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg">

@@ -11,6 +11,9 @@
 > Plateforme premium de commande de crêpes artisanales — Full-Stack React + Node + Supabase  
 > Livraison à domicile & retrait en boutique | Notification WhatsApp | Google OAuth
 
+**Repository:** [github.com/Marwenrb/Crepe-Time-Tunisia](https://github.com/Marwenrb/Crepe-Time-Tunisia)  
+**Contact:** rbmarwenrb@gmail.com
+
 ---
 
 ## Aperçu
@@ -66,7 +69,7 @@ npm run dev
 ### Configuration
 
 1. **Cloner** le projet
-2. **Supabase** : Créer un projet, exécuter `supabase/migrations/001_initial_schema.sql` et `002_supabase_auth.sql`
+2. **Supabase** : Créer un projet, exécuter les migrations SQL dans l'ordre : `001_initial_schema.sql`, `002_supabase_auth.sql`, `003_realtime_and_email_logs.sql`
 3. **Backend** : Copier `food-ordering-backend/.env.example` → `.env`, remplir les variables
 4. **Frontend** : Copier `food-ordering-frontend/.env.example` → `.env`, remplir les variables
 5. **Seed** (une fois) : `npm run seed`
@@ -150,7 +153,15 @@ Voir [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) pour les détails.
 | [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) | Architecture et conventions |
 | [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) | Déploiement Vercel + Render |
 | [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) | Configuration Google OAuth |
+| [NOTIFICATIONS_SETUP.md](./NOTIFICATIONS_SETUP.md) | Realtime + Resend emails |
 | [CREDENTIALS.md](./CREDENTIALS.md) | Comptes de test (seed) |
+
+---
+
+## Auteurs & Contact
+
+- **Crêpe Time Tunisia** — [GitHub](https://github.com/Marwenrb/Crepe-Time-Tunisia)
+- **Email:** rbmarwenrb@gmail.com
 
 ---
 

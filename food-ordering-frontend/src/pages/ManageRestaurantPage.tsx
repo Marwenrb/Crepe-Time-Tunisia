@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   useCreateMyRestaurant,
   useGetMyRestaurant,
   useGetMyRestaurantOrders,
   useUpdateMyRestaurant,
 } from "@/api/MyRestaurantApi";
+import { useOrdersRealtime } from "@/hooks/useOrdersRealtime";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageRestaurantForm from "@/forms/manage-restaurant-form/ManageRestaurantForm";
@@ -39,6 +40,16 @@ const ManageRestaurantPage = () => {
   } = useGetMyRestaurantOrders(!!restaurant);
   const queryClient = useQueryClient();
   const [batchPrintRange, setBatchPrintRange] = useState<BatchPrintRange>("today");
+
+  const handleRealtimeOrderChange = useCallback(() => {
+    queryClient.invalidateQueries("fetchMyRestaurantOrders");
+    refetch();
+  }, [queryClient, refetch]);
+
+  useOrdersRealtime(restaurant?._id, handleRealtimeOrderChange, {
+    enabled: !!restaurant?._id,
+    playSound: true,
+  });
 
   const isEditing = !!restaurant;
 

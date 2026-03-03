@@ -38,7 +38,10 @@ const OrderStatusPage = () => {
   const { order: orderById, isLoading: orderByIdLoading } = useGetOrderById(orderIdFromUrl);
   const { orders: restaurantOrders = [], isLoading: restaurantOrdersLoading } = useGetMyRestaurantOrders(!!isAdmin);
 
-  const visibleStatuses = ["placed", "confirmed", "inProgress", "outForDelivery", "delivered"];
+  const visibleStatuses = useMemo(
+    () => ["placed", "confirmed", "inProgress", "outForDelivery", "delivered"],
+    []
+  );
 
   const allOrders = useMemo(() => {
     const seen = new Set<string>();
@@ -56,7 +59,7 @@ const OrderStatusPage = () => {
     return result.sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  }, [orderById, myOrders, restaurantOrders, isAdmin]);
+  }, [orderById, myOrders, restaurantOrders, isAdmin, visibleStatuses]);
 
   const isLoading = myOrdersLoading || orderByIdLoading || (isAdmin && restaurantOrdersLoading);
   // Group visible orders by date with expand/collapse

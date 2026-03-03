@@ -149,11 +149,12 @@ const createOrder = async (req: Request, res: Response) => {
         restaurant as Record<string, unknown>,
         userRow as Record<string, unknown> | null
       );
+      const orderId = (newOrder as { id?: string }).id ?? (transformed as { _id?: string })._id;
       res.status(201).json({
         order: transformed,
         whatsappUrl: whatsappResult.whatsappUrl,
         whatsappSent: whatsappResult.sent,
-        redirectUrl: `${FRONTEND_URL}/order-status?success=true`,
+        redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     } catch (whatsappError) {
       console.error("WhatsApp notification failed:", whatsappError);
@@ -162,11 +163,12 @@ const createOrder = async (req: Request, res: Response) => {
         restaurant as Record<string, unknown>,
         userRow as Record<string, unknown> | null
       );
+      const orderId = (newOrder as { id?: string }).id ?? (transformed as { _id?: string })._id;
       res.status(201).json({
         order: transformed,
         whatsappUrl: null,
         whatsappSent: false,
-        redirectUrl: `${FRONTEND_URL}/order-status?success=true`,
+        redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     }
   } catch (error: unknown) {
@@ -248,20 +250,22 @@ const createGuestOrder = async (req: Request, res: Response) => {
       });
 
       const transformed = transformOrder(newOrder as Record<string, unknown>, restaurant as Record<string, unknown>, null);
+      const orderId = (newOrder as { id?: string }).id ?? (transformed as { _id?: string })._id;
       res.status(201).json({
         order: transformed,
         whatsappUrl: whatsappResult.whatsappUrl,
         whatsappSent: whatsappResult.sent,
-        redirectUrl: `${FRONTEND_URL}/order-status?success=true`,
+        redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     } catch (whatsappError) {
       console.error("WhatsApp notification failed:", whatsappError);
       const transformed = transformOrder(newOrder as Record<string, unknown>, restaurant as Record<string, unknown>, null);
+      const orderId = (newOrder as { id?: string }).id ?? (transformed as { _id?: string })._id;
       res.status(201).json({
         order: transformed,
         whatsappUrl: null,
         whatsappSent: false,
-        redirectUrl: `${FRONTEND_URL}/order-status?success=true`,
+        redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     }
   } catch (error: unknown) {

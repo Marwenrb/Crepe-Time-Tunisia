@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Layout from "./layouts/layout";
 import HomePage from "./pages/HomePage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
@@ -17,8 +18,25 @@ import ApiStatusPage from "./pages/ApiStatusPage";
 import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage";
 import PerformancePage from "./pages/PerformancePage";
 
+function OAuthRedirectHandler({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/auth/callback") return;
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const hashCode = location.hash?.includes("code=");
+    if (code || hashCode) {
+      window.location.replace(`/auth/callback${location.search}${location.hash}`);
+    }
+  }, [location.pathname, location.search, location.hash]);
+
+  return <>{children}</>;
+}
+
 const AppRoutes = () => {
   return (
+    <OAuthRedirectHandler>
     <Routes>
       <Route
         path="/"
@@ -132,6 +150,7 @@ const AppRoutes = () => {
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
+    </OAuthRedirectHandler>
   );
 };
 

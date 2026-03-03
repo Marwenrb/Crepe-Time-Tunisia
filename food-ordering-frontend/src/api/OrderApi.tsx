@@ -1,9 +1,7 @@
 import { Order } from "@/types";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { axiosInstance } from "@/lib/api-client";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 export const useGetMyOrders = () => {
   const getMyOrdersRequest = async (): Promise<Order[]> => {
@@ -30,9 +28,14 @@ export const useGetOrderById = (orderId: string | null) => {
     ["fetchOrderById", orderId],
     async (): Promise<Order | null> => {
       if (!orderId) return null;
-      const res = await fetch(`${API_BASE_URL}/api/order/track/${orderId}`);
-      if (!res.ok) return null;
-      return res.json();
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(orderId)) return null;
+      try {
+        const res = await axiosInstance.get(`/api/order/track/${orderId}`);
+        return res.data ?? null;
+      } catch {
+        return null;
+      }
     },
     { enabled: !!orderId }
   );
@@ -55,13 +58,20 @@ type CreateOrderRequest = {
 };
 
 export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
   const createOrderRequest = async (req: CreateOrderRequest) => {
     const res = await axiosInstance.post("/api/order/create", req);
     return res.data;
   };
 
   const { mutateAsync: createOrder, isLoading, error, reset } =
-    useMutation(createOrderRequest);
+    useMutation(createOrderRequest, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("fetchMyOrders");
+        const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
+        if (orderId) queryClient.invalidateQueries(["fetchOrderById", orderId]);
+      },
+    });
 
   if (error) {
     toast.error((error as Error).toString());
@@ -72,13 +82,19 @@ export const useCreateOrder = () => {
 };
 
 export const useCreateGuestOrder = () => {
+  const queryClient = useQueryClient();
   const createGuestOrderRequest = async (req: CreateOrderRequest) => {
     const res = await axiosInstance.post("/api/order/create-guest", req);
     return res.data;
   };
 
   const { mutateAsync: createGuestOrder, isLoading, error, reset } =
-    useMutation(createGuestOrderRequest);
+    useMutation(createGuestOrderRequest, {
+      onSuccess: (data) => {
+        const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
+        if (orderId) queryClient.invalidateQueries(["fetchOrderById", orderId]);
+      },
+    });
 
   if (error) {
     toast.error((error as Error).toString());

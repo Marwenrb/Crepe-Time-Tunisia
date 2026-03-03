@@ -131,10 +131,10 @@ const DetailPage = () => {
     };
 
     const data = await createOrder(orderData);
-    if (data.whatsappUrl) window.open(data.whatsappUrl, "_blank");
+    if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
     toast.success("Commande confirmée ! Paiement à la livraison.");
-    const orderId = data?.order?._id ?? data?.order?.id;
-    navigate(orderId ? `/order-status?success=true&orderId=${orderId}` : "/order-status?success=true");
+    const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
+    navigate(`/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`);
   };
 
   const onGuestCheckout = async (guestFormData: GuestFormData) => {
@@ -159,10 +159,10 @@ const DetailPage = () => {
     };
 
     const data = await createGuestOrder(orderData);
-    if (data.whatsappUrl) window.open(data.whatsappUrl, "_blank");
+    if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
     toast.success("Commande confirmée ! Paiement à la livraison.");
-    const orderId = data?.order?._id ?? data?.order?.id;
-    navigate(orderId ? `/order-status?success=true&orderId=${orderId}` : "/order-status?success=true");
+    const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
+    navigate(`/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`);
   };
 
   if (isLoading || !restaurant) {

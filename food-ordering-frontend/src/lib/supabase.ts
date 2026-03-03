@@ -12,6 +12,8 @@ export const supabase = createClient(supabaseUrl || "https://placeholder.supabas
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    flowType: "pkce",
+    // Implicit flow: tokens in URL hash — avoids PKCE code_verifier storage issues
+    // (AuthPKCECodeVerifierMissingError when localStorage is cleared/lost during redirect)
+    flowType: "implicit",
   },
 });

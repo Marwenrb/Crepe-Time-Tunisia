@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Order, OrderStatus } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -370,9 +371,16 @@ const EnhancedOrdersTab = ({
                     : "space-y-4"
                 }
               >
+                <AnimatePresence mode="popLayout">
                 {dateOrders.map((order) => (
-                  <Card
+                  <motion.div
                     key={order._id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                  <Card
                     className="hover:shadow-lg transition-shadow"
                   >
                     <CardHeader className="pb-3">
@@ -535,7 +543,9 @@ const EnhancedOrdersTab = ({
                       </div>
                     </CardContent>
                   </Card>
+                  </motion.div>
                 ))}
+                </AnimatePresence>
               </div>
             </CardContent>
           </Card>
