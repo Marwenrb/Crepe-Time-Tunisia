@@ -15,8 +15,10 @@
     "lint": "cd food-ordering-frontend && npm run lint",
     "type-check": "cd food-ordering-frontend && npx tsc --noEmit",
     "supabase:link": "supabase link --project-ref kjhuwmbddxuyrtycdezr",
-    "supabase:secrets": "supabase secrets set RESEND_API_KEY=re_YZJN6ZKx_7gehQiuioN6oARuADRfPT1pP && supabase secrets set FRONTEND_URL=http://localhost:5173",
-    "supabase:deploy-fn": "supabase functions deploy notify-client"
+    "supabase:secrets": "supabase secrets set FRONTEND_URL=https://crepetime.netlify.app",
+    "supabase:db:push": "supabase db push --linked",
+    "supabase:deploy-fn": "supabase functions deploy notify-client",
+    "setup:prod:data": "npm run seed"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

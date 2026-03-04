@@ -1,7 +1,6 @@
 import axios from "axios";
 import { supabase } from "@/lib/supabase";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { API_BASE_URL } from "@/lib/runtime-config";
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

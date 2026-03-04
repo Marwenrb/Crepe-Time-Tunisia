@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 
 const MenuPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!HAS_WORKING_API_URL) {
+      setError(true);
+      return;
+    }
+
     const fetchAndRedirect = async () => {
       try {
-        const res = await fetch(
-          `${API_BASE_URL}/api/restaurant/default/Nabeul`
-        );
+        const res = await fetch(`${API_BASE_URL}/api/restaurant/default/Nabeul`);
         if (!res.ok) throw new Error("No restaurant found");
         const restaurant = await res.json();
         navigate(`/detail/${restaurant._id}`, { replace: true });
@@ -32,19 +34,22 @@ const MenuPage = () => {
           Impossible de charger le menu.
         </span>
         <span className="text-sm text-muted-foreground max-w-md">
-          Vérifiez que Supabase est configuré et que le schéma SQL a été exécuté.
+          Verifiez la configuration backend et Supabase.
           <span className="block mt-2">Puis :</span>
+          <code className="bg-muted px-2 py-1 rounded block mt-2">
+            Deployer le backend (Render, Railway, VPS)
+          </code>
+          <code className="bg-muted px-2 py-1 rounded block mt-1">
+            VITE_API_BASE_URL=https://votre-backend
+          </code>
           <code className="bg-muted px-2 py-1 rounded block mt-2">
             cd food-ordering-backend
           </code>
           <code className="bg-muted px-2 py-1 rounded block mt-1">
             npm run seed
           </code>
-          <code className="bg-muted px-2 py-1 rounded block mt-1">
-            npm run dev
-          </code>
           <span className="block mt-3 text-xs">
-            Voir GUIDE_DEMARRAGE.md pour la configuration Supabase.
+            Voir GUIDE_DEMARRAGE.md pour la configuration complete.
           </span>
         </span>
       </div>

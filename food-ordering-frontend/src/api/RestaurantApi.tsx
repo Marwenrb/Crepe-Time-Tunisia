@@ -1,11 +1,14 @@
 import { SearchState } from "@/pages/SearchPage";
 import { Restaurant, RestaurantSearchResponse } from "@/types";
 import { useQuery } from "react-query";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 
 export const useGetRestaurant = (restaurantId?: string) => {
   const getRestaurantByIdRequest = async (): Promise<Restaurant> => {
+    if (!HAS_WORKING_API_URL) {
+      throw new Error("API base URL is not configured");
+    }
+
     const response = await fetch(
       `${API_BASE_URL}/api/restaurant/${restaurantId}`
     );
@@ -33,6 +36,10 @@ export const useSearchRestaurants = (
   city?: string
 ) => {
   const createSearchRequest = async (): Promise<RestaurantSearchResponse> => {
+    if (!HAS_WORKING_API_URL) {
+      throw new Error("API base URL is not configured");
+    }
+
     const params = new URLSearchParams();
     params.set("searchQuery", searchState.searchQuery);
     params.set("page", searchState.page.toString());

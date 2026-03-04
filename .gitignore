@@ -27,6 +27,10 @@ out/
 .env.netlify
 CREDENTIALS_BACKUP.env
 CREDENTIALS_BACKUP_FILLED.env
+CREDENTIALS_CONSOLIDATED_BACKUP.env
+supabase.credentials.backup.txt
+food-ordering-backend/render.env
+food-ordering-backend/render.env.no-whatsapp
 
 # Logs
 logs/

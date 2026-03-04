@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 
 const DEFAULT_CITY = "Nabeul";
 
@@ -11,6 +10,13 @@ export const useCitySearch = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!HAS_WORKING_API_URL) {
+      setCities([DEFAULT_CITY]);
+      setFilteredCities([DEFAULT_CITY]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     fetch(`${API_BASE_URL}/api/restaurant/cities/all`)
       .then((res) => res.json())

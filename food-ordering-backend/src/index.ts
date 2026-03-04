@@ -25,6 +25,17 @@ cloudinary.config({
 const app = express();
 
 const serverStartTime = Date.now();
+const frontendOriginsFromEnv = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const allowedOrigins = Array.from(
+  new Set([
+    ...frontendOriginsFromEnv,
+    "http://localhost:5173",
+    "http://localhost:3000",
+  ])
+);
 
 app.use(helmet({ contentSecurityPolicy: false }));
 
@@ -39,11 +50,13 @@ app.use("/api/", limiter);
 
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      "http://localhost:5173",
-      "http://localhost:3000",
-    ].filter((o): o is string => Boolean(o)),
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie", "X-Requested-With"],

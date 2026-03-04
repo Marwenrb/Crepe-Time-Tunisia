@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { axiosInstance } from "@/lib/api-client";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+import { API_BASE_URL, APP_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 
 function storeSession(session: { access_token: string; user: { id: string; email?: string; user_metadata?: { name?: string; picture?: string } } }) {
   if (session?.access_token) {
@@ -40,7 +39,7 @@ export const signUp = async (data: { email: string; password: string; name: stri
 };
 
 export const signInWithGoogle = () => {
-  const redirectTo = `${window.location.origin}/auth/callback`;
+  const redirectTo = `${APP_BASE_URL}/auth/callback`;
   supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo },
@@ -48,6 +47,7 @@ export const signInWithGoogle = () => {
 };
 
 async function fetchIsAdmin(token: string): Promise<boolean> {
+  if (!HAS_WORKING_API_URL) return false;
   try {
     const res = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
       headers: { Authorization: `Bearer ${token}` },

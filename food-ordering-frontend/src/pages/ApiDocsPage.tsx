@@ -14,13 +14,14 @@ import {
 } from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
 import { Copy, Code, Database, CreditCard } from "lucide-react";
+import { API_BASE_URL } from "@/lib/runtime-config";
 
 const ApiDocsPage = () => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
 
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+  const baseUrl = API_BASE_URL || "Backend URL not configured";
 
   const endpoints = [
     {

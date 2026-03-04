@@ -23,6 +23,7 @@ import {
   Zap,
   HardDrive,
 } from "lucide-react";
+import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 
 interface SystemStatus {
   status: "healthy" | "warning" | "error";
@@ -52,9 +53,7 @@ const ApiStatusPage = () => {
       name: "API Server",
       status: "healthy",
       responseTime: 45,
-      endpoint: `${
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"
-      }/health`,
+      endpoint: `${API_BASE_URL || "Backend URL not configured"}/health`,
       description: "Main API server health check",
     },
     {
@@ -100,11 +99,14 @@ const ApiStatusPage = () => {
   const checkSystemHealth = async () => {
     setIsLoading(true);
     try {
+      if (!HAS_WORKING_API_URL) {
+        throw new Error("API base URL missing");
+      }
+
       const startTime = Date.now();
 
       // Check API Server health
-      const apiBaseUrl =
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+      const apiBaseUrl = API_BASE_URL;
       const apiResponse = await fetch(`${apiBaseUrl}/health`);
       const apiEndTime = Date.now();
       const apiResponseTime = apiEndTime - startTime;
