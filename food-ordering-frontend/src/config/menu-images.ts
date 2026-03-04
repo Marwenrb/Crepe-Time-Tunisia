@@ -37,7 +37,20 @@ const MENU_ITEM_IMAGES: Record<string, string> = {
   "crepe time signature": crepeTimeSignature,
 };
 
+const FALLBACK_MATCHERS: Array<{ tokens: string[]; image: string }> = [
+  { tokens: ["nutella", "banane"], image: nutellaBanane },
+];
+
 export const getMenuItemImage = (name: string, fallback?: string) => {
   const key = normalizeMenuName(name);
-  return MENU_ITEM_IMAGES[key] || fallback || "";
+  const directMatch = MENU_ITEM_IMAGES[key];
+  if (directMatch) return directMatch;
+
+  for (const matcher of FALLBACK_MATCHERS) {
+    if (matcher.tokens.every((token) => key.includes(token))) {
+      return matcher.image;
+    }
+  }
+
+  return fallback || "";
 };
