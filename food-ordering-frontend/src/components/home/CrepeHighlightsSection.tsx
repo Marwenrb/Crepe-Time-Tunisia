@@ -1,18 +1,19 @@
 import { memo, useRef } from "react";
 import { motion } from "framer-motion";
 import CrepeHighlightCard, { type CrepeHighlight } from "./CrepeHighlightCard";
+import nutellaBananeFeature from "@/assets/hero/Crêpe Nutella Banane feature.jpg";
 
 const HIGHLIGHTS: CrepeHighlight[] = [
   {
     id: "1",
     name: "Crêpe Nutella Banane",
     description: "Une combinaison irrésistible de Nutella généreux et de bananes fraîches.",
-    imageUrl: "https://images.unsplash.com/photo-1635350736475-c8cef4b21906?w=600&q=85",
+    imageUrl: nutellaBananeFeature,
   },
   {
     id: "2",
     name: "Crêpe Lotus Biscoff",
-    description: "Le spéculoos caramelisé sur une crêpe dorée, un classique réinventé.",
+    description: "Le spéculoos caramélisé sur une crêpe dorée, un classique réinventé.",
     imageUrl: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=85",
   },
   {
@@ -41,7 +42,7 @@ const CrepeHighlightsSection = () => {
       />
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl rounded-2xl border border-crepe-gold/15 overflow-hidden">
         <div className="relative py-2 sm:py-4">
-          {/* Header card — compact, footer theme */}
+          {/* Header card - compact, footer theme */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}

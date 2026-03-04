@@ -6,7 +6,7 @@ import BrandMarquee from "@/components/home/BrandMarquee";
 import CrepeHighlightsSection from "@/components/home/CrepeHighlightsSection";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import CallToActionSection from "@/components/home/CallToActionSection";
-import appOrderImage from "@/assets/hero/estefania-ventura-flloHXEs9DQ-unsplash.jpg";
+import appOrderImage from "@/assets/hero/photo-1734056650036-7002ede7b8f8.avif";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
