@@ -6,6 +6,7 @@ import BrandMarquee from "@/components/home/BrandMarquee";
 import CrepeHighlightsSection from "@/components/home/CrepeHighlightsSection";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import CallToActionSection from "@/components/home/CallToActionSection";
+import appOrderImage from "@/assets/hero/estefania-ventura-flloHXEs9DQ-unsplash.jpg";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -38,15 +39,15 @@ const HomePage = () => {
         animate={fadeInUp.animate}
         transition={fadeInUp.transition}
       >
-        <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-crepe-purple leading-tight">
-          Découvrez Nos Crêpes Artisanales
+        <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight bg-gradient-to-r from-crepe-purple via-rose-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+          La Signature Crepe Time, Luxe Artisan a Nabeul
         </h1>
         <span className="text-base sm:text-lg md:text-xl text-muted-foreground">
-          Crêperie premium — Livraison à domicile à Nabeul
+          Recettes artisanales d excellence, commande digitale ultra fluide et livraison premium rapide.
         </span>
         <div className="w-full max-w-2xl mx-auto">
           <SearchBar
-            placeHolder="Rechercher une crêpe..."
+            placeHolder="Rechercher une crepe..."
             onSubmit={handleSearchSubmit}
             city="Nabeul"
           />
@@ -68,8 +69,8 @@ const HomePage = () => {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
-            src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?w=800&q=90"
-            alt="Crêpe Time — Crêpes artisanales"
+            src={appOrderImage}
+            alt="Commande sur l app - Crepe Time"
             className="w-full h-48 sm:h-64 md:h-80 object-cover"
             loading="lazy"
           />
@@ -82,11 +83,11 @@ const HomePage = () => {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className="font-heading font-bold text-2xl sm:text-3xl tracking-tighter text-crepe-purple">
-            Commandez en Toute Simplicité
+            Commandez sur l App, Finalisez en Un Instant
           </span>
           <span className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Contactez-nous sur WhatsApp pour une commande rapide et personnalisée.
-            Livraison à domicile ou retrait en boutique — c&apos;est vous qui choisissez !
+            Creez votre commande directement dans notre app, personnalisez chaque crepe et confirmez en un clic.
+            WhatsApp reste disponible pour un accompagnement VIP. Livraison premium ou retrait express, selon votre rythme.
           </span>
         </motion.div>
       </div>
@@ -99,7 +100,7 @@ const HomePage = () => {
       {/* Testimonial carousel */}
       <TestimonialCarousel />
 
-      {/* Call to action — just before footer */}
+      {/* Call to action just before footer */}
       <CallToActionSection />
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import heroBanner from "@/assets/hero/premium_photo-1707757442396-8784df68d028.avif";
 
 const Hero = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,8 +21,8 @@ const Hero = () => {
       )}
       <img
         ref={imgRef}
-        src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?w=1200&q=90"
-        alt="Crêpe Time — The Sweetest Escape"
+        src={heroBanner}
+        alt="Crepe Time - Hero Banner"
         className={`w-full h-40 sm:h-56 md:h-72 lg:max-h-[500px] xl:max-h-[600px] object-cover object-center transition-opacity duration-500 ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
