@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { AspectRatio } from "./ui/aspect-ratio";
 import { Button } from "./ui/button";
 import { ShoppingCart } from "lucide-react";
-import { MENU_ITEM_IMAGES } from "@/config/menu-images";
+import { getMenuItemImage } from "@/config/menu-images";
 
 type Props = {
   menuItem: MenuItem;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const MenuItem = ({ menuItem, addToCart }: Props) => {
-  const imageUrl = MENU_ITEM_IMAGES[menuItem.name] || menuItem.imageUrl;
+  const imageUrl = getMenuItemImage(menuItem.name, menuItem.imageUrl);
   return (
     <Card className="overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-fade-in">
       <AspectRatio ratio={16 / 9}>

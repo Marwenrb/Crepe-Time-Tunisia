@@ -1,5 +1,5 @@
 /**
- * Mapping des crêpes du menu vers les images locales (assets/menu-items).
+ * Mapping des crepes du menu vers les images locales (assets/menu-items).
  */
 import nutellaBanane from "@/assets/menu-items/nutella-banane.jpg";
 import fraiseCreme from "@/assets/menu-items/fraise-creme.jpg";
@@ -14,17 +14,30 @@ import mielNoix from "@/assets/menu-items/miel-noix.jpg";
 import sucreCitron from "@/assets/menu-items/sucre-citron.jpg";
 import crepeTimeSignature from "@/assets/menu-items/crepe-time-signature.jpg";
 
-export const MENU_ITEM_IMAGES: Record<string, string> = {
-  "Crêpe Nutella Banane": nutellaBanane,
-  "Crêpe Fraise Crème": fraiseCreme,
-  "Crêpe Lotus Biscoff": lotusBiscoff,
-  "Crêpe Kinder Bueno": kinderBueno,
-  "Crêpe Oréo Crème": oreoCreme,
-  "Crêpe Caramel Noix de Pécan": caramelNoixPecan,
-  "Crêpe Fruits des Bois": fruitsDesBois,
-  "Crêpe Pistache Rose": pistacheRose,
-  "Crêpe Coco Mangue": cocoMangue,
-  "Crêpe Miel & Noix": mielNoix,
-  "Crêpe Sucre & Citron": sucreCitron,
-  "Crêpe Time Signature": crepeTimeSignature,
+const normalizeMenuName = (name: string) =>
+  name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+const MENU_ITEM_IMAGES: Record<string, string> = {
+  "crepe nutella banane": nutellaBanane,
+  "crepe fraise creme": fraiseCreme,
+  "crepe lotus biscoff": lotusBiscoff,
+  "crepe kinder bueno": kinderBueno,
+  "crepe oreo creme": oreoCreme,
+  "crepe caramel noix de pecan": caramelNoixPecan,
+  "crepe fruits des bois": fruitsDesBois,
+  "crepe pistache rose": pistacheRose,
+  "crepe coco mangue": cocoMangue,
+  "crepe miel noix": mielNoix,
+  "crepe sucre citron": sucreCitron,
+  "crepe time signature": crepeTimeSignature,
+};
+
+export const getMenuItemImage = (name: string, fallback?: string) => {
+  const key = normalizeMenuName(name);
+  return MENU_ITEM_IMAGES[key] || fallback || "";
 };
