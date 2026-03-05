@@ -14,7 +14,7 @@ interface OrderDetails {
   paymentMethod: "cash" | "pickup";
 }
 
-const RESTAURANT_PHONE = process.env.WHATSAPP_RESTAURANT_PHONE || "+216XXXXXXXX";
+const RESTAURANT_PHONE = process.env.WHATSAPP_RESTAURANT_PHONE || "+21625799066";
 
 function formatDate(): string {
   return new Intl.DateTimeFormat("fr-TN", {

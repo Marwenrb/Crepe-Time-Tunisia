@@ -23,19 +23,44 @@ export const signIn = async (data: { email: string; password: string }) => {
   return { userId: authData.user?.id, isAdmin: localStorage.getItem("is_admin") === "1", user: authData.user };
 };
 
-export const signUp = async (data: { email: string; password: string; name: string }) => {
+export const signUp = async (data: { email: string; password: string; name: string; phone: string }) => {
   const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
-    options: { data: { name: data.name } },
+    options: { data: { name: data.name, phone: data.phone } },
   });
   if (error) throw error;
+  if (!authData.user?.id) {
+    throw new Error("Registration failed. Please try again.");
+  }
+
+  const hasExistingIdentity = (authData.user.identities?.length || 0) > 0;
+  if (!authData.session && !hasExistingIdentity) {
+    throw new Error("This email is already registered. Please sign in.");
+  }
+
   if (authData.session) {
     storeSession(authData.session);
     const isAdmin = await fetchIsAdmin(authData.session.access_token);
     localStorage.setItem("is_admin", isAdmin ? "1" : "0");
+    if (HAS_WORKING_API_URL) {
+      await axiosInstance.post("/api/my/user");
+    }
+    return {
+      userId: authData.user.id,
+      isAdmin,
+      user: authData.user,
+      hasSession: true,
+      needsEmailVerification: false,
+    };
   }
-  return { userId: authData.user?.id, isAdmin: false, user: authData.user };
+  return {
+    userId: authData.user.id,
+    isAdmin: false,
+    user: authData.user,
+    hasSession: false,
+    needsEmailVerification: true,
+  };
 };
 
 export const signInWithGoogle = () => {

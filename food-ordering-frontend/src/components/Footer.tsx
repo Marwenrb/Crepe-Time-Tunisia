@@ -2,11 +2,12 @@ import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from 
 import { BRAND } from "@/config/brand";
 
 const CONTACT = {
-  phone: "+216 XX XXX XXX",
-  whatsapp: "+216XXXXXXXX",
-  instagram: "crepetime_tunisia",
-  facebook: "crepetimetunisia",
-  tiktok: "crepetime_tunisia",
+  phone: "+216 25 799 066",
+  whatsapp: "21625799066",
+  instagram: "crepe.time_nabeul",
+  instagramUrl: "https://www.instagram.com/crepe.time_nabeul?igsh=M3R2MXU4bzgwODZt",
+  facebookUrl: "https://www.facebook.com/share/1CZt76ZdtW/?mibextid=wwXIfr",
+  tiktok: "crepetime_nabeul",
   address: "Nabeul, Tunisia",
 };
 
@@ -42,9 +43,15 @@ const Footer = () => {
                 CT
               </div>
             </div>
-            <div>
-              <span className="text-white font-bold text-lg block leading-tight">{BRAND.fullName}</span>
-              <span className="text-crepe-gold text-xs tracking-[0.2em] uppercase font-medium">{BRAND.tagline}</span>
+            <div className="flex flex-col">
+              <span className="inline-flex items-center">
+                <span className="bg-gradient-to-r from-white via-crepe-gold-light to-white bg-clip-text text-transparent font-heading font-bold text-xl sm:text-2xl tracking-tight leading-none drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)]">
+                  Crêpe Time
+                </span>
+              </span>
+              <span className="mt-1 text-crepe-gold/95 text-[10px] sm:text-xs tracking-[0.24em] uppercase font-semibold">
+                {BRAND.tagline}
+              </span>
             </div>
           </div>
 
@@ -67,7 +74,7 @@ const Footer = () => {
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-crepe-gold/90 text-xs font-semibold uppercase tracking-wider">Suivez-nous</span>
-              <a href={`https://instagram.com/${CONTACT.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <Instagram className="h-3.5 w-3.5" />
                 @{CONTACT.instagram}
               </a>
@@ -75,7 +82,7 @@ const Footer = () => {
                 <TikTokIcon className="h-3.5 w-3.5" />
                 @{CONTACT.tiktok}
               </a>
-              <a href={`https://facebook.com/${CONTACT.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <Facebook className="h-3.5 w-3.5" />
                 Facebook
               </a>

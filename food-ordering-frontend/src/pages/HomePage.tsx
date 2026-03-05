@@ -34,7 +34,7 @@ const HomePage = () => {
     <div className="flex flex-col">
       {/* Hero content: search card */}
       <motion.div
-        className="relative z-[9999] mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16"
+        className="relative z-10 mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16"
         initial={fadeInUp.initial}
         animate={fadeInUp.animate}
         transition={fadeInUp.transition}

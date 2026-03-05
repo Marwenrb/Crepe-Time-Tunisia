@@ -8,7 +8,7 @@ import * as authApi from "@/api/authApi";
 import { useQueryClient } from "react-query";
 import { toast } from "sonner";
 
-type FormData = { email: string; password: string; name: string };
+type FormData = { email: string; password: string; name: string; phone: string };
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -20,11 +20,17 @@ const RegisterPage = () => {
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
     try {
-      await authApi.signUp(data);
-      await queryClient.invalidateQueries("validateToken");
-      toast.success("Account created! Signed in.");
-      navigate("/");
-      window.location.reload();
+      const signUpResult = await authApi.signUp(data);
+
+      if (signUpResult.hasSession) {
+        await queryClient.invalidateQueries("validateToken");
+        toast.success("Account created! Signed in.");
+        navigate("/");
+        window.location.reload();
+      } else {
+        toast.success("Account created. Check your email to confirm, then sign in.");
+        navigate("/sign-in");
+      }
     } catch (err: unknown) {
       const ax = err as { message?: string };
       toast.error(ax.message || "Registration failed");
@@ -47,6 +53,23 @@ const RegisterPage = () => {
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" {...register("email", { required: "Email is required" })} />
             {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone / WhatsApp</Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+216 XX XXX XXX"
+              {...register("phone", {
+                required: "Phone number is required",
+                minLength: { value: 8, message: "Phone number must be at least 8 digits" },
+                pattern: {
+                  value: /^\+?[0-9\s\-()]{8,20}$/,
+                  message: "Please enter a valid phone number",
+                },
+              })}
+            />
+            {errors.phone && <p className="text-sm text-red-500">{errors.phone.message}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>

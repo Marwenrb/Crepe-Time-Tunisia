@@ -10,7 +10,14 @@ const getCurrentUser = async (req: Request, res: Response) => {
       .eq("id", req.userId)
       .single();
 
-    if (error || !user) {
+    const shouldBackfillFromAuth =
+      error ||
+      !user ||
+      !user.name ||
+      !user.email ||
+      !user.phone;
+
+    if (shouldBackfillFromAuth) {
       const { data: authUser } = await supabase.auth.admin.getUserById(req.userId);
       if (authUser?.user) {
         const { id, email, user_metadata } = authUser.user;
@@ -20,6 +27,7 @@ const getCurrentUser = async (req: Request, res: Response) => {
             email: email || undefined,
             name: user_metadata?.name || user_metadata?.full_name,
             image: user_metadata?.picture,
+            phone: user_metadata?.phone,
           },
           { onConflict: "id" }
         );
@@ -41,21 +49,17 @@ const getCurrentUser = async (req: Request, res: Response) => {
 
 const createCurrentUser = async (req: Request, res: Response) => {
   try {
-    const { data: existingUser } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", req.userId)
-      .single();
-
-    if (existingUser) {
-      return res.status(200).send();
-    }
-
     const { data: authUser } = await supabase.auth.admin.getUserById(req.userId);
     if (authUser?.user) {
       const { id, email, user_metadata } = authUser.user;
       await supabase.from("profiles").upsert(
-        { id, email: email || undefined, name: user_metadata?.name || user_metadata?.full_name, image: user_metadata?.picture },
+        {
+          id,
+          email: email || undefined,
+          name: user_metadata?.name || user_metadata?.full_name,
+          image: user_metadata?.picture,
+          phone: user_metadata?.phone,
+        },
         { onConflict: "id" }
       );
       return res.status(200).send();
@@ -70,11 +74,28 @@ const createCurrentUser = async (req: Request, res: Response) => {
 
 const updateCurrentUser = async (req: Request, res: Response) => {
   try {
-    const { name, addressLine1, country, city } = req.body;
+    const { name, addressLine1, country, city, phone } = req.body;
+
+    const updatePayload: {
+      name: string;
+      address_line1: string;
+      city: string;
+      country: string;
+      phone?: string;
+    } = {
+      name,
+      address_line1: addressLine1,
+      city,
+      country,
+    };
+
+    if (typeof phone === "string") {
+      updatePayload.phone = phone;
+    }
 
     const { data: user, error } = await supabase
       .from("profiles")
-      .update({ name, address_line1: addressLine1, city, country })
+      .update(updatePayload)
       .eq("id", req.userId)
       .select()
       .single();

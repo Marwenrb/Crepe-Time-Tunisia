@@ -24,6 +24,7 @@ export const useGetMyUser = () => {
 
 type UpdateMyUserRequest = {
   name: string;
+  phone?: string;
   addressLine1: string;
   city: string;
   country: string;

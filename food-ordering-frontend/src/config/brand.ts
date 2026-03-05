@@ -12,5 +12,5 @@ export const BRAND = {
   logo: "/crepe-time-logo.png",
 
   /** Favicon for browser tab */
-  favicon: "/crepe-time-logo.png",
+  favicon: "/favicon-32x32.png",
 } as const;

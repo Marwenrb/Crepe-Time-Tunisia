@@ -15,6 +15,11 @@ const handleValidationErrors = async (
 
 export const validateMyUserRequest = [
   body("name").isString().notEmpty().withMessage("Name must be a string"),
+  body("phone")
+    .optional()
+    .isString()
+    .isLength({ min: 8 })
+    .withMessage("Phone must be a string with at least 8 characters"),
   body("addressLine1")
     .isString()
     .notEmpty()
