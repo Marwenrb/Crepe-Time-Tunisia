@@ -101,6 +101,19 @@ module.exports = {
           "0%, 100%": { boxShadow: "0 0 20px rgba(212, 175, 55, 0.2)" },
           "50%": { boxShadow: "0 0 30px rgba(212, 175, 55, 0.4)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        "orb-drift": {
+          "0%, 100%": { opacity: "0.15", transform: "scale(1) translate(0, 0)" },
+          "33%":       { opacity: "0.25", transform: "scale(1.06) translate(10px, -8px)" },
+          "66%":       { opacity: "0.18", transform: "scale(0.97) translate(-8px, 6px)" },
+        },
+        "gradient-x": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%":       { backgroundPosition: "100% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -109,6 +122,9 @@ module.exports = {
         "fade-in-up": "fade-in-up 0.5s ease-out forwards",
         "scale-in": "scale-in 0.3s ease-out forwards",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "float": "float 4s ease-in-out infinite",
+        "orb-drift": "orb-drift 8s ease-in-out infinite",
+        "gradient-x": "gradient-x 4s ease infinite",
       },
       boxShadow: {
         "header": "0 4px 30px rgba(76, 29, 149, 0.08)",

@@ -1,4 +1,5 @@
 import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { BRAND } from "@/config/brand";
 
 const CONTACT = {
@@ -43,16 +44,117 @@ const Footer = () => {
                 CT
               </div>
             </div>
-            <div className="flex flex-col">
-              <span className="inline-flex items-center">
-                <span className="bg-gradient-to-r from-white via-crepe-gold-light to-white bg-clip-text text-transparent font-heading font-bold text-xl sm:text-2xl tracking-tight leading-none drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)]">
-                  Crêpe Time
+            {/*
+             * Premium brand signature
+             * — Motion variant system drives coordinated hover choreography:
+             *   1. Shine sweep scrolls left→right across the brand name
+             *   2. Hairline expands from origin-left to full width
+             *   3. Tagline lifts 2px + opacity boost
+             * — cursor-default prevents text-cursor on the lockup
+             */}
+            <motion.div
+              className="flex flex-col gap-0.5 cursor-default"
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              {/* ── Brand name with shine sweep ── */}
+              <div className="relative overflow-hidden inline-block leading-none">
+                <span
+                  className="font-heading font-black block"
+                  style={{
+                    fontSize: "clamp(1.35rem, 2.4vw, 1.85rem)",
+                    letterSpacing: "-0.03em",
+                    background:
+                      "linear-gradient(135deg, #E5C76B 0%, #D4AF37 22%, #FFFFFF 50%, #E5C76B 78%, #C9A227 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    filter: "drop-shadow(0 1px 12px rgba(212,175,55,0.5))",
+                  }}
+                >
+                  {BRAND.name}
                 </span>
-              </span>
-              <span className="mt-1 text-crepe-gold/95 text-[10px] sm:text-xs tracking-[0.24em] uppercase font-semibold">
-                {BRAND.tagline}
-              </span>
-            </div>
+
+                {/*
+                 * Shine overlay — starts 110% left of its own width (off-screen left),
+                 * slides to 210% on hover (off-screen right).
+                 * Parent overflow-hidden clips it cleanly.
+                 */}
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute inset-y-0 pointer-events-none"
+                  style={{
+                    width: "55%",
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent)",
+                    skewX: -18,
+                  }}
+                  variants={{
+                    rest: { x: "-120%" },
+                    hover: { x: "260%" },
+                  }}
+                  transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </div>
+
+              {/* ── Expanding hairline ── */}
+              <motion.span
+                aria-hidden="true"
+                className="block h-px"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(212,175,55,0.65), transparent)",
+                  transformOrigin: "left",
+                }}
+                variants={{
+                  rest: { scaleX: 0.55, opacity: 0.45 },
+                  hover: { scaleX: 1, opacity: 0.85 },
+                }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              />
+
+              {/* ── Tagline — lifts on hover ── */}
+              <motion.span
+                className="flex items-center gap-1.5 mt-0.5"
+                variants={{
+                  rest: { y: 0, opacity: 0.65 },
+                  hover: { y: -2, opacity: 1 },
+                }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <motion.span
+                  aria-hidden="true"
+                  className="text-[8px]"
+                  style={{ color: "rgba(212,175,55,0.7)" }}
+                  variants={{
+                    rest: { rotate: 0 },
+                    hover: { rotate: 72 },
+                  }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  ✦
+                </motion.span>
+                <span
+                  className="text-[10px] sm:text-[11px] font-bold tracking-[0.26em] uppercase"
+                  style={{ color: "rgba(212,175,55,0.85)" }}
+                >
+                  {BRAND.tagline}
+                </span>
+                <motion.span
+                  aria-hidden="true"
+                  className="text-[8px]"
+                  style={{ color: "rgba(212,175,55,0.7)" }}
+                  variants={{
+                    rest: { rotate: 0 },
+                    hover: { rotate: -72 },
+                  }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  ✦
+                </motion.span>
+              </motion.span>
+            </motion.div>
           </div>
 
           {/* Contact + Social inline */}
