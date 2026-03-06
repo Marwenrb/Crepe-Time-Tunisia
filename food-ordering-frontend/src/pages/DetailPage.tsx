@@ -37,6 +37,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Brand signature
+import { LuxurySignatureTitle } from "@/components/home/LuxurySignatureTitle";
+
 // New premium components
 import { MenuHero } from "@/components/menu/MenuHero";
 import { CategoryNav } from "@/components/menu/CategoryNav";
@@ -71,12 +74,12 @@ const DarkSkeleton = ({
 }) => (
   <div
     className={`rounded-lg animate-pulse ${className}`}
-    style={{ background: "rgba(76,29,149,0.15)", ...style }}
+    style={{ background: "rgba(255,255,255,0.12)", ...style }}
   />
 );
 
 const LoadingState = () => (
-  <div className="min-h-screen" style={{ background: "#0F0A1F" }}>
+  <div className="min-h-screen" style={{ background: "#4C1D95" }}>
     {/* Hero skeleton */}
     <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: "16/7" }}>
       <DarkSkeleton className="w-full h-full rounded-none" />
@@ -93,7 +96,7 @@ const LoadingState = () => (
     <div className="container pb-16 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 pt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-2xl overflow-hidden" style={{ background: "rgba(26,18,51,0.7)" }}>
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
             <DarkSkeleton style={{ aspectRatio: "4/3" }} className="w-full" />
             <div className="p-4 space-y-3">
               <DarkSkeleton style={{ height: 20, width: "75%" }} />
@@ -103,7 +106,7 @@ const LoadingState = () => (
           </div>
         ))}
       </div>
-      <div className="rounded-2xl p-5 space-y-4" style={{ background: "rgba(19,13,40,0.85)" }}>
+      <div className="rounded-2xl p-5 space-y-4" style={{ background: "rgba(0,0,0,0.25)" }}>
         <DarkSkeleton style={{ height: 24, width: "60%" }} />
         {[1, 2, 3].map((i) => (
           <DarkSkeleton key={i} style={{ height: 44 }} className="w-full" />
@@ -284,7 +287,7 @@ const DetailPage = () => {
   return (
     <div
       className="min-h-screen relative"
-      style={{ background: "#0F0A1F" }}
+      style={{ background: "#4C1D95" }}
     >
       {/* ── Decorative background orbs (non-interactive depth layer) ── */}
       <div
@@ -293,23 +296,23 @@ const DetailPage = () => {
         style={{ zIndex: 0 }}
       >
         <div
-          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-20"
+          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-30"
           style={{
-            background: "radial-gradient(circle, #4C1D95 0%, transparent 70%)",
+            background: "radial-gradient(circle, #7C3AED 0%, transparent 70%)",
             filter: "blur(60px)",
           }}
         />
         <div
-          className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full opacity-10"
+          className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full opacity-20"
           style={{
             background: "radial-gradient(circle, #D4AF37 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
         />
         <div
-          className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full opacity-15"
+          className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full opacity-20"
           style={{
-            background: "radial-gradient(circle, #4C1D95 0%, transparent 70%)",
+            background: "radial-gradient(circle, #3B0764 0%, transparent 70%)",
             filter: "blur(70px)",
           }}
         />
@@ -317,6 +320,63 @@ const DetailPage = () => {
 
       {/* ── Page content ── */}
       <div className="relative z-10">
+
+        {/* 0. Brand signature header */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="container pt-8 pb-4 flex flex-col items-center text-center"
+        >
+          <h1 className="flex flex-col items-center gap-1 sm:gap-1.5">
+            {/* Eyebrow — fine ornamental line */}
+            <span className="flex items-center gap-2 sm:gap-3">
+              <span
+                className="h-px w-6 sm:w-8"
+                style={{ background: "linear-gradient(to right, transparent, #D4AF37)" }}
+              />
+              <span
+                className="text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase"
+                style={{ color: "#C9A227" }}
+              >
+                Artisan · Nabeul · Est. 2021
+              </span>
+              <span
+                className="h-px w-6 sm:w-8"
+                style={{ background: "linear-gradient(to left, transparent, #D4AF37)" }}
+              />
+            </span>
+
+            {/* "La Signature" — cinematic animated title */}
+            <LuxurySignatureTitle />
+
+            {/* "Crêpe Time" — dominant brand name */}
+            <span
+              className="font-heading font-black leading-none"
+              style={{
+                fontSize: "clamp(2.6rem, 8vw, 5.5rem)",
+                letterSpacing: "-0.04em",
+                background:
+                  "linear-gradient(135deg, #B8901F 0%, #D4AF37 28%, #E5C76B 52%, #D4AF37 72%, #C9A227 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 2px 14px rgba(212,175,55,0.28))",
+              }}
+            >
+              Crêpe Time
+            </span>
+          </h1>
+
+          {/* Separator */}
+          <div
+            className="mt-5 h-px w-24 sm:w-32"
+            style={{
+              background:
+                "linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent)",
+            }}
+          />
+        </motion.div>
 
         {/* 1. Hero */}
         <div className="container pt-4 pb-0">
