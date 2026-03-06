@@ -200,14 +200,14 @@ const Footer = () => {
             <span className="text-white/60 hover:text-crepe-gold cursor-pointer transition-colors">Conditions d&apos;utilisation</span>
           </div>
           <div className="flex flex-col sm:items-end gap-1 text-xs">
-            <span className="text-white/80">© {new Date().getFullYear()} <span className="text-crepe-gold font-semibold">Crêpe Time Tunisia</span>. Tous droits réservés.</span>
+            <span className="text-white/80">© 2021 <span className="text-crepe-gold font-semibold">Crêpe Time</span>. Tous droits réservés.</span>
             <div className="flex flex-wrap items-center justify-center sm:justify-end gap-1.5 text-white/70">
               <Code2 className="h-3.5 w-3.5 text-crepe-gold/80" />
               <span>Built with passion & precision</span>
               <span className="text-white/40">•</span>
               <a href="https://marwen-rabai.netlify.app" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-crepe-gold hover:text-crepe-gold-light font-medium transition-colors" title="Digital Architect & Event Designer">
                 <Heart className="h-3 w-3 fill-current" />
-                Marwen Rabai
+                Digital Team
               </a>
             </div>
           </div>
