@@ -1,12 +1,32 @@
-import { useGetRestaurant } from "@/api/RestaurantApi";
-import MenuItem from "@/components/MenuItem";
-import OrderSummary from "@/components/OrderSummary";
-import RestaurantInfo from "@/components/RestaurantInfo";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Card, CardFooter } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
+/**
+ * DetailPage — Premium Menu Page for Crêpe Time.
+ *
+ * Architecture overview:
+ *  ┌──────────────────────────────────────────────┐
+ *  │  MenuHero (cinematic full-bleed)              │
+ *  ├──────────────────────────────────────────────┤
+ *  │  CategoryNav (sticky glassmorphism bar)       │
+ *  ├────────────────────────┬─────────────────────┤
+ *  │  Menu grid             │  Cart sidebar        │
+ *  │  PremiumMenuCard ×N    │  OrderSummary        │
+ *  │                        │  CheckoutButton      │
+ *  └────────────────────────┴─────────────────────┘
+ *
+ *  When a card is clicked → ProductModal opens with larger image + details.
+ *
+ * Design decisions:
+ *  - Full page background is crepe-dark (#0F0A1F) — the new premium design
+ *    owns the entire viewport, not just a content column.
+ *  - Decorative glow orbs are absolutely positioned to add depth without
+ *    affecting layout flow.
+ *  - Load skeleton mirrors the final layout with correct dark colours,
+ *    so the transition from loading → loaded feels seamless.
+ *  - Category filter is purely a client-side derived view — it imposes
+ *    no API changes since the data model has no category field.
+ */
 
+import { useGetRestaurant } from "@/api/RestaurantApi";
+import { useState, useEffect, useMemo, CSSProperties } from "react";
 import { useParams } from "react-router-dom";
 import { MenuItem as MenuItemType } from "../types";
 import CheckoutButton from "@/components/CheckoutButton";
@@ -15,7 +35,19 @@ import { GuestFormData } from "@/forms/guest-checkout-form/GuestCheckoutForm";
 import { useCreateOrder, useCreateGuestOrder } from "@/api/OrderApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 
+// New premium components
+import { MenuHero } from "@/components/menu/MenuHero";
+import { CategoryNav } from "@/components/menu/CategoryNav";
+import { PremiumMenuCard } from "@/components/menu/PremiumMenuCard";
+import { ProductModal } from "@/components/menu/ProductModal";
+import OrderSummary from "@/components/OrderSummary";
+
+// Category config
+import { MENU_CATEGORIES, getCategoryId } from "@/config/menu-categories";
+
+// ── CartItem type (also used by OrderSummary + CheckoutButton) ──────────────
 export type CartItem = {
   _id: string;
   name: string;
@@ -23,100 +55,157 @@ export type CartItem = {
   quantity: number;
 };
 
+// ── Grid entrance animation ──────────────────────────────────────────────────
+const gridVariants = {
+  hidden:  {},
+  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+};
+
+// ── Loading skeleton (dark theme) ────────────────────────────────────────────
+const DarkSkeleton = ({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: CSSProperties;
+}) => (
+  <div
+    className={`rounded-lg animate-pulse ${className}`}
+    style={{ background: "rgba(76,29,149,0.15)", ...style }}
+  />
+);
+
+const LoadingState = () => (
+  <div className="min-h-screen" style={{ background: "#0F0A1F" }}>
+    {/* Hero skeleton */}
+    <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: "16/7" }}>
+      <DarkSkeleton className="w-full h-full rounded-none" />
+    </div>
+
+    {/* Category nav skeleton */}
+    <div className="container mt-0 py-3 flex gap-2">
+      {[80, 90, 75, 85, 70].map((w, i) => (
+        <DarkSkeleton key={i} style={{ width: w, height: 36, borderRadius: 999 }} className="" />
+      ))}
+    </div>
+
+    {/* Grid skeleton */}
+    <div className="container pb-16 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 pt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ background: "rgba(26,18,51,0.7)" }}>
+            <DarkSkeleton style={{ aspectRatio: "4/3" }} className="w-full" />
+            <div className="p-4 space-y-3">
+              <DarkSkeleton style={{ height: 20, width: "75%" }} />
+              <DarkSkeleton style={{ height: 16, width: "40%" }} />
+              <DarkSkeleton style={{ height: 36 }} className="w-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="rounded-2xl p-5 space-y-4" style={{ background: "rgba(19,13,40,0.85)" }}>
+        <DarkSkeleton style={{ height: 24, width: "60%" }} />
+        {[1, 2, 3].map((i) => (
+          <DarkSkeleton key={i} style={{ height: 44 }} className="w-full" />
+        ))}
+        <DarkSkeleton style={{ height: 48 }} className="w-full" />
+      </div>
+    </div>
+  </div>
+);
+
+// ── Main page component ──────────────────────────────────────────────────────
 const DetailPage = () => {
   const { restaurantId } = useParams();
   const navigate = useNavigate();
+
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
   const { createOrder, isLoading: isOrderLoading } = useCreateOrder();
   const { createGuestOrder, isLoading: isGuestOrderLoading } = useCreateGuestOrder();
 
-  // Helper to clear cart for this restaurant
-  function clearCart(restaurantId: string | undefined) {
-    if (!restaurantId) return;
-    sessionStorage.removeItem(`cartItems-${restaurantId}`);
-  }
-  // Clear cart when leaving DetailPage (unmount)
-  useEffect(() => {
-    return () => clearCart(restaurantId);
-  }, [restaurantId]);
-
+  // Cart state — persisted to sessionStorage per restaurant ──────────────────
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
-    return storedCartItems ? JSON.parse(storedCartItems) : [];
+    try {
+      const stored = sessionStorage.getItem(`cartItems-${restaurantId}`);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
   });
 
-  const addToCart = (menuItem: MenuItemType) => {
-    setCartItems((prevCartItems) => {
-      const existingCartItem = prevCartItems.find(
-        (cartItem) => cartItem._id === menuItem._id
-      );
+  // Clear cart on unmount
+  useEffect(() => {
+    return () => {
+      if (restaurantId) sessionStorage.removeItem(`cartItems-${restaurantId}`);
+    };
+  }, [restaurantId]);
 
-      let updatedCartItems;
+  // Category filter state ────────────────────────────────────────────────────
+  const [activeCategory, setActiveCategory] = useState("all");
 
-      if (existingCartItem) {
-        updatedCartItems = prevCartItems.map((cartItem) =>
-          cartItem._id === menuItem._id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      } else {
-        updatedCartItems = [
-          ...prevCartItems,
-          {
-            _id: menuItem._id,
-            name: menuItem.name,
-            price: menuItem.price,
-            quantity: 1,
-          },
-        ];
-      }
+  // Product modal state ──────────────────────────────────────────────────────
+  const [modalItem, setModalItem] = useState<MenuItemType | null>(null);
 
-      sessionStorage.setItem(
-        `cartItems-${restaurantId}`,
-        JSON.stringify(updatedCartItems)
-      );
+  // Derived list of filtered menu items ─────────────────────────────────────
+  const filteredItems = useMemo(() => {
+    if (!restaurant) return [];
+    if (activeCategory === "all") return restaurant.menuItems;
+    return restaurant.menuItems.filter(
+      (item) => getCategoryId(item.name) === activeCategory
+    );
+  }, [restaurant, activeCategory]);
 
-      return updatedCartItems;
+  // Cart helpers ─────────────────────────────────────────────────────────────
+  const persistCart = (items: CartItem[]) => {
+    sessionStorage.setItem(`cartItems-${restaurantId}`, JSON.stringify(items));
+  };
+
+  const addToCart = (menuItem: MenuItemType, qty = 1) => {
+    setCartItems((prev) => {
+      const existing = prev.find((c) => c._id === menuItem._id);
+      const updated = existing
+        ? prev.map((c) =>
+            c._id === menuItem._id ? { ...c, quantity: c.quantity + qty } : c
+          )
+        : [
+            ...prev,
+            { _id: menuItem._id, name: menuItem.name, price: menuItem.price, quantity: qty },
+          ];
+      persistCart(updated);
+      return updated;
     });
   };
 
   const removeFromCart = (cartItem: CartItem) => {
-    setCartItems((prevCartItems) => {
-      const updatedCartItems = prevCartItems.filter(
-        (item) => cartItem._id !== item._id
-      );
-
-      sessionStorage.setItem(
-        `cartItems-${restaurantId}`,
-        JSON.stringify(updatedCartItems)
-      );
-
-      return updatedCartItems;
+    setCartItems((prev) => {
+      const updated = prev.filter((c) => c._id !== cartItem._id);
+      persistCart(updated);
+      return updated;
     });
   };
 
   const updateCartItemQuantity = (cartItem: CartItem, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setCartItems((prevCartItems) => {
-      const updatedCartItems = prevCartItems.map((item) =>
-        item._id === cartItem._id ? { ...item, quantity: newQuantity } : item
+    setCartItems((prev) => {
+      const updated = prev.map((c) =>
+        c._id === cartItem._id ? { ...c, quantity: newQuantity } : c
       );
-      sessionStorage.setItem(
-        `cartItems-${restaurantId}`,
-        JSON.stringify(updatedCartItems)
-      );
-      return updatedCartItems;
+      persistCart(updated);
+      return updated;
     });
   };
 
+  const getCartQty = (itemId: string) =>
+    cartItems.find((c) => c._id === itemId)?.quantity ?? 0;
+
+  // Checkout handlers ────────────────────────────────────────────────────────
   const onCheckout = async (userFormData: UserFormData) => {
     if (!restaurant) return;
-
     const orderData = {
-      cartItems: cartItems.map((cartItem) => ({
-        menuItemId: cartItem._id,
-        name: cartItem.name,
-        quantity: cartItem.quantity.toString(),
+      cartItems: cartItems.map((c) => ({
+        menuItemId: c._id,
+        name: c.name,
+        quantity: c.quantity.toString(),
       })),
       restaurantId: restaurant._id,
       deliveryDetails: {
@@ -129,7 +218,6 @@ const DetailPage = () => {
       },
       paymentMethod: "cash" as const,
     };
-
     const data = await createOrder(orderData);
     if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
     toast.success("Commande confirmée ! Paiement à la livraison.");
@@ -139,12 +227,11 @@ const DetailPage = () => {
 
   const onGuestCheckout = async (guestFormData: GuestFormData) => {
     if (!restaurant) return;
-
     const orderData = {
-      cartItems: cartItems.map((cartItem) => ({
-        menuItemId: cartItem._id,
-        name: cartItem.name,
-        quantity: cartItem.quantity.toString(),
+      cartItems: cartItems.map((c) => ({
+        menuItemId: c._id,
+        name: c.name,
+        quantity: c.quantity.toString(),
       })),
       restaurantId: restaurant._id,
       deliveryDetails: {
@@ -157,7 +244,6 @@ const DetailPage = () => {
       },
       paymentMethod: "cash" as const,
     };
-
     const data = await createGuestOrder(orderData);
     if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
     toast.success("Commande confirmée ! Paiement à la livraison.");
@@ -165,99 +251,162 @@ const DetailPage = () => {
     navigate(`/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`);
   };
 
-  if (isLoading || !restaurant) {
-    return (
-      <div className="flex flex-col gap-10">
-        <AspectRatio ratio={8 / 2}>
-          <Skeleton className="h-full w-full rounded-md" />
-        </AspectRatio>
-        <div className="grid md:grid-cols-[4fr_2fr] gap-5 md:px-0">
-          <div className="flex flex-col gap-4">
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-64" />
-              <Skeleton className="h-4 w-48" />
-              <div className="flex gap-2">
-                <Skeleton className="h-6 w-20" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-            </div>
-            <Skeleton className="h-7 w-24" />
-            {[...Array(3)].map((_, index) => (
-              <div key={index} className="flex gap-4 p-4 border rounded-lg">
-                <Skeleton className="h-24 w-24 rounded-md" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-9 w-28" />
-                </div>
-              </div>
-            ))}
-          </div>
+  // ── Loading & error states ─────────────────────────────────────────────────
+  if (isLoading || !restaurant) return <LoadingState />;
 
-          <div>
-            <Card>
-              <div className="p-6 space-y-4">
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <CardFooter>
-                <Skeleton className="h-10 w-full" />
-              </CardFooter>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10">
-      <div className="rounded-lg sm:rounded-xl overflow-hidden -mx-4 sm:mx-0">
-        <AspectRatio ratio={8 / 2}>
-          <img
-            src={restaurant.imageUrl}
-            alt={restaurant.restaurantName}
-            className="object-cover h-full w-full"
-          />
-        </AspectRatio>
+    <div
+      className="min-h-screen relative"
+      style={{ background: "#0F0A1F" }}
+    >
+      {/* ── Decorative background orbs (non-interactive depth layer) ── */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none overflow-hidden"
+        style={{ zIndex: 0 }}
+      >
+        <div
+          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-20"
+          style={{
+            background: "radial-gradient(circle, #4C1D95 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+        />
+        <div
+          className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full opacity-10"
+          style={{
+            background: "radial-gradient(circle, #D4AF37 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full opacity-15"
+          style={{
+            background: "radial-gradient(circle, #4C1D95 0%, transparent 70%)",
+            filter: "blur(70px)",
+          }}
+        />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[4fr_2fr] gap-6 lg:gap-8">
-        <div className="flex flex-col gap-4 order-2 lg:order-1">
-          <RestaurantInfo restaurant={restaurant} />
-          <span className="text-xl sm:text-2xl font-bold tracking-tight">Notre Menu</span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-            {restaurant.menuItems.map((menuItem) => (
-              <MenuItem
-                key={menuItem._id}
-                menuItem={menuItem}
-                addToCart={() => addToCart(menuItem)}
-              />
-            ))}
-          </div>
+
+      {/* ── Page content ── */}
+      <div className="relative z-10">
+
+        {/* 1. Hero */}
+        <div className="container pt-4 pb-0">
+          <MenuHero restaurant={restaurant} />
         </div>
 
-        <div className="order-1 lg:order-2 lg:sticky lg:top-24 lg:self-start">
-          <Card>
-            <OrderSummary
-              restaurant={restaurant}
-              cartItems={cartItems}
-              removeFromCart={removeFromCart}
-              updateCartItemQuantity={updateCartItemQuantity}
-            />
-            <CardFooter>
-              <CheckoutButton
-                disabled={cartItems.length === 0}
-                onCheckout={onCheckout}
-                onGuestCheckout={onGuestCheckout}
-                isLoading={isOrderLoading}
-                isGuestLoading={isGuestOrderLoading}
+        {/* 2. Category navigation */}
+        <div className="container">
+          <CategoryNav
+            categories={MENU_CATEGORIES}
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+            menuItems={restaurant.menuItems}
+          />
+        </div>
+
+        {/* 3. Main content grid: menu left | cart right */}
+        <div className="container py-8 lg:py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-8">
+
+            {/* ── Menu Grid ── */}
+            <div className="order-2 lg:order-1">
+              {/* Section header */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(212,175,55,0.3), transparent)" }} />
+                <h2
+                  className="text-white/60 text-xs font-semibold uppercase tracking-[0.2em] whitespace-nowrap"
+                >
+                  {activeCategory === "all"
+                    ? `${restaurant.menuItems.length} créations`
+                    : `${filteredItems.length} créations · ${MENU_CATEGORIES.find(c => c.id === activeCategory)?.label}`}
+                </h2>
+                <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.3))" }} />
+              </div>
+
+              {/* Animated grid */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCategory}
+                  variants={gridVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
+                >
+                  {filteredItems.length > 0 ? (
+                    filteredItems.map((menuItem, i) => (
+                      <PremiumMenuCard
+                        key={menuItem._id}
+                        menuItem={menuItem}
+                        index={i}
+                        cartQuantity={getCartQty(menuItem._id)}
+                        addToCart={() => addToCart(menuItem)}
+                        onCardClick={() => setModalItem(menuItem)}
+                      />
+                    ))
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="col-span-full flex flex-col items-center justify-center py-20 text-center"
+                    >
+                      <div
+                        className="text-4xl mb-3 opacity-30"
+                        style={{ filter: "grayscale(1)" }}
+                      >
+                        🥞
+                      </div>
+                      <p style={{ color: "rgba(255,255,255,0.3)" }} className="text-sm">
+                        Aucune crêpe dans cette catégorie
+                      </p>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* ── Cart sidebar ── */}
+            <div className="order-1 lg:order-2 lg:sticky lg:top-24 lg:self-start">
+              <OrderSummary
+                restaurant={restaurant}
+                cartItems={cartItems}
+                removeFromCart={removeFromCart}
+                updateCartItemQuantity={updateCartItemQuantity}
               />
-            </CardFooter>
-          </Card>
+
+              {/* Checkout button */}
+              <div className="mt-3">
+                <CheckoutButton
+                  disabled={cartItems.length === 0}
+                  onCheckout={onCheckout}
+                  onGuestCheckout={onGuestCheckout}
+                  isLoading={isOrderLoading}
+                  isGuestLoading={isGuestOrderLoading}
+                />
+              </div>
+
+              {/* Security note */}
+              <p
+                className="text-center text-xs mt-3"
+                style={{ color: "rgba(255,255,255,0.2)" }}
+              >
+                Paiement en espèces à la livraison · Sécurisé
+              </p>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* 4. Product detail modal */}
+      <ProductModal
+        item={modalItem}
+        isOpen={!!modalItem}
+        onClose={() => setModalItem(null)}
+        onAddToCart={(item, qty) => addToCart(item, qty)}
+        initialCartQty={modalItem ? getCartQty(modalItem._id) : 0}
+      />
     </div>
   );
 };

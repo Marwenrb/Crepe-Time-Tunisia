@@ -3,6 +3,7 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 import { ShoppingBag, DollarSign, Hash } from "lucide-react";
+import { formatCurrency } from "@/lib/formatters";
 
 type Props = {
   order: Order;
@@ -25,9 +26,6 @@ const OrderRightColumn = ({ order }: Props) => {
       ? order.totalAmount
       : computedSubtotal + order.restaurant.deliveryPrice;
 
-  const formatCurrency = (amount: number) => {
-    return `${(amount / 100).toFixed(2)} TND`;
-  };
   // Helper function to format date and time
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -47,24 +45,6 @@ const OrderRightColumn = ({ order }: Props) => {
 
   return (
     <div className="space-y-6">
-      {/* Restaurant Image */}
-      {/* <div className="space-y-4">
-        <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-          <Building2 className="h-4 w-4" />
-          Restaurant Image
-        </div>
-        <AspectRatio ratio={16 / 5}>
-          <img
-            src={order.restaurant.imageUrl}
-            alt={order.restaurant.restaurantName}
-            className="rounded-md object-cover h-full w-full"
-          />
-        </AspectRatio>
-        <div className="text-center text-sm text-muted-foreground">
-          {order.restaurant.restaurantName}
-        </div>
-      </div> */}
-
       {/* Order Information */}
       <Card className="">
         <CardHeader className="pb-3">

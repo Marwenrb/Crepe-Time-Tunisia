@@ -1,4 +1,5 @@
 import type { Order } from "@/types";
+import { formatCurrency, formatDateTime } from "@/lib/formatters";
 
 const getDeliveryDetails = (order: Order) => {
   const d = order.deliveryDetails || (order as { delivery_details?: Record<string, unknown> }).delivery_details;
@@ -9,21 +10,6 @@ const getDeliveryDetails = (order: Order) => {
     email: String(d?.email ?? ""),
     phone: String(d?.phone ?? ""),
   };
-};
-
-const formatCurrency = (amount: number) => {
-  const safe = Number(amount) || 0;
-  return `${(safe / 100).toFixed(2)} TND`;
-};
-
-const formatDateTime = (dateString: string) => {
-  return new Date(dateString).toLocaleString("fr-FR", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 };
 
 const getStatusLabel = (status: string) => {

@@ -1,47 +1,39 @@
-import type { MenuItem } from "../types";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { AspectRatio } from "./ui/aspect-ratio";
-import { Button } from "./ui/button";
-import { ShoppingCart } from "lucide-react";
-import { getMenuItemImage } from "@/config/menu-images";
+/**
+ * MenuItem — thin wrapper that delegates to PremiumMenuCard.
+ *
+ * Kept as a stable import path so other code that may reference
+ * this component does not break. All visual logic lives in PremiumMenuCard.
+ */
+
+import type { MenuItem as MenuItemType } from "../types";
+import { PremiumMenuCard } from "./menu/PremiumMenuCard";
 
 type Props = {
-  menuItem: MenuItem;
+  menuItem: MenuItemType;
   addToCart: () => void;
+  /** Position in the rendered list (drives stagger entrance animation) */
+  index?: number;
+  /** Number of this item currently in the cart */
+  cartQuantity?: number;
+  /** Called when the card body is clicked to open the detail modal */
+  onCardClick?: () => void;
 };
 
-const MenuItem = ({ menuItem, addToCart }: Props) => {
-  const imageUrl = getMenuItemImage(menuItem.name, menuItem.imageUrl);
+const MenuItem = ({
+  menuItem,
+  addToCart,
+  index = 0,
+  cartQuantity = 0,
+  onCardClick = () => {},
+}: Props) => {
   return (
-    <Card className="overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 animate-fade-in">
-      <AspectRatio ratio={16 / 9}>
-        <img
-          src={imageUrl}
-          alt={menuItem.name}
-          className="object-cover w-full h-full"
-        />
-      </AspectRatio>
-      <CardHeader>
-        <CardTitle className="font-bold text-gray-800">
-          {menuItem.name}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="font-bold text-gray-800">
-          {(menuItem.price / 100).toFixed(2)} TND
-        </div>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            addToCart();
-          }}
-          className="w-full bg-crepe-purple hover:bg-crepe-purple/90"
-        >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          Ajouter au panier
-        </Button>
-      </CardContent>
-    </Card>
+    <PremiumMenuCard
+      menuItem={menuItem}
+      addToCart={addToCart}
+      index={index}
+      cartQuantity={cartQuantity}
+      onCardClick={onCardClick}
+    />
   );
 };
 

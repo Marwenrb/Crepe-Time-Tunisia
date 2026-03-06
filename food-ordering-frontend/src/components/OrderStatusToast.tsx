@@ -1,46 +1,13 @@
 import { OrderStatus } from "@/types";
 import { toast } from "sonner";
-import { CheckCircle, AlertCircle, Truck, ChefHat } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { getStatusColor, getStatusIcon } from "@/lib/statusUtils";
 
 interface OrderStatusToastProps {
   status: OrderStatus;
   customerName: string;
   orderId: string;
 }
-
-const getStatusIcon = (status: OrderStatus) => {
-  switch (status) {
-    case "placed":
-      return <AlertCircle className="h-4 w-4" />;
-    case "confirmed":
-      return <CheckCircle className="h-4 w-4" />;
-    case "inProgress":
-      return <ChefHat className="h-4 w-4" />;
-    case "outForDelivery":
-      return <Truck className="h-4 w-4" />;
-    case "delivered":
-      return <CheckCircle className="h-4 w-4" />;
-    default:
-      return <AlertCircle className="h-4 w-4" />;
-  }
-};
-
-const getStatusColor = (status: OrderStatus) => {
-  switch (status) {
-    case "placed":
-      return "bg-gray-100 text-gray-800";
-    case "confirmed":
-      return "bg-blue-100 text-blue-800";
-    case "inProgress":
-      return "bg-yellow-100 text-yellow-800";
-    case "outForDelivery":
-      return "bg-orange-100 text-orange-800";
-    case "delivered":
-      return "bg-green-100 text-green-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
 
 const getStatusMessage = (status: OrderStatus) => {
   switch (status) {

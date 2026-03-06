@@ -53,19 +53,6 @@ const PerformanceOptimizer = () => {
     )[0] as PerformanceNavigationTiming;
     let loadTime = 0;
 
-    // Debug navigation timing
-    console.log("Navigation Timing Debug:", {
-      navigation: navigation
-        ? {
-            loadEventStart: navigation.loadEventStart,
-            loadEventEnd: navigation.loadEventEnd,
-            domContentLoadedEventStart: navigation.domContentLoadedEventStart,
-            domContentLoadedEventEnd: navigation.domContentLoadedEventEnd,
-            domComplete: navigation.domComplete,
-          }
-        : "No navigation timing available",
-    });
-
     if (
       navigation &&
       navigation.loadEventEnd > 0 &&
@@ -116,11 +103,6 @@ const PerformanceOptimizer = () => {
       resources.push(...retryResources);
     } else {
       // Use the original resources array to avoid duplication
-      console.log(
-        "Using original resources array with",
-        resources.length,
-        "resources"
-      );
     }
 
     // Improved JS resource detection (including Vite dev server)
@@ -141,16 +123,6 @@ const PerformanceOptimizer = () => {
       );
     });
 
-    // Debug JS resources
-    console.log("JS Resources Debug:", {
-      totalResources: resources.length,
-      jsResourcesFound: jsResources.length,
-      sampleResources: resources.slice(0, 5).map((r) => ({
-        name: r.name,
-        size: r.transferSize || r.decodedBodySize || 0,
-      })),
-      jsResourceNames: jsResources.map((r) => r.name),
-    });
     const bundleSize = jsResources.reduce((total, resource) => {
       return total + (resource.transferSize || resource.decodedBodySize || 0);
     }, 0);
@@ -225,21 +197,6 @@ const PerformanceOptimizer = () => {
           : 20;
     }
 
-    // Debug caching and compression
-    console.log("Caching/Compression Debug:", {
-      isDevelopment: isDevelopment,
-      totalResources: resources.length,
-      cachedResources: cachedResources,
-      compressedResources: compressedResources,
-      finalCaching: caching,
-      finalCompression: compression,
-      sampleResourceSizes: resources.slice(0, 3).map((r) => ({
-        name: r.name.split("/").pop(),
-        transferSize: r.transferSize,
-        decodedSize: r.decodedBodySize,
-      })),
-    });
-
     // Calculate overall score based on real metrics with load time factor
     const loadTimeScore =
       loadTime < 1000 ? 100 : loadTime < 2000 ? 80 : loadTime < 3000 ? 60 : 40;
@@ -274,22 +231,6 @@ const PerformanceOptimizer = () => {
       recommendations.push(
         "Use responsive images and modern formats (WebP, AVIF)"
       );
-
-    // Debug: Log real performance data
-    console.log("Real Performance Analysis:", {
-      loadTime,
-      bundleSize: formatBytes(finalBundleSize),
-      jsResourcesCount: jsResources.length,
-      totalResourcesCount: resources.length,
-      imageResourcesCount: imageResources.length,
-      optimizedImagesCount: optimizedImages,
-      cachedResourcesCount: cachedResources,
-      compressedResourcesCount: compressedResources,
-      imageOptimization,
-      caching,
-      compression,
-      overallScore,
-    });
 
     setMetrics({
       loadTime,

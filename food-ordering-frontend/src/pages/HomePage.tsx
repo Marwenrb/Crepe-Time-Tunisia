@@ -6,7 +6,9 @@ import BrandMarquee from "@/components/home/BrandMarquee";
 import CrepeHighlightsSection from "@/components/home/CrepeHighlightsSection";
 import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import CallToActionSection from "@/components/home/CallToActionSection";
-import appOrderImage from "@/assets/hero/photo-1734056650036-7002ede7b8f8.avif";
+import WowExperienceSection from "@/components/home/WowExperienceSection";
+import AppExperienceSection from "@/components/home/AppExperienceSection";
+import { LuxurySignatureTitle } from "@/components/home/LuxurySignatureTitle";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -39,8 +41,66 @@ const HomePage = () => {
         animate={fadeInUp.animate}
         transition={fadeInUp.transition}
       >
-        <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight bg-gradient-to-r from-crepe-purple via-rose-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
-          La Signature Crepe Time, Luxe Artisan a Nabeul
+        <h1 className="flex flex-col items-center gap-1 sm:gap-1.5">
+          {/* Eyebrow — fine ornamental line */}
+          <span className="flex items-center gap-2 sm:gap-3">
+            <span
+              className="h-px w-6 sm:w-8"
+              style={{
+                background: "linear-gradient(to right, transparent, #D4AF37)",
+              }}
+            />
+            <span
+              className="text-[10px] sm:text-xs font-bold tracking-[0.22em] uppercase"
+              style={{ color: "#C9A227" }}
+            >
+              Artisan · Nabeul · Est. 2021
+            </span>
+            <span
+              className="h-px w-6 sm:w-8"
+              style={{
+                background: "linear-gradient(to left, transparent, #D4AF37)",
+              }}
+            />
+          </span>
+
+          {/* "La Signature" — cinematic animated hero title */}
+          <LuxurySignatureTitle />
+
+          {/* "Crêpe Time" — hero word, dominant */}
+          <span
+            className="font-heading font-black leading-none"
+            style={{
+              fontSize: "clamp(2.6rem, 8vw, 5.5rem)",
+              letterSpacing: "-0.04em",
+              background:
+                "linear-gradient(135deg, #B8901F 0%, #D4AF37 28%, #E5C76B 52%, #D4AF37 72%, #C9A227 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              filter: "drop-shadow(0 2px 14px rgba(212,175,55,0.28))",
+            }}
+          >
+            Crêpe Time
+          </span>
+
+          {/* "Luxe Artisan" — closing ornament */}
+          <span className="flex items-center gap-2 sm:gap-3 mt-0.5">
+            <span
+              className="h-px w-5 sm:w-8"
+              style={{ background: "rgba(76,29,149,0.3)" }}
+            />
+            <span
+              className="text-[10px] sm:text-xs font-semibold tracking-[0.18em] uppercase"
+              style={{ color: "rgba(76,29,149,0.55)" }}
+            >
+              Luxe Artisan — Nabeul
+            </span>
+            <span
+              className="h-px w-5 sm:w-8"
+              style={{ background: "rgba(76,29,149,0.3)" }}
+            />
+          </span>
         </h1>
         <span className="text-base sm:text-lg md:text-xl text-muted-foreground">
           Recettes artisanales d excellence, commande digitale ultra fluide et livraison premium rapide.
@@ -59,43 +119,16 @@ const HomePage = () => {
         <BrandMarquee />
       </div>
 
-      {/* Menu teaser: image + CTA */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-center mt-8 sm:mt-10 lg:mt-12">
-        <motion.div
-          className="order-2 md:order-1 rounded-xl overflow-hidden shadow-lg"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <img
-            src={appOrderImage}
-            alt="Commande sur l app - Crepe Time"
-            className="w-full h-48 sm:h-64 md:h-80 object-cover"
-            loading="lazy"
-          />
-        </motion.div>
-        <motion.div
-          className="order-1 md:order-2 flex flex-col gap-3 sm:gap-4 text-center md:text-left"
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <span className="font-heading font-bold text-2xl sm:text-3xl tracking-tighter text-crepe-purple">
-            Commandez sur l App, Finalisez en Un Instant
-          </span>
-          <span className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Creez votre commande directement dans notre app, personnalisez chaque crepe et confirmez en un clic.
-            WhatsApp reste disponible pour un accompagnement VIP. Livraison premium ou retrait express, selon votre rythme.
-          </span>
-        </motion.div>
-      </div>
+      {/* ── Product showcase: App ordering experience ── */}
+      <AppExperienceSection />
 
       {/* Crepe highlights section with 3D tilt cards */}
       <div className="mt-6 sm:mt-10">
         <CrepeHighlightsSection />
       </div>
+
+      {/* WOW section — scroll story, floating images, flavor explorer */}
+      <WowExperienceSection />
 
       {/* Testimonial carousel */}
       <TestimonialCarousel />

@@ -12,9 +12,7 @@ const BrandMarquee = () => {
       {/* Layered gradient background */}
       <div
         className="absolute inset-0"
-        style={{
-          background: "linear-gradient(135deg, #4C1D95 0%, #3B0764 40%, #2D0650 100%)",
-        }}
+        style={{ background: "#4C1D95" }}
       />
       {/* Top edge highlight */}
       <div

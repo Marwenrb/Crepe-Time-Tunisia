@@ -46,14 +46,7 @@ const triggerHaptic = (): void => {
 /** Particle burst count for hover effect */
 const PARTICLE_COUNT = 12;
 
-/** Reduced motion preference */
-const useReducedMotion = (): boolean => {
-  const [reduced] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  });
-  return reduced;
-};
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /** Particle burst component — gold sparks on button hover */
 const ParticleBurst = memo(function ParticleBurst({
