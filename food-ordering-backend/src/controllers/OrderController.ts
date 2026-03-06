@@ -153,7 +153,9 @@ const createOrder = async (req: Request, res: Response) => {
       res.status(201).json({
         order: transformed,
         whatsappUrl: whatsappResult.whatsappUrl,
-        whatsappSent: whatsappResult.sent,
+        whatsappSent: whatsappResult.restaurantNotified,
+        restaurantNotified: whatsappResult.restaurantNotified,
+        customerNotified: whatsappResult.customerNotified,
         redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     } catch (whatsappError) {
@@ -168,6 +170,8 @@ const createOrder = async (req: Request, res: Response) => {
         order: transformed,
         whatsappUrl: null,
         whatsappSent: false,
+        restaurantNotified: false,
+        customerNotified: false,
         redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     }
@@ -254,7 +258,9 @@ const createGuestOrder = async (req: Request, res: Response) => {
       res.status(201).json({
         order: transformed,
         whatsappUrl: whatsappResult.whatsappUrl,
-        whatsappSent: whatsappResult.sent,
+        whatsappSent: whatsappResult.restaurantNotified,
+        restaurantNotified: whatsappResult.restaurantNotified,
+        customerNotified: whatsappResult.customerNotified,
         redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     } catch (whatsappError) {
@@ -265,6 +271,8 @@ const createGuestOrder = async (req: Request, res: Response) => {
         order: transformed,
         whatsappUrl: null,
         whatsappSent: false,
+        restaurantNotified: false,
+        customerNotified: false,
         redirectUrl: `${FRONTEND_URL}/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`,
       });
     }
