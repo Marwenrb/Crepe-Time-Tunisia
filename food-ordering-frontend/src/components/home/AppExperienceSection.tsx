@@ -35,8 +35,8 @@ const HEADLINE = [
   {
     text: "Commandez sur l'App,",
     size: "clamp(1rem, 2.2vw, 1.4rem)",
-    weight: 300,
-    color: "rgba(255,255,255,0.45)",
+    weight: 500,
+    color: "rgba(255,255,255,0.75)",
     tracking: "0.02em",
   },
   {
@@ -976,6 +976,20 @@ const AppExperienceSection = () => {
 
         {/* ══ RIGHT — Editorial text column ════════════════════════════════= */}
         <div className="relative flex flex-col justify-center gap-7 sm:gap-8 px-7 sm:px-10 lg:px-12 py-12 sm:py-14 lg:py-16">
+          {/* Mobile-only dark glass veil — sits behind all text content */}
+          <div
+            className="absolute inset-0 lg:hidden rounded-t-2xl sm:rounded-t-3xl"
+            aria-hidden="true"
+            style={{
+              background: "linear-gradient(160deg, rgba(30,8,68,0.78) 0%, rgba(20,5,50,0.72) 100%)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              zIndex: 0,
+            }}
+          />
+
+          {/* ─ Content layer — sits above mobile glass veil ─ */}
+          <div className="relative flex flex-col gap-7 sm:gap-8" style={{ zIndex: 1 }}>
 
           {/* Eyebrow */}
           <motion.div
@@ -992,11 +1006,11 @@ const AppExperienceSection = () => {
               whileInView={reduced ? {} : { scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: SOFT, delay: 0.25 }}
-              style={{ transformOrigin: "left", height: 1, width: 28, background: "rgba(212,175,55,0.45)" }}
+              style={{ transformOrigin: "left", height: 1, width: 28, background: "rgba(212,175,55,0.65)" }}
             />
             <span
-              className="text-[10px] sm:text-xs font-black tracking-[0.22em] uppercase"
-              style={{ color: "rgba(212,175,55,0.7)" }}
+              className="text-[11px] sm:text-xs font-black tracking-[0.22em] uppercase"
+              style={{ color: "rgba(212,175,55,0.88)" }}
             >
               Commande digitale
             </span>
@@ -1032,14 +1046,15 @@ const AppExperienceSection = () => {
                 {/* Timeline spine */}
                 <div className="flex flex-col items-center gap-0 pt-3">
                   <div
-                    className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
+                    className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center"
                     style={{
-                      background: "rgba(212,175,55,0.1)",
-                      border: "1px solid rgba(212,175,55,0.25)",
+                      background: "rgba(212,175,55,0.14)",
+                      border: "1px solid rgba(212,175,55,0.4)",
+                      boxShadow: "0 0 10px rgba(212,175,55,0.12)",
                     }}
                   >
                     <span
-                      className="text-[8px] font-black"
+                      className="text-[9px] font-black"
                       style={{ color: "#D4AF37" }}
                     >
                       {feat.index}
@@ -1061,13 +1076,13 @@ const AppExperienceSection = () => {
                 <div className="pb-6">
                   <p
                     className="text-sm font-bold leading-snug"
-                    style={{ color: "rgba(255,255,255,0.88)" }}
+                    style={{ color: "rgba(255,255,255,0.93)" }}
                   >
                     {feat.label}
                   </p>
                   <p
-                    className="text-xs mt-0.5 leading-relaxed"
-                    style={{ color: "rgba(255,255,255,0.4)" }}
+                    className="text-[13px] sm:text-xs mt-1 leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.62)" }}
                   >
                     {feat.detail}
                   </p>
@@ -1178,6 +1193,8 @@ const AppExperienceSection = () => {
               </span>
             </Link>
           </motion.div>
+
+          </div>{/* /content z-layer */}
         </div>
       </div>
     </div>

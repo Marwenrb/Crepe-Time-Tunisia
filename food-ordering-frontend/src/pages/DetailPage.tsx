@@ -219,8 +219,22 @@ const DetailPage = () => {
       paymentMethod: "cash" as const,
     };
     const data = await createOrder(orderData);
-    if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
-    toast.success("Commande confirmée ! Paiement à la livraison.");
+
+    // Smart WhatsApp handling: if the Business API auto-notified the
+    // restaurant, skip opening the manual URL (no client action needed).
+    if (data?.restaurantNotified) {
+      toast.success("Commande envoyée ! Le restaurant a été notifié automatiquement.");
+    } else if (data?.whatsappUrl) {
+      window.open(data.whatsappUrl, "_blank");
+      toast.success("Commande confirmée ! Paiement à la livraison.");
+    } else {
+      toast.success("Commande confirmée ! Paiement à la livraison.");
+    }
+
+    if (data?.customerNotified) {
+      toast.info("Confirmation envoyée sur votre WhatsApp.", { duration: 4000 });
+    }
+
     const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
     navigate(`/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`);
   };
@@ -245,8 +259,20 @@ const DetailPage = () => {
       paymentMethod: "cash" as const,
     };
     const data = await createGuestOrder(orderData);
-    if (data?.whatsappUrl) window.open(data.whatsappUrl, "_blank");
-    toast.success("Commande confirmée ! Paiement à la livraison.");
+
+    if (data?.restaurantNotified) {
+      toast.success("Commande envoyée ! Le restaurant a été notifié automatiquement.");
+    } else if (data?.whatsappUrl) {
+      window.open(data.whatsappUrl, "_blank");
+      toast.success("Commande confirmée ! Paiement à la livraison.");
+    } else {
+      toast.success("Commande confirmée ! Paiement à la livraison.");
+    }
+
+    if (data?.customerNotified) {
+      toast.info("Confirmation envoyée sur votre WhatsApp.", { duration: 4000 });
+    }
+
     const orderId = data?.order?._id ?? data?.order?.id ?? data?.id;
     navigate(`/order-status?success=true${orderId ? `&orderId=${orderId}` : ""}`);
   };
