@@ -200,7 +200,7 @@ const CallToActionSection = () => {
               </div>
 
               {/* Right: CTA buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center sm:justify-end">
+              <div className="flex flex-col items-center sm:flex-row gap-3 sm:justify-end sm:items-center">
                 <motion.div
                   variants={itemVariants}
                   onHoverStart={() => setCtaHover(true)}
