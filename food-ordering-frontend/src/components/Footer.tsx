@@ -186,7 +186,7 @@ const Footer = () => {
               </a>
               <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <Facebook className="h-3.5 w-3.5" />
-                Facebook
+                Crêpe Time
               </a>
             </div>
           </div>
