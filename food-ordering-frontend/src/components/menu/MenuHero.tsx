@@ -12,7 +12,16 @@
 
 import { motion } from "framer-motion";
 import { Restaurant } from "@/types";
-import { Clock, MapPin } from "lucide-react";
+import { MapPin, Zap } from "lucide-react";
+
+// Map raw DB cuisine tags → catchy brand-aligned display labels + icons
+const CUISINE_DISPLAY: Record<string, { label: string; icon: string }> = {
+  "Crêpes":   { label: "Crêpes",     icon: "🥞" },
+  "Desserts": { label: "Desserts",   icon: "🍮" },
+  "Français": { label: "Fait Maison", icon: "✦" },
+};
+const resolveCuisine = (c: string) =>
+  CUISINE_DISPLAY[c] ?? { label: c, icon: "✦" };
 
 type Props = {
   restaurant: Restaurant;
@@ -124,20 +133,61 @@ export const MenuHero = ({ restaurant }: Props) => {
           chaque jour, avec les meilleurs ingrédients.
         </motion.p>
 
-        {/* Info pills */}
-        <motion.div variants={itemVariant} className="flex flex-wrap items-center justify-center gap-3">
-          <span className="flex items-center gap-1.5 bg-white/8 backdrop-blur-sm border border-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full">
-            <Clock className="w-3 h-3 text-crepe-gold" />
-            {restaurant.estimatedDeliveryTime} min
-          </span>
-          {restaurant.cuisines.slice(0, 3).map((c) => (
-            <span
-              key={c}
-              className="bg-white/8 backdrop-blur-sm border border-white/10 text-white/70 text-xs px-3 py-1.5 rounded-full"
+        {/* ── Premium info strip ── */}
+        <motion.div
+          variants={itemVariant}
+          className="flex items-stretch justify-center overflow-hidden rounded-2xl"
+          style={{
+            background: "rgba(10,6,24,0.65)",
+            border: "1px solid rgba(212,175,55,0.22)",
+            backdropFilter: "blur(24px)",
+            boxShadow:
+              "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)",
+          }}
+        >
+          {/* Delivery time — gold accent */}
+          <div className="flex items-center gap-2 px-5 py-2.5 border-r border-white/10">
+            <div
+              className="flex items-center justify-center w-6 h-6 rounded-full shrink-0"
+              style={{ background: "rgba(212,175,55,0.15)" }}
             >
-              {c}
-            </span>
-          ))}
+              <Zap className="w-3 h-3" style={{ color: "#D4AF37" }} />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span
+                className="text-sm font-black tracking-tight"
+                style={{ color: "#D4AF37" }}
+              >
+                {restaurant.estimatedDeliveryTime} min
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.15em] text-white/35 font-medium mt-0.5">
+                Livraison
+              </span>
+            </div>
+          </div>
+
+          {/* Cuisine tags */}
+          {restaurant.cuisines.slice(0, 3).map((c, i, arr) => {
+            const { label, icon } = resolveCuisine(c);
+            return (
+              <div
+                key={c}
+                className={`flex items-center gap-2 px-5 py-2.5${
+                  i < arr.length - 1 ? " border-r border-white/10" : ""
+                }`}
+              >
+                <span
+                  className="text-xs leading-none"
+                  style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.4))" }}
+                >
+                  {icon}
+                </span>
+                <span className="text-xs font-semibold text-white/80 tracking-wide">
+                  {label}
+                </span>
+              </div>
+            );
+          })}
         </motion.div>
       </motion.div>
 
