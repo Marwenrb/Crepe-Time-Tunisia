@@ -1,11 +1,12 @@
-import { memo, useCallback, useMemo, useState, useRef } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
 import { ChevronRight, Search } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-/** Phrases premium pour le marquee — accrocheuses en français */
+// ─── Marquee phrases ──────────────────────────────────────
 const PREMIUM_PHRASES = [
   "L'évasion la plus douce vous attend",
   "Craquez pour l'artisanat",
@@ -15,7 +16,7 @@ const PREMIUM_PHRASES = [
   "Goût premium, à chaque bouchée",
 ];
 
-/** Teaser CTA selon l'heure — messages accrocheurs en français */
+// ─── Time-based CTA teaser ────────────────────────────────
 const getTimeBasedTeaser = (): string => {
   const hour = new Date().getHours();
   if (hour >= 6 && hour < 12) return "Petit-déj gourmand — Commandez";
@@ -24,7 +25,6 @@ const getTimeBasedTeaser = (): string => {
   return "Coup de cœur nocturne — Commandez";
 };
 
-/** Teaser personnalisé selon la préférence utilisateur */
 const getPersonalizedTeaser = (isLoggedIn: boolean): string | null => {
   if (!isLoggedIn) return null;
   try {
@@ -36,248 +36,287 @@ const getPersonalizedTeaser = (isLoggedIn: boolean): string | null => {
   return null;
 };
 
-/** Trigger haptic feedback on supported devices */
+// ─── Haptic feedback ──────────────────────────────────────
 const triggerHaptic = (): void => {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) {
     navigator.vibrate(10);
   }
 };
 
-/** Particle burst count for hover effect */
-const PARTICLE_COUNT = 12;
+// ─── Animation constants ──────────────────────────────────
+const EASE = [0.22, 1, 0.36, 1] as const;
 
-import { useReducedMotion } from "@/hooks/useReducedMotion";
+/**
+ * Variants shared between the primary button wrapper and its
+ * motion children (shimmer span, arrow span).
+ * Parent sets initial="rest" whileHover="hover" animate="rest".
+ * Framer-motion propagates the variant name through context so
+ * nested motion elements respond automatically.
+ */
+const SHIMMER_VARIANTS = {
+  rest: { x: "-120%" },
+  hover: { x: "230%" },
+} as const;
 
-/** Particle burst component — gold sparks on button hover */
-const ParticleBurst = memo(function ParticleBurst({
-  active,
-  reducedMotion,
-}: {
-  active: boolean;
-  reducedMotion: boolean;
-}) {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
-        id: i,
-        angle: (i / PARTICLE_COUNT) * 360,
-      })),
-    []
-  );
+const ARROW_VARIANTS = {
+  rest: { x: 0 },
+  hover: { x: 5 },
+} as const;
 
-  if (reducedMotion) return null;
-
-  return (
-    <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg">
-      {particles.map(({ id, angle }) => {
-        const rad = (angle * Math.PI) / 180;
-        const distance = 40;
-        const x = Math.cos(rad) * distance;
-        const y = Math.sin(rad) * distance;
-        return (
-          <motion.span
-            key={id}
-            className="absolute left-1/2 top-1/2 h-1 w-1 rounded-full bg-crepe-gold"
-            style={{
-              boxShadow: "0 0 6px rgba(212, 175, 55, 0.9)",
-            }}
-            initial={{ scale: 0, opacity: 0, x: 0, y: 0 }}
-            animate={
-              active
-                ? {
-                    scale: [0, 1.2, 0],
-                    opacity: [0, 0.9, 0],
-                    x: [0, x],
-                    y: [0, y],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 0.6,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          />
-        );
-      })}
-    </span>
-  );
-});
-
+// ─── Component ────────────────────────────────────────────
 const CallToActionSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
   const { isLoggedIn } = useAppContext();
   const reducedMotion = useReducedMotion();
-  const [ctaHover, setCtaHover] = useState(false);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const parallaxY = useTransform(scrollYProgress, [0.3, 0.7], [30, -30]);
-  const opacity = useTransform(scrollYProgress, [0.2, 0.4], [0.6, 1]);
 
   const ctaTeaser = useMemo(() => {
-    const personalized = getPersonalizedTeaser(isLoggedIn);
-    return personalized ?? getTimeBasedTeaser();
+    return getPersonalizedTeaser(isLoggedIn) ?? getTimeBasedTeaser();
   }, [isLoggedIn]);
 
   const handleCtaInteraction = useCallback(() => {
     triggerHaptic();
   }, []);
 
-  const containerVariants = useMemo(
-    () => ({
-      hidden: { opacity: 0 },
-      visible: reducedMotion
-        ? { opacity: 1 }
-        : {
-            opacity: 1,
-            transition: {
-              staggerChildren: 0.08,
-              delayChildren: 0.1,
-            },
-          },
-    }),
-    [reducedMotion]
-  );
-
-  const itemVariants = useMemo(
-    () => ({
-      hidden: reducedMotion ? {} : { opacity: 0, y: 24 },
-      visible: reducedMotion ? {} : { opacity: 1, y: 0 },
-    }),
-    [reducedMotion]
-  );
-
   return (
     <section
-      ref={sectionRef}
-      className={`relative mt-8 sm:mt-10 ${reducedMotion ? "cta-reduce-motion" : ""}`}
+      className="relative mt-8 sm:mt-10"
       aria-labelledby="cta-heading"
       aria-describedby="cta-description"
     >
+      {/* Card + marquee wrapper — entrance animation */}
       <motion.div
-        style={reducedMotion ? undefined : { y: parallaxY, opacity }}
-        className="relative max-w-2xl mx-auto flex flex-col gap-0"
+        className="relative max-w-2xl mx-auto"
+        initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+        whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.55, ease: EASE }}
       >
-        {/* Button card — on top */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-crepe-purple"
-        >
-          {/* Footer-style: solid purple with gold accents */}
+        {/* ── Purple card ── */}
+        <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-crepe-purple">
+          {/* Gold hairline top */}
           <div
-            className="absolute top-0 left-0 right-0 h-px z-10"
+            className="absolute top-0 left-0 right-0 h-px z-10 pointer-events-none"
             style={{
               background:
-                "linear-gradient(90deg, transparent 10%, rgba(212, 175, 55, 0.5) 50%, transparent 90%)",
+                "linear-gradient(90deg, transparent 10%, rgba(212,175,55,0.55) 50%, transparent 90%)",
             }}
           />
 
           <div className="relative px-4 py-5 sm:px-6 sm:py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              {/* Left: text only (compact — Lottie removed for density) */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
+
+              {/* Left — text */}
               <div className="text-center sm:text-left">
                 <motion.h2
                   id="cta-heading"
-                  variants={itemVariants}
+                  initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+                  whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.42, delay: 0.1, ease: EASE }}
                   className="font-heading text-xl sm:text-2xl font-semibold tracking-tight text-white"
                 >
                   Craquez maintenant !
                 </motion.h2>
                 <motion.p
                   id="cta-description"
-                  variants={itemVariants}
-                  className="mt-1 text-xs sm:text-sm text-white/85"
+                  initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+                  whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.38, delay: 0.17, ease: EASE }}
+                  className="mt-1 text-xs sm:text-sm"
+                  style={{ color: "rgba(255,255,255,0.72)" }}
                 >
                   Une douceur à portée de clic — livraison ou retrait.
                 </motion.p>
               </div>
 
-              {/* Right: CTA buttons */}
-              <div className="flex flex-col items-center sm:flex-row gap-3 sm:justify-end sm:items-center">
+              {/* Right — CTA buttons */}
+              <motion.div
+                className="flex flex-col items-center sm:flex-row gap-3 sm:items-center sm:justify-end"
+                initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+                whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.22, ease: EASE }}
+              >
+                {/* ── Primary CTA — Next-Gen Premium ── */}
                 <motion.div
-                  variants={itemVariants}
-                  onHoverStart={() => setCtaHover(true)}
-                  onHoverEnd={() => setCtaHover(false)}
-                  whileHover={reducedMotion ? {} : { scale: 1.03, y: -2 }}
-                  whileTap={reducedMotion ? {} : { scale: 0.98 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
+                  className="relative w-full sm:w-auto"
+                  style={{ borderRadius: "0.5rem" }}
+                  initial="rest"
+                  animate="rest"
+                  whileHover={reducedMotion ? "rest" : "hover"}
+                  whileTap={reducedMotion ? {} : { scale: 0.965 }}
+                  variants={{
+                    rest: {
+                      y: 0,
+                      boxShadow:
+                        "0 0 0 1px rgba(212,175,55,0.18), 0 4px 20px rgba(212,175,55,0.32), 0 8px 40px rgba(212,175,55,0.10), 0 1px 4px rgba(0,0,0,0.28)",
+                    },
+                    hover: {
+                      y: -3,
+                      boxShadow:
+                        "0 0 0 1px rgba(212,175,55,0.48), 0 6px 32px rgba(212,175,55,0.72), 0 16px 64px rgba(212,175,55,0.28), 0 2px 8px rgba(0,0,0,0.28)",
+                    },
                   }}
+                  transition={{ duration: 0.28, ease: EASE }}
                 >
+                  {/* ── Ambient pulsing aura — breathes behind the surface ── */}
+                  {!reducedMotion && (
+                    <motion.span
+                      aria-hidden
+                      className="absolute pointer-events-none"
+                      style={{
+                        inset: "-10px",
+                        borderRadius: "0.875rem",
+                        background:
+                          "radial-gradient(ellipse at 50% 60%, rgba(212,175,55,0.26) 0%, rgba(212,175,55,0.10) 45%, transparent 68%)",
+                        filter: "blur(7px)",
+                      }}
+                      animate={{
+                        opacity: [0.55, 1, 0.55],
+                        scale: [0.95, 1.05, 0.95],
+                      }}
+                      transition={{
+                        duration: 2.8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  )}
+
                   <Link
                     to="/menu"
                     onClick={handleCtaInteraction}
                     onFocus={handleCtaInteraction}
-                    className="group relative inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg overflow-hidden transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    className="relative flex items-center justify-center w-full px-6 py-2.5 rounded-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
                     style={{
                       background:
-                        "linear-gradient(135deg, #D4AF37 0%, #C9A227 100%)",
+                        "linear-gradient(135deg, #F7E07C 0%, #E5C76B 20%, #D4AF37 50%, #C2940E 78%, #B8901F 100%)",
                       color: "#0F0A1F",
                       boxShadow:
-                        "0 2px 12px rgba(212, 175, 55, 0.3)",
+                        "inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.20)",
                     }}
                     aria-label={`${ctaTeaser} — Voir le menu`}
                   >
-                    <ParticleBurst active={ctaHover} reducedMotion={reducedMotion} />
-                    <span className="relative z-10 flex items-center gap-2">
-                      <span className="font-medium whitespace-nowrap truncate max-w-[200px] sm:max-w-none">
-                        {ctaTeaser}
-                      </span>
-                      <ChevronRight
-                        className="w-4 h-4 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
-                        aria-hidden
-                      />
-                    </span>
-                    {/* Hover shine */}
+                    {/* Layer 1 — top glass edge line */}
                     <span
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      aria-hidden
+                      className="absolute top-0 left-0 right-0 h-px pointer-events-none"
                       style={{
                         background:
-                          "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
-                        backgroundSize: "200% 100%",
+                          "linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.72) 50%, transparent 95%)",
                       }}
                     />
+
+                    {/* Layer 2 — upper surface gloss */}
+                    <span
+                      aria-hidden
+                      className="absolute top-0 left-0 right-0 pointer-events-none"
+                      style={{
+                        height: "44%",
+                        background:
+                          "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%)",
+                      }}
+                    />
+
+                    {/* Layer 3 — blob energy orb, erupts on hover */}
+                    {!reducedMotion && (
+                      <motion.span
+                        aria-hidden
+                        className="absolute pointer-events-none"
+                        style={{
+                          width: "130%",
+                          height: "220%",
+                          top: "-60%",
+                          left: "-15%",
+                          background:
+                            "radial-gradient(ellipse at 50% 55%, rgba(255,252,200,0.32) 0%, rgba(229,199,107,0.14) 38%, transparent 65%)",
+                          borderRadius: "50%",
+                        }}
+                        variants={{
+                          rest: { opacity: 0, scale: 0.78, y: 14 },
+                          hover: { opacity: 1, scale: 1.06, y: 0 },
+                        }}
+                        transition={{ duration: 0.44, ease: EASE }}
+                      />
+                    )}
+
+                    {/* Layer 4 — shimmer sweep */}
+                    {!reducedMotion && (
+                      <motion.span
+                        aria-hidden
+                        className="absolute top-0 bottom-0 left-0 pointer-events-none"
+                        style={{
+                          width: "62%",
+                          background:
+                            "linear-gradient(108deg, transparent 10%, rgba(255,255,255,0.42) 46%, rgba(255,255,255,0.18) 56%, transparent 90%)",
+                          skewX: -18,
+                        }}
+                        variants={SHIMMER_VARIANTS}
+                        transition={{ duration: 0.62, ease: EASE }}
+                      />
+                    )}
+
+                    {/* Content */}
+                    <span className="relative z-10 flex items-center gap-2.5 text-sm font-bold tracking-wide whitespace-nowrap">
+                      <span>{ctaTeaser}</span>
+                      {!reducedMotion ? (
+                        <motion.span
+                          className="flex-shrink-0 flex"
+                          variants={ARROW_VARIANTS}
+                          transition={{ duration: 0.22, ease: EASE }}
+                        >
+                          <ChevronRight className="w-4 h-4" aria-hidden />
+                        </motion.span>
+                      ) : (
+                        <ChevronRight
+                          className="w-4 h-4 flex-shrink-0"
+                          aria-hidden
+                        />
+                      )}
+                    </span>
                   </Link>
                 </motion.div>
 
+                {/* ── Secondary — Explorer ── */}
                 <motion.div
-                  variants={itemVariants}
-                  whileHover={reducedMotion ? {} : { scale: 1.03, y: -2 }}
-                  whileTap={reducedMotion ? {} : { scale: 0.98 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
-                  }}
+                  className="w-full sm:w-auto"
+                  whileHover={reducedMotion ? {} : { y: -1 }}
+                  whileTap={reducedMotion ? {} : { scale: 0.97 }}
+                  transition={{ duration: 0.2, ease: EASE }}
                 >
                   <Link
                     to="/search/Nabeul"
                     onClick={handleCtaInteraction}
-                    className="group inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg border transition-all duration-300 border-crepe-gold/50 text-crepe-gold hover:border-crepe-gold/70 hover:bg-crepe-gold/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    className="group flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    style={{
+                      border: "1px solid rgba(212,175,55,0.45)",
+                      color: "#D4AF37",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.background = "rgba(212,175,55,0.1)";
+                      el.style.borderColor = "rgba(212,175,55,0.65)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.background = "transparent";
+                      el.style.borderColor = "rgba(212,175,55,0.45)";
+                    }}
                     aria-label="Explorer les crêpes"
                   >
                     <Search
-                      className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:scale-110"
+                      className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:scale-110"
                       aria-hidden
                     />
                     Explorer
                   </Link>
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Marquee — under the button card, no gap */}
+        {/* ── Marquee band — flush under card ── */}
         <div className="overflow-hidden -mt-px [&_.rfm-marquee-container]:!py-0">
           <Marquee
             speed={30}
@@ -291,7 +330,8 @@ const CallToActionSection = () => {
                 key={`${phrase}-${i}`}
                 className="mx-4 font-heading text-xs sm:text-sm tracking-[0.12em] uppercase whitespace-nowrap"
                 style={{
-                  background: "linear-gradient(90deg, #E5C76B 0%, #D4AF37 50%, #C9A227 100%)",
+                  background:
+                    "linear-gradient(90deg, #E5C76B 0%, #D4AF37 50%, #C9A227 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
