@@ -160,7 +160,7 @@ const Footer = () => {
           </div>
 
           {/* Contact + Social inline */}
-          <div className="flex flex-wrap gap-6 sm:gap-8">
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
             <div className="flex flex-col gap-1.5">
               <span className="text-crepe-gold/90 text-xs font-semibold uppercase tracking-wider">Contact</span>
               <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
