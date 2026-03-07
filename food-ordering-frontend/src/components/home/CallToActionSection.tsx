@@ -187,7 +187,7 @@ const CallToActionSection = () => {
                     to="/menu"
                     onClick={handleCtaInteraction}
                     onFocus={handleCtaInteraction}
-                    className="relative flex items-center justify-center w-full px-6 py-2.5 rounded-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    className="relative flex items-center justify-center w-full px-5 py-1.5 rounded-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
                     style={{
                       background:
                         "linear-gradient(135deg, #F7E07C 0%, #E5C76B 20%, #D4AF37 50%, #C2940E 78%, #B8901F 100%)",
@@ -287,7 +287,7 @@ const CallToActionSection = () => {
                   <Link
                     to="/search/Nabeul"
                     onClick={handleCtaInteraction}
-                    className="group flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    className="group flex items-center justify-center w-full px-5 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
                     style={{
                       border: "1px solid rgba(212,175,55,0.45)",
                       color: "#D4AF37",
