@@ -24,70 +24,72 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Main row - compact */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-8">
-          {/* Brand — official logo */}
-          <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 sm:h-11 sm:w-11 shrink-0 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 shadow-lg bg-white/10">
-              <img
-                src={BRAND.logo}
-                alt={BRAND.name}
-                className="h-full w-full object-cover object-center"
-                onError={(e) => {
-                  const el = e.target as HTMLImageElement;
-                  el.src = "/logo.png";
-                  el.onerror = () => {
-                    el.style.display = "none";
-                    el.parentElement?.querySelector(".logo-fallback")?.classList.remove("hidden");
-                  };
-                }}
-              />
-              <div className="logo-fallback hidden absolute inset-0 rounded-xl bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-sm">
-                CT
+          {/* Brand — centered signature stamp */}
+          <div className="flex flex-col items-center gap-3">
+            {/* Logo — centered above the text mark */}
+            <motion.div
+              className="relative shrink-0"
+              whileHover={{ scale: 1.06 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 shadow-lg bg-white/10">
+                <img
+                  src={BRAND.logo}
+                  alt={BRAND.name}
+                  className="h-full w-full object-cover object-center"
+                  onError={(e) => {
+                    const el = e.target as HTMLImageElement;
+                    el.src = "/logo.png";
+                    el.onerror = () => {
+                      el.style.display = "none";
+                      el.parentElement?.querySelector(".logo-fallback")?.classList.remove("hidden");
+                    };
+                  }}
+                />
+                <div className="logo-fallback hidden absolute inset-0 rounded-xl bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-sm">
+                  CT
+                </div>
               </div>
-            </div>
+            </motion.div>
+
             {/*
-             * Premium brand signature
-             * — Motion variant system drives coordinated hover choreography:
-             *   1. Shine sweep scrolls left→right across the brand name
-             *   2. Hairline expands from origin-left to full width
-             *   3. Tagline lifts 2px + opacity boost
-             * — cursor-default prevents text-cursor on the lockup
+             * Centered brand text mark
+             * — All children are items-center so name / hairline / tagline
+             *   share the same optical axis as the logo above.
+             * — Hairline expands from center outward (transformOrigin: center,
+             *   symmetric gradient) to match the centered composition.
              */}
             <motion.div
-              className="flex flex-col gap-0.5 cursor-default"
+              className="flex flex-col items-center gap-1.5 cursor-default"
               initial="rest"
               whileHover="hover"
               animate="rest"
             >
               {/* ── Brand name with shine sweep ── */}
-              <div className="relative overflow-hidden inline-block leading-none">
+              <div className="relative overflow-hidden leading-tight">
                 <span
                   className="font-heading font-black block"
                   style={{
-                    fontSize: "clamp(1.35rem, 2.4vw, 1.85rem)",
-                    letterSpacing: "-0.03em",
+                    fontSize: "clamp(1.4rem, 2.6vw, 1.95rem)",
+                    letterSpacing: "-0.035em",
                     background:
                       "linear-gradient(135deg, #E5C76B 0%, #D4AF37 22%, #FFFFFF 50%, #E5C76B 78%, #C9A227 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    filter: "drop-shadow(0 1px 12px rgba(212,175,55,0.5))",
+                    filter: "drop-shadow(0 1px 14px rgba(212,175,55,0.55))",
                   }}
                 >
                   {BRAND.name}
                 </span>
 
-                {/*
-                 * Shine overlay — starts 110% left of its own width (off-screen left),
-                 * slides to 210% on hover (off-screen right).
-                 * Parent overflow-hidden clips it cleanly.
-                 */}
                 <motion.span
                   aria-hidden="true"
                   className="absolute inset-y-0 pointer-events-none"
                   style={{
                     width: "55%",
                     background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent)",
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
                     skewX: -18,
                   }}
                   variants={{
@@ -98,56 +100,56 @@ const Footer = () => {
                 />
               </div>
 
-              {/* ── Expanding hairline ── */}
+              {/* ── Hairline — expands symmetrically from center ── */}
               <motion.span
                 aria-hidden="true"
-                className="block h-px"
+                className="block h-px w-full"
                 style={{
                   background:
-                    "linear-gradient(to right, rgba(212,175,55,0.65), transparent)",
-                  transformOrigin: "left",
+                    "linear-gradient(to right, transparent, rgba(212,175,55,0.7), transparent)",
+                  transformOrigin: "center",
                 }}
                 variants={{
-                  rest: { scaleX: 0.55, opacity: 0.45 },
-                  hover: { scaleX: 1, opacity: 0.85 },
+                  rest: { scaleX: 0.5, opacity: 0.5 },
+                  hover: { scaleX: 1, opacity: 0.9 },
                 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               />
 
-              {/* ── Tagline — lifts on hover ── */}
+              {/* ── Tagline ── */}
               <motion.span
-                className="flex items-center gap-1.5 mt-0.5"
+                className="flex items-center gap-2"
                 variants={{
-                  rest: { y: 0, opacity: 0.65 },
+                  rest: { y: 0, opacity: 0.7 },
                   hover: { y: -2, opacity: 1 },
                 }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               >
                 <motion.span
                   aria-hidden="true"
-                  className="text-[8px]"
-                  style={{ color: "rgba(212,175,55,0.7)" }}
+                  className="text-[8px] inline-block"
+                  style={{ color: "rgba(212,175,55,0.8)" }}
                   variants={{
-                    rest: { rotate: 0 },
-                    hover: { rotate: 72 },
+                    rest: { rotate: 0, scale: 1 },
+                    hover: { rotate: 72, scale: 1.1 },
                   }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   ✦
                 </motion.span>
                 <span
-                  className="text-[10px] sm:text-[11px] font-bold tracking-[0.26em] uppercase"
-                  style={{ color: "rgba(212,175,55,0.85)" }}
+                  className="text-[10px] sm:text-[11px] font-bold tracking-[0.28em] uppercase"
+                  style={{ color: "rgba(212,175,55,0.9)" }}
                 >
                   {BRAND.tagline}
                 </span>
                 <motion.span
                   aria-hidden="true"
-                  className="text-[8px]"
-                  style={{ color: "rgba(212,175,55,0.7)" }}
+                  className="text-[8px] inline-block"
+                  style={{ color: "rgba(212,175,55,0.8)" }}
                   variants={{
-                    rest: { rotate: 0 },
-                    hover: { rotate: -72 },
+                    rest: { rotate: 0, scale: 1 },
+                    hover: { rotate: -72, scale: 1.1 },
                   }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
@@ -178,11 +180,11 @@ const Footer = () => {
               <span className="text-crepe-gold/90 text-xs font-semibold uppercase tracking-wider">Suivez-nous</span>
               <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <Instagram className="h-3.5 w-3.5" />
-                @{CONTACT.instagram}
+                Crêpe Time
               </a>
               <a href={`https://tiktok.com/@${CONTACT.tiktok}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <TikTokIcon className="h-3.5 w-3.5" />
-                @{CONTACT.tiktok}
+                Crêpe Time
               </a>
               <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
                 <Facebook className="h-3.5 w-3.5" />
