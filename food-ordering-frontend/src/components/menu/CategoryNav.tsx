@@ -2,12 +2,13 @@
  * CategoryNav — Premium horizontal category selector.
  *
  * Design intent:
- *  - Sticky backdrop-blur bar so it feels elevated above the content
- *  - Pill buttons use a gold glow on the active state — distinctive and brand-aligned
- *  - The active indicator is a shared Framer Motion layoutId element that
- *    slides (like a pill background) between tabs — GPU-accelerated, lag-free
- *  - Horizontal scroll on mobile with hidden scrollbar for clean appearance
- *  - Count badge on each category shows items available → reduces friction
+ *  - Sticky backdrop-blur bar elevated above content
+ *  - Gold glow active pill with shared Framer Motion layoutId — GPU-accelerated
+ *  - Horizontal scroll on mobile with hidden scrollbar
+ *  - Count badge on each category
+ *
+ * Mobile fix: explicit min-height + overflow-x-auto on inner scroll container,
+ * no clipping on the outer wrapper, proper flex-shrink-0 on each pill.
  */
 
 import { useRef } from "react";
@@ -38,23 +39,30 @@ export const CategoryNav = ({
 
   return (
     /*
-     * The outer wrapper provides the sticky glassmorphism bar.
-     * Negative horizontal margins bleed it edge-to-edge when inside a padded container.
+     * Outer wrapper: sticky glassmorphism bar, bleeds edge-to-edge.
+     * overflow-visible keeps pill shadows from being clipped.
      */
     <div
-      className="sticky top-16 z-30 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3"
+      className="sticky top-16 z-30 -mx-4 sm:-mx-6 lg:-mx-8"
       style={{
-        background: "rgba(15, 10, 31, 0.75)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(212, 175, 55, 0.08)",
+        background: "rgba(12, 8, 26, 0.82)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        borderBottom: "1px solid rgba(212, 175, 55, 0.12)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)",
       }}
     >
-      {/* Horizontally scrollable pill row */}
+      {/* Inner scroll track — explicit height to prevent clipping */}
       <div
         ref={scrollRef}
-        className="flex items-center gap-2 overflow-x-auto pb-0.5"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto px-4 sm:px-6 lg:px-8"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          minHeight: "52px",
+          paddingTop: "8px",
+          paddingBottom: "8px",
+        }}
       >
         {categories.map((cat) => {
           const count = getCount(cat.id);
@@ -66,46 +74,73 @@ export const CategoryNav = ({
             <button
               key={cat.id}
               onClick={() => onCategoryChange(cat.id)}
-              className="relative flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold"
+              className="relative flex-shrink-0 flex items-center gap-1.5 rounded-full text-sm font-semibold outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold transition-colors duration-200"
               style={{
-                color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.6)",
+                padding: "6px 14px",
+                color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.65)",
                 zIndex: 0,
               }}
               aria-pressed={isActive}
             >
-              {/* Sliding active background */}
+              {/* Sliding gold active background */}
               {isActive && (
                 <motion.span
                   layoutId="category-pill"
                   className="absolute inset-0 rounded-full"
                   style={{
                     background: "linear-gradient(135deg, #D4AF37 0%, #E5C76B 100%)",
-                    boxShadow: "0 0 20px rgba(212,175,55,0.45), 0 2px 8px rgba(212,175,55,0.25)",
+                    boxShadow:
+                      "0 0 22px rgba(212,175,55,0.5), 0 2px 8px rgba(212,175,55,0.3)",
                     zIndex: -1,
                   }}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
 
-              {/* Hover background for inactive pills */}
+              {/* Hover glow for inactive pills */}
               {!isActive && (
-                <span
-                  className="absolute inset-0 rounded-full opacity-0 hover:opacity-100 transition-opacity"
-                  style={{ background: "rgba(255,255,255,0.06)" }}
+                <motion.span
+                  className="absolute inset-0 rounded-full"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  style={{
+                    background:
+                      "rgba(255,255,255,0.07)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    zIndex: -1,
+                  }}
                 />
               )}
 
-              <span className="relative z-10">{cat.emoji}</span>
-              <span className="relative z-10 whitespace-nowrap">{cat.label}</span>
+              {/* Emoji */}
+              <span
+                className="relative z-10 text-base leading-none"
+                style={
+                  isActive
+                    ? {}
+                    : { filter: "drop-shadow(0 0 4px rgba(212,175,55,0.25))" }
+                }
+              >
+                {cat.emoji}
+              </span>
+
+              {/* Label */}
+              <span className="relative z-10 whitespace-nowrap tracking-wide">
+                {cat.label}
+              </span>
 
               {/* Count badge */}
               <span
-                className="relative z-10 text-xs px-1.5 py-0.5 rounded-full font-mono"
+                className="relative z-10 text-xs font-mono rounded-full"
                 style={{
-                  background: isActive ? "rgba(15,10,31,0.2)" : "rgba(255,255,255,0.08)",
-                  color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.4)",
-                  minWidth: "1.25rem",
+                  padding: "1px 6px",
+                  background: isActive
+                    ? "rgba(15,10,31,0.22)"
+                    : "rgba(255,255,255,0.09)",
+                  color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.38)",
+                  minWidth: "1.4rem",
                   textAlign: "center",
+                  lineHeight: "1.4",
                 }}
               >
                 {count}

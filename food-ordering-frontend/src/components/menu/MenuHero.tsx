@@ -136,58 +136,65 @@ export const MenuHero = ({ restaurant }: Props) => {
         {/* ── Premium info strip ── */}
         <motion.div
           variants={itemVariant}
-          className="flex items-stretch justify-center overflow-hidden rounded-2xl"
-          style={{
-            background: "rgba(10,6,24,0.65)",
-            border: "1px solid rgba(212,175,55,0.22)",
-            backdropFilter: "blur(24px)",
-            boxShadow:
-              "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)",
-          }}
+          className="w-full max-w-sm sm:max-w-none sm:w-auto"
         >
-          {/* Delivery time — gold accent */}
-          <div className="flex items-center gap-2 px-5 py-2.5 border-r border-white/10">
-            <div
-              className="flex items-center justify-center w-6 h-6 rounded-full shrink-0"
-              style={{ background: "rgba(212,175,55,0.15)" }}
-            >
-              <Zap className="w-3 h-3" style={{ color: "#D4AF37" }} />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span
-                className="text-sm font-black tracking-tight"
-                style={{ color: "#D4AF37" }}
-              >
-                {restaurant.estimatedDeliveryTime} min
-              </span>
-              <span className="text-[9px] uppercase tracking-[0.15em] text-white/35 font-medium mt-0.5">
-                Livraison
-              </span>
-            </div>
-          </div>
-
-          {/* Cuisine tags */}
-          {restaurant.cuisines.slice(0, 3).map((c, i, arr) => {
-            const { label, icon } = resolveCuisine(c);
-            return (
+          <div
+            className="flex items-stretch rounded-2xl overflow-x-auto"
+            style={{
+              background: "rgba(10,6,24,0.65)",
+              border: "1px solid rgba(212,175,55,0.22)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              boxShadow:
+                "0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {/* Delivery time — gold accent */}
+            <div className="flex items-center gap-2.5 px-4 sm:px-5 py-3.5 border-r border-white/10 shrink-0">
               <div
-                key={c}
-                className={`flex items-center gap-2 px-5 py-2.5${
-                  i < arr.length - 1 ? " border-r border-white/10" : ""
-                }`}
+                className="flex items-center justify-center w-7 h-7 rounded-full shrink-0"
+                style={{ background: "rgba(212,175,55,0.15)" }}
               >
+                <Zap className="w-3.5 h-3.5" style={{ color: "#D4AF37" }} />
+              </div>
+              <div className="flex flex-col leading-none">
                 <span
-                  className="text-xs leading-none"
-                  style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.4))" }}
+                  className="text-sm font-black tracking-tight whitespace-nowrap"
+                  style={{ color: "#D4AF37" }}
                 >
-                  {icon}
+                  {restaurant.estimatedDeliveryTime} min
                 </span>
-                <span className="text-xs font-semibold text-white/80 tracking-wide">
-                  {label}
+                <span className="text-[9px] uppercase tracking-[0.15em] text-white/35 font-medium mt-1 whitespace-nowrap">
+                  Livraison
                 </span>
               </div>
-            );
-          })}
+            </div>
+
+            {/* Cuisine tags */}
+            {restaurant.cuisines.slice(0, 3).map((c, i, arr) => {
+              const { label, icon } = resolveCuisine(c);
+              return (
+                <div
+                  key={c}
+                  className={`flex items-center gap-2 px-4 sm:px-5 py-3.5 shrink-0${
+                    i < arr.length - 1 ? " border-r border-white/10" : ""
+                  }`}
+                >
+                  <span
+                    className="text-base leading-none"
+                    style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.4))" }}
+                  >
+                    {icon}
+                  </span>
+                  <span className="text-xs font-semibold text-white/80 tracking-wide whitespace-nowrap">
+                    {label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
       </motion.div>
 
