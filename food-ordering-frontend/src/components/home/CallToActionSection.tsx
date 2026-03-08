@@ -137,49 +137,42 @@ const CallToActionSection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.22, ease: EASE }}
               >
-                {/* ── Primary CTA — Next-Gen Premium ── */}
+                {/* ── Primary CTA — Liquid Gold Capsule ── */}
                 <motion.div
                   className="relative w-full sm:w-auto"
-                  style={{ borderRadius: "0.5rem" }}
+                  style={{ borderRadius: "9999px" }}
                   initial="rest"
                   animate="rest"
                   whileHover={reducedMotion ? "rest" : "hover"}
-                  whileTap={reducedMotion ? {} : { scale: 0.965 }}
+                  whileTap={reducedMotion ? {} : { scale: 0.952 }}
                   variants={{
                     rest: {
                       y: 0,
                       boxShadow:
-                        "0 0 0 1px rgba(212,175,55,0.18), 0 4px 20px rgba(212,175,55,0.32), 0 8px 40px rgba(212,175,55,0.10), 0 1px 4px rgba(0,0,0,0.28)",
+                        "0 0 0 1px rgba(212,175,55,0.22), 0 4px 20px rgba(212,175,55,0.36), 0 8px 42px rgba(212,175,55,0.12), 0 1px 4px rgba(0,0,0,0.32)",
                     },
                     hover: {
                       y: -3,
                       boxShadow:
-                        "0 0 0 1px rgba(212,175,55,0.48), 0 6px 32px rgba(212,175,55,0.72), 0 16px 64px rgba(212,175,55,0.28), 0 2px 8px rgba(0,0,0,0.28)",
+                        "0 0 0 1px rgba(212,175,55,0.60), 0 6px 28px rgba(212,175,55,0.80), 0 18px 58px rgba(212,175,55,0.36), 0 2px 8px rgba(0,0,0,0.32)",
                     },
                   }}
                   transition={{ duration: 0.28, ease: EASE }}
                 >
-                  {/* ── Ambient pulsing aura — breathes behind the surface ── */}
+                  {/* Ambient breathing corona */}
                   {!reducedMotion && (
                     <motion.span
                       aria-hidden
                       className="absolute pointer-events-none"
                       style={{
-                        inset: "-10px",
-                        borderRadius: "0.875rem",
+                        inset: "-14px",
+                        borderRadius: "9999px",
                         background:
-                          "radial-gradient(ellipse at 50% 60%, rgba(212,175,55,0.26) 0%, rgba(212,175,55,0.10) 45%, transparent 68%)",
-                        filter: "blur(7px)",
+                          "radial-gradient(ellipse at 50% 55%, rgba(212,175,55,0.32) 0%, rgba(212,175,55,0.08) 52%, transparent 70%)",
+                        filter: "blur(9px)",
                       }}
-                      animate={{
-                        opacity: [0.55, 1, 0.55],
-                        scale: [0.95, 1.05, 0.95],
-                      }}
-                      transition={{
-                        duration: 2.8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
+                      animate={{ opacity: [0.45, 1, 0.45], scale: [0.92, 1.08, 0.92] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     />
                   )}
 
@@ -187,77 +180,108 @@ const CallToActionSection = () => {
                     to="/menu"
                     onClick={handleCtaInteraction}
                     onFocus={handleCtaInteraction}
-                    className="relative flex items-center justify-center w-full px-5 py-1.5 rounded-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                    className="relative flex items-center justify-center w-full px-5 py-1 rounded-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
                     style={{
                       background:
-                        "linear-gradient(135deg, #F7E07C 0%, #E5C76B 20%, #D4AF37 50%, #C2940E 78%, #B8901F 100%)",
+                        "linear-gradient(135deg, #F7E07C 0%, #E5C76B 18%, #D4AF37 48%, #C2940E 78%, #B8901F 100%)",
                       color: "#0F0A1F",
                       boxShadow:
-                        "inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.20)",
+                        "inset 0 1px 0 rgba(255,255,255,0.36), inset 0 -1px 0 rgba(0,0,0,0.26)",
                     }}
                     aria-label={`${ctaTeaser} — Voir le menu`}
                   >
-                    {/* Layer 1 — top glass edge line */}
+                    {/* L1 — top glass hairline */}
                     <span
                       aria-hidden
                       className="absolute top-0 left-0 right-0 h-px pointer-events-none"
                       style={{
                         background:
-                          "linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.72) 50%, transparent 95%)",
+                          "linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.82) 50%, transparent 95%)",
                       }}
                     />
-
-                    {/* Layer 2 — upper surface gloss */}
+                    {/* L2 — convex surface gloss */}
                     <span
                       aria-hidden
                       className="absolute top-0 left-0 right-0 pointer-events-none"
                       style={{
-                        height: "44%",
+                        height: "42%",
                         background:
-                          "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%)",
+                          "linear-gradient(180deg, rgba(255,255,255,0.24) 0%, transparent 100%)",
                       }}
                     />
-
-                    {/* Layer 3 — blob energy orb, erupts on hover */}
+                    {/* L3 — blob energy core, erupts on hover */}
                     {!reducedMotion && (
                       <motion.span
                         aria-hidden
                         className="absolute pointer-events-none"
                         style={{
                           width: "130%",
-                          height: "220%",
-                          top: "-60%",
+                          height: "250%",
+                          top: "-75%",
                           left: "-15%",
                           background:
-                            "radial-gradient(ellipse at 50% 55%, rgba(255,252,200,0.32) 0%, rgba(229,199,107,0.14) 38%, transparent 65%)",
+                            "radial-gradient(ellipse at 50% 58%, rgba(255,253,215,0.40) 0%, rgba(229,199,107,0.15) 38%, transparent 65%)",
                           borderRadius: "50%",
                         }}
                         variants={{
-                          rest: { opacity: 0, scale: 0.78, y: 14 },
-                          hover: { opacity: 1, scale: 1.06, y: 0 },
+                          rest: { opacity: 0, scale: 0.70, y: 20 },
+                          hover: { opacity: 1, scale: 1.12, y: 0 },
                         }}
-                        transition={{ duration: 0.44, ease: EASE }}
+                        transition={{ duration: 0.42, ease: EASE }}
                       />
                     )}
-
-                    {/* Layer 4 — shimmer sweep */}
+                    {/* L4 — shimmer sweep */}
                     {!reducedMotion && (
                       <motion.span
                         aria-hidden
                         className="absolute top-0 bottom-0 left-0 pointer-events-none"
                         style={{
-                          width: "62%",
+                          width: "60%",
                           background:
-                            "linear-gradient(108deg, transparent 10%, rgba(255,255,255,0.42) 46%, rgba(255,255,255,0.18) 56%, transparent 90%)",
+                            "linear-gradient(110deg, transparent 10%, rgba(255,255,255,0.48) 46%, rgba(255,255,255,0.20) 56%, transparent 90%)",
                           skewX: -18,
                         }}
                         variants={SHIMMER_VARIANTS}
-                        transition={{ duration: 0.62, ease: EASE }}
+                        transition={{ duration: 0.56, ease: EASE }}
                       />
                     )}
-
+                    {/* L5 — sparkle burst on hover */}
+                    {!reducedMotion && (
+                      <>
+                        <motion.span
+                          aria-hidden
+                          className="absolute pointer-events-none select-none"
+                          style={{ color: "rgba(255,246,160,0.95)", top: 0, left: "18%", fontSize: "7px", lineHeight: 1 }}
+                          variants={{
+                            rest: { opacity: 0, y: 0, scale: 0 },
+                            hover: { opacity: [0, 1, 0], y: -10, scale: [0, 1.4, 0] },
+                          }}
+                          transition={{ duration: 0.55, ease: EASE }}
+                        >✦</motion.span>
+                        <motion.span
+                          aria-hidden
+                          className="absolute pointer-events-none select-none"
+                          style={{ color: "rgba(255,230,110,0.85)", bottom: 0, right: "22%", fontSize: "6px", lineHeight: 1 }}
+                          variants={{
+                            rest: { opacity: 0, y: 0, scale: 0 },
+                            hover: { opacity: [0, 1, 0], y: 10, scale: [0, 1.1, 0] },
+                          }}
+                          transition={{ duration: 0.50, ease: EASE, delay: 0.08 }}
+                        >✦</motion.span>
+                        <motion.span
+                          aria-hidden
+                          className="absolute pointer-events-none select-none"
+                          style={{ color: "rgba(255,218,70,0.90)", top: "16%", right: "5%", fontSize: "5px", lineHeight: 1 }}
+                          variants={{
+                            rest: { opacity: 0, x: 0, scale: 0 },
+                            hover: { opacity: [0, 1, 0], x: 9, scale: [0, 1, 0] },
+                          }}
+                          transition={{ duration: 0.48, ease: EASE, delay: 0.05 }}
+                        >✦</motion.span>
+                      </>
+                    )}
                     {/* Content */}
-                    <span className="relative z-10 flex items-center gap-2.5 text-sm font-bold tracking-wide whitespace-nowrap">
+                    <span className="relative z-10 flex items-center gap-2 text-sm font-bold tracking-wide whitespace-nowrap">
                       <span>{ctaTeaser}</span>
                       {!reducedMotion ? (
                         <motion.span
@@ -265,51 +289,84 @@ const CallToActionSection = () => {
                           variants={ARROW_VARIANTS}
                           transition={{ duration: 0.22, ease: EASE }}
                         >
-                          <ChevronRight className="w-4 h-4" aria-hidden />
+                          <ChevronRight className="w-3.5 h-3.5" aria-hidden />
                         </motion.span>
                       ) : (
-                        <ChevronRight
-                          className="w-4 h-4 flex-shrink-0"
-                          aria-hidden
-                        />
+                        <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />
                       )}
                     </span>
                   </Link>
                 </motion.div>
 
-                {/* ── Secondary — Explorer ── */}
+                {/* ── Secondary — Glass Capsule ── */}
                 <motion.div
-                  className="w-full sm:w-auto"
-                  whileHover={reducedMotion ? {} : { y: -1 }}
-                  whileTap={reducedMotion ? {} : { scale: 0.97 }}
-                  transition={{ duration: 0.2, ease: EASE }}
+                  className="relative w-full sm:w-auto"
+                  style={{ borderRadius: "9999px" }}
+                  initial="rest"
+                  animate="rest"
+                  whileHover={reducedMotion ? "rest" : "hover"}
+                  whileTap={reducedMotion ? {} : { scale: 0.952 }}
+                  variants={{
+                    rest: { y: 0 },
+                    hover: { y: -2 },
+                  }}
+                  transition={{ duration: 0.28, ease: EASE }}
                 >
-                  <Link
-                    to="/search/Nabeul"
-                    onClick={handleCtaInteraction}
-                    className="group flex items-center justify-center w-full px-5 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple"
+                  {/* Gradient border shell — dim at rest, vivid on hover */}
+                  <motion.div
+                    className="rounded-full p-px"
                     style={{
-                      border: "1px solid rgba(212,175,55,0.45)",
-                      color: "#D4AF37",
+                      background:
+                        "linear-gradient(135deg, rgba(247,224,124,0.9) 0%, rgba(212,175,55,1) 50%, rgba(184,144,31,0.9) 100%)",
                     }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLAnchorElement;
-                      el.style.background = "rgba(212,175,55,0.1)";
-                      el.style.borderColor = "rgba(212,175,55,0.65)";
+                    variants={{
+                      rest: { opacity: 0.36 },
+                      hover: { opacity: 1 },
                     }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLAnchorElement;
-                      el.style.background = "transparent";
-                      el.style.borderColor = "rgba(212,175,55,0.45)";
-                    }}
-                    aria-label="Explorer les crêpes"
+                    transition={{ duration: 0.28, ease: EASE }}
                   >
-                    <Search
-                      className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:scale-110"
-                      aria-hidden
-                    />
-                    Explorer
-                  </Link>
+                    <Link
+                      to="/search/Nabeul"
+                      onClick={handleCtaInteraction}
+                      className="relative flex items-center justify-center w-full px-5 py-1 rounded-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/50 focus-visible:ring-offset-1 focus-visible:ring-offset-crepe-purple"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(24,15,46,0.97) 0%, rgba(15,10,31,0.97) 100%)",
+                        color: "#C9A820",
+                        boxShadow: "inset 0 1px 0 rgba(212,175,55,0.10)",
+                      }}
+                      aria-label="Explorer les crêpes"
+                    >
+                      {/* Bottom warm glow on hover */}
+                      {!reducedMotion && (
+                        <motion.span
+                          aria-hidden
+                          className="absolute inset-0 rounded-full pointer-events-none"
+                          style={{
+                            background:
+                              "radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.20) 0%, transparent 65%)",
+                          }}
+                          variants={{
+                            rest: { opacity: 0 },
+                            hover: { opacity: 1 },
+                          }}
+                          transition={{ duration: 0.32, ease: EASE }}
+                        />
+                      )}
+                      {/* Search icon — rotates on hover */}
+                      <motion.span
+                        className="relative z-10 flex mr-1.5 flex-shrink-0"
+                        variants={{
+                          rest: { rotate: 0, scale: 1 },
+                          hover: { rotate: 14, scale: 1.18 },
+                        }}
+                        transition={{ duration: 0.32, ease: EASE }}
+                      >
+                        <Search className="w-3.5 h-3.5" aria-hidden />
+                      </motion.span>
+                      <span className="relative z-10 text-sm font-semibold tracking-wide">Explorer</span>
+                    </Link>
+                  </motion.div>
                 </motion.div>
               </motion.div>
             </div>
