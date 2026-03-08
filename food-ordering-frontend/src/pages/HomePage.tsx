@@ -8,6 +8,7 @@ import TestimonialCarousel from "@/components/home/TestimonialCarousel";
 import CallToActionSection from "@/components/home/CallToActionSection";
 import WowExperienceSection from "@/components/home/WowExperienceSection";
 import AppExperienceSection from "@/components/home/AppExperienceSection";
+import AppDownloadSection from "@/components/home/AppDownloadSection";
 import { LuxurySignatureTitle } from "@/components/home/LuxurySignatureTitle";
 
 const fadeInUp = {
@@ -132,6 +133,9 @@ const HomePage = () => {
 
       {/* Testimonial carousel */}
       <TestimonialCarousel />
+
+      {/* App download — ultra-premium section */}
+      <AppDownloadSection />
 
       {/* Call to action just before footer */}
       <CallToActionSection />

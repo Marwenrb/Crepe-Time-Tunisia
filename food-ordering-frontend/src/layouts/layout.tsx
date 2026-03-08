@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import BackToTop from "@/components/BackToTop";
 
 type Props = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ const Layout = ({ children, showHero = false }: Props) => {
         {children}
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 };

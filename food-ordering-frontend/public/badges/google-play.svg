@@ -1,0 +1,17 @@
+<svg width="135" height="40" viewBox="0 0 135 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Get it on Google Play">
+  <rect width="135" height="40" rx="6.5" fill="#000000"/>
+  <rect x="0.5" y="0.5" width="134" height="39" rx="6" stroke="rgba(255,255,255,0.25)" stroke-width="0.7" fill="none"/>
+
+  <!-- Google Play icon — 4-color play button, centered vertically at y=9 -->
+  <g transform="translate(10, 9)">
+    <path d="M0.8 0.5 L13 11 L0.8 21.5 C0.3 21.2 0 20.6 0 20V2C0 1.4 0.3 0.8 0.8 0.5Z" fill="#EA4335"/>
+    <path d="M17.4 14.5 L13 11 L0.8 21.5 C1.1 21.7 1.5 21.7 1.9 21.5L17.4 14.5Z" fill="#FBBC04"/>
+    <path d="M17.4 7.5 L1.9 0.5 C1.5 0.3 1.1 0.3 0.8 0.5L13 11L17.4 7.5Z" fill="#4285F4"/>
+    <path d="M17.4 7.5 L13 11 L17.4 14.5 C19.5 13.3 19.5 8.7 17.4 7.5Z" fill="#34A853"/>
+  </g>
+
+  <!-- "Get it on" -->
+  <text x="38" y="16" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="9" fill="white" letter-spacing="0.04em">Get it on</text>
+  <!-- "Google Play" -->
+  <text x="37" y="31" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="16.5" font-weight="700" fill="white" letter-spacing="-0.02em">Google Play</text>
+</svg>
