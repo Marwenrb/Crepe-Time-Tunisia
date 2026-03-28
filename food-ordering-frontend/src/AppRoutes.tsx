@@ -1,22 +1,38 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import Layout from "./layouts/layout";
+import { lazy, Suspense, useEffect } from "react";
+import Layout from "./layouts/Layout";
 import HomePage from "./pages/HomePage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
-import UserProfilePage from "./pages/UserProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminRoute from "./auth/AdminRoute";
-import ManageRestaurantPage from "./pages/ManageRestaurantPage";
-import SearchPage from "./pages/SearchPage";
-import MenuPage from "./pages/MenuPage";
-import DetailPage from "./pages/DetailPage";
-import OrderStatusPage from "./pages/OrderStatusPage";
-import ApiDocsPage from "./pages/ApiDocsPage";
-import ApiStatusPage from "./pages/ApiStatusPage";
-import AnalyticsDashboardPage from "./pages/AnalyticsDashboardPage";
-import PerformancePage from "./pages/PerformancePage";
+
+// ─── Lazy-loaded heavy pages ────────────────────────────────────────────────
+const UserProfilePage = lazy(() => import("./pages/UserProfilePage"));
+const ManageRestaurantPage = lazy(() => import("./pages/ManageRestaurantPage"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const MenuPage = lazy(() => import("./pages/MenuPage"));
+const DetailPage = lazy(() => import("./pages/DetailPage"));
+const OrderStatusPage = lazy(() => import("./pages/OrderStatusPage"));
+const ApiDocsPage = lazy(() => import("./pages/ApiDocsPage"));
+const ApiStatusPage = lazy(() => import("./pages/ApiStatusPage"));
+const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage"));
+const PerformancePage = lazy(() => import("./pages/PerformancePage"));
+
+// ─── Loading fallback ───────────────────────────────────────────────────────
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="relative">
+      <div className="w-12 h-12 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
+    </div>
+  </div>
+);
+
+// ─── Suspense wrapper ───────────────────────────────────────────────────────
+const Lazy = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<PageLoader />}>{children}</Suspense>
+);
 
 function OAuthRedirectHandler({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -37,119 +53,119 @@ function OAuthRedirectHandler({ children }: { children: React.ReactNode }) {
 const AppRoutes = () => {
   return (
     <OAuthRedirectHandler>
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Layout showHero>
-            <HomePage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/sign-in"
-        element={
-          <Layout showHero={false}>
-            <SignInPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <Layout showHero={false}>
-            <RegisterPage />
-          </Layout>
-        }
-      />
-      <Route path="/auth/callback" element={<AuthCallbackPage />} />
-      <Route
-        path="/menu"
-        element={
-          <Layout showHero={false}>
-            <MenuPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/search/:city"
-        element={
-          <Layout showHero={false}>
-            <SearchPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/detail/:restaurantId"
-        element={
-          <Layout showHero={false}>
-            <DetailPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/api-docs"
-        element={
-          <Layout showHero={false}>
-            <ApiDocsPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/api-status"
-        element={
-          <Layout showHero={false}>
-            <ApiStatusPage />
-          </Layout>
-        }
-      />
-      <Route
-        path="/order-status"
-        element={
-          <Layout showHero={false}>
-            <OrderStatusPage />
-          </Layout>
-        }
-      />
-      <Route element={<ProtectedRoute />}>
+      <Routes>
         <Route
-          path="/user-profile"
+          path="/"
           element={
-            <Layout>
-              <UserProfilePage />
-            </Layout>
-          }
-        />
-      </Route>
-      <Route element={<AdminRoute />}>
-        <Route
-          path="/manage-restaurant"
-          element={
-            <Layout>
-              <ManageRestaurantPage />
+            <Layout showHero>
+              <HomePage />
             </Layout>
           }
         />
         <Route
-          path="/business-insights"
+          path="/sign-in"
           element={
             <Layout showHero={false}>
-              <AnalyticsDashboardPage />
+              <SignInPage />
             </Layout>
           }
         />
         <Route
-          path="/optimization"
+          path="/register"
           element={
             <Layout showHero={false}>
-              <PerformancePage />
+              <RegisterPage />
             </Layout>
           }
         />
-      </Route>
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route
+          path="/menu"
+          element={
+            <Layout showHero={false}>
+              <Lazy><MenuPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route
+          path="/search/:city"
+          element={
+            <Layout showHero={false}>
+              <Lazy><SearchPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route
+          path="/detail/:restaurantId"
+          element={
+            <Layout showHero={false}>
+              <Lazy><DetailPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route
+          path="/api-docs"
+          element={
+            <Layout showHero={false}>
+              <Lazy><ApiDocsPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route
+          path="/api-status"
+          element={
+            <Layout showHero={false}>
+              <Lazy><ApiStatusPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route
+          path="/order-status"
+          element={
+            <Layout showHero={false}>
+              <Lazy><OrderStatusPage /></Lazy>
+            </Layout>
+          }
+        />
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/user-profile"
+            element={
+              <Layout>
+                <Lazy><UserProfilePage /></Lazy>
+              </Layout>
+            }
+          />
+        </Route>
+        <Route element={<AdminRoute />}>
+          <Route
+            path="/manage-restaurant"
+            element={
+              <Layout>
+                <Lazy><ManageRestaurantPage /></Lazy>
+              </Layout>
+            }
+          />
+          <Route
+            path="/business-insights"
+            element={
+              <Layout showHero={false}>
+                <Lazy><AnalyticsDashboardPage /></Lazy>
+              </Layout>
+            }
+          />
+          <Route
+            path="/optimization"
+            element={
+              <Layout showHero={false}>
+                <Lazy><PerformancePage /></Lazy>
+              </Layout>
+            }
+          />
+        </Route>
 
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </OAuthRedirectHandler>
   );
 };

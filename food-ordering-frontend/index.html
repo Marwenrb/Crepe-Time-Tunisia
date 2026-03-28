@@ -1,42 +1,119 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ─── Primary Meta ──────────────────────────────────────────────── -->
+    <title>Crêpe Time Tunisia — Crêperie Premium à Nabeul | Commande en Ligne</title>
+    <meta
+      name="description"
+      content="Crêpe Time Tunisia — Crêperie premium à Nabeul. Savourez nos crêpes artisanales sucrées et salées. Commande en ligne, livraison à domicile et retrait en boutique. La meilleure crêperie de Tunisie."
+    />
+    <meta name="author" content="Marwen Rabai — marwen-rabai.netlify.app" />
+    <meta
+      name="keywords"
+      content="crêpe, crêperie, Nabeul, Tunisie, Tunisia, livraison, commande en ligne, Crêpe Time, crêpes artisanales, dessert, food delivery, crêpes sucrées, crêpes salées, meilleure crêperie"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://crepetime.tn/" />
+    <meta name="theme-color" content="#4C1D95" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- ─── Favicons & PWA ────────────────────────────────────────────── -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Crêpe Time Tunisia — The Sweetest Escape</title>
-    <meta
-      name="description"
-      content="Crêpe Time Tunisia — Crêperie premium à Nabeul. Commandez nos crêpes artisanales en ligne. Livraison à domicile et retrait en boutique."
-    />
-    <meta name="author" content="Marwen Rabai — marwen-rabai.netlify.app" />
-    <meta
-      name="keywords"
-      content="crêpe, crêperie, Nabeul, Tunisia, livraison, commande en ligne, Crêpe Time, crêpes artisanales, dessert, food delivery"
-    />
-    <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="Crêpe Time Tunisia — The Sweetest Escape" />
+
+    <!-- ─── Open Graph (Facebook / LinkedIn / WhatsApp) ───────────────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Crêpe Time Tunisia" />
+    <meta property="og:title" content="Crêpe Time Tunisia — Crêperie Premium à Nabeul" />
     <meta
       property="og:description"
-      content="Crêperie premium à Nabeul. Crêpes artisanales livrées chez vous."
+      content="Crêperie premium à Nabeul. Crêpes artisanales sucrées et salées livrées chez vous. Commandez en ligne dès maintenant !"
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/crepe-time-logo.png" />
+    <meta property="og:url" content="https://crepetime.tn/" />
+    <meta property="og:image" content="https://crepetime.tn/crepe-time-logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo Crêpe Time Tunisia — Crêperie Premium" />
+    <meta property="og:locale" content="fr_TN" />
+
+    <!-- ─── Twitter Card ──────────────────────────────────────────────── -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Crêpe Time Tunisia — The Sweetest Escape" />
+    <meta name="twitter:title" content="Crêpe Time Tunisia — Crêperie Premium à Nabeul" />
     <meta
       name="twitter:description"
-      content="Commandez nos crêpes artisanales en ligne. Livraison à domicile à Nabeul."
+      content="Commandez nos crêpes artisanales en ligne. Livraison à domicile à Nabeul, Tunisie."
     />
-    <meta name="twitter:image" content="/crepe-time-logo.png" />
-    <meta name="theme-color" content="#4C1D95" />
+    <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
+    <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
+
+    <!-- ─── Fonts (preconnect + swap) ─────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ─── DNS Prefetch for Backend & Supabase ──────────────────────── -->
+    <link rel="dns-prefetch" href="https://crepe-time-tunisia.onrender.com" />
+    <link rel="dns-prefetch" href="https://kjhuwmbddxuyrtycdezr.supabase.co" />
+
+    <!-- ─── JSON-LD Structured Data (Local Restaurant Business) ──────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Crêpe Time Tunisia",
+      "alternateName": "Crêpe Time Nabeul",
+      "description": "Crêperie premium à Nabeul, Tunisie. Crêpes artisanales sucrées et salées, livraison à domicile et retrait en boutique.",
+      "url": "https://crepetime.tn",
+      "logo": "https://crepetime.tn/crepe-time-logo.png",
+      "image": "https://crepetime.tn/hero.png",
+      "telephone": "+216-XX-XXX-XXX",
+      "servesCuisine": ["Crêpes", "Desserts", "French", "Tunisian"],
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Nabeul Centre",
+        "addressLocality": "Nabeul",
+        "addressRegion": "Nabeul",
+        "postalCode": "8000",
+        "addressCountry": "TN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.4513,
+        "longitude": 10.7357
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+          "opens": "10:00",
+          "closes": "23:00"
+        }
+      ],
+      "sameAs": [],
+      "hasMenu": "https://crepetime.tn/menu",
+      "acceptsReservations": false,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "120",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
