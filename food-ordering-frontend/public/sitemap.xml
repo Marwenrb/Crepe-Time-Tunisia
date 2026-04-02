@@ -7,39 +7,31 @@
     <loc>https://crepetime.tn/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-03-27</lastmod>
+    <lastmod>2026-04-02</lastmod>
   </url>
 
-  <!-- Menu -->
+  <!-- Menu redirect (canonical entry point) -->
   <url>
     <loc>https://crepetime.tn/menu</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <lastmod>2026-03-27</lastmod>
+    <lastmod>2026-04-02</lastmod>
   </url>
 
-  <!-- Sign In -->
+  <!-- Actual menu detail page -->
   <url>
-    <loc>https://crepetime.tn/sign-in</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <lastmod>2026-03-27</lastmod>
+    <loc>https://crepetime.tn/detail/3188b88d-b11f-4265-8e35-6f1d49c2b1dc</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <lastmod>2026-04-02</lastmod>
   </url>
 
-  <!-- Register -->
-  <url>
-    <loc>https://crepetime.tn/register</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <lastmod>2026-03-27</lastmod>
-  </url>
-
-  <!-- Search (representative city) -->
+  <!-- Search — Nabeul -->
   <url>
     <loc>https://crepetime.tn/search/nabeul</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <lastmod>2026-03-27</lastmod>
+    <priority>0.7</priority>
+    <lastmod>2026-04-02</lastmod>
   </url>
 
 </urlset>

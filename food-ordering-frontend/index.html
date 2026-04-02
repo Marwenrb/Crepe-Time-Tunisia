@@ -2,6 +2,7 @@
 <html lang="fr" dir="ltr">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- ─── Primary Meta ──────────────────────────────────────────────── -->
@@ -10,7 +11,7 @@
       name="description"
       content="Crêpe Time Tunisia — Crêperie premium à Nabeul. Savourez nos crêpes artisanales sucrées et salées. Commande en ligne, livraison à domicile et retrait en boutique. La meilleure crêperie de Tunisie."
     />
-    <meta name="author" content="Marwen Rabai — marwen-rabai.netlify.app" />
+    <meta name="author" content="Crêpe Time Tunisia" />
     <meta
       name="keywords"
       content="crêpe, crêperie, Nabeul, Tunisie, Tunisia, livraison, commande en ligne, Crêpe Time, crêpes artisanales, dessert, food delivery, crêpes sucrées, crêpes salées, meilleure crêperie"
@@ -18,8 +19,11 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <link rel="canonical" href="https://crepetime.tn/" />
     <meta name="theme-color" content="#4C1D95" />
+    <meta name="application-name" content="Crêpe Time" />
+    <meta name="msapplication-TileColor" content="#4C1D95" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Crêpe Time" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="format-detection" content="telephone=no" />
 
@@ -40,10 +44,12 @@
     />
     <meta property="og:url" content="https://crepetime.tn/" />
     <meta property="og:image" content="https://crepetime.tn/crepe-time-logo.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Logo Crêpe Time Tunisia — Crêperie Premium" />
     <meta property="og:locale" content="fr_TN" />
+    <meta property="og:locale:alternate" content="ar_TN" />
 
     <!-- ─── Twitter Card ──────────────────────────────────────────────── -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -54,6 +60,9 @@
     />
     <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
     <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
+
+    <!-- ─── Preload critical assets ───────────────────────────────────── -->
+    <link rel="preload" href="/hero.png" as="image" fetchpriority="high" />
 
     <!-- ─── Fonts (preconnect + swap) ─────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -66,6 +75,7 @@
     <!-- ─── DNS Prefetch for Backend & Supabase ──────────────────────── -->
     <link rel="dns-prefetch" href="https://crepe-time-tunisia.onrender.com" />
     <link rel="dns-prefetch" href="https://kjhuwmbddxuyrtycdezr.supabase.co" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
     <!-- ─── JSON-LD Structured Data (Local Restaurant Business) ──────── -->
     <script type="application/ld+json">
@@ -78,9 +88,10 @@
       "url": "https://crepetime.tn",
       "logo": "https://crepetime.tn/crepe-time-logo.png",
       "image": "https://crepetime.tn/hero.png",
-      "telephone": "+216-XX-XXX-XXX",
       "servesCuisine": ["Crêpes", "Desserts", "French", "Tunisian"],
       "priceRange": "$$",
+      "currenciesAccepted": "TND",
+      "paymentAccepted": "Cash",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Nabeul Centre",
@@ -105,12 +116,17 @@
       "sameAs": [],
       "hasMenu": "https://crepetime.tn/menu",
       "acceptsReservations": false,
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "120",
-        "bestRating": "5",
-        "worstRating": "1"
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://crepetime.tn/menu",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "deliveryMethod": ["http://purl.org/goodrelations/v1#DeliveryModeDirectDownload"]
       }
     }
     </script>

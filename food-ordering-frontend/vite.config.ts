@@ -11,8 +11,8 @@ export default defineConfig({
     },
   },
   build: {
-    // Target modern browsers for smaller bundles
-    target: "es2020",
+    // Cross-browser: Safari 14+, Chrome 89+, Firefox 89+, Edge 89+
+    target: ["es2020", "chrome89", "firefox89", "safari14", "edge89"],
     // Increase warning limit for vendor chunks
     chunkSizeWarningLimit: 600,
     // Enable CSS code splitting
