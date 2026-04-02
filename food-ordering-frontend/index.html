@@ -61,9 +61,6 @@
     <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
     <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
 
-    <!-- ─── Preload critical assets ───────────────────────────────────── -->
-    <link rel="preload" href="/hero.png" as="image" fetchpriority="high" />
-
     <!-- ─── Fonts (preconnect + swap) ─────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -132,6 +129,154 @@
     </script>
   </head>
   <body>
+    <!-- ─── Premium brand preloader — dismissed by main.tsx after React mounts ── -->
+    <div id="app-preloader">
+
+      <div class="ct-bg-glow"></div>
+
+      <div class="ct-stage">
+
+        <!-- SVG animated medallion rings + real logo -->
+        <div class="ct-medallion">
+          <svg class="ct-svg" viewBox="0 0 220 220" aria-hidden="true">
+            <!-- Cardinal accent dots: 12 / 3 / 6 / 9 o'clock -->
+            <circle cx="110" cy="8"   r="2.4" fill="#D4AF37" class="ct-dot-c" style="animation-delay:.08s"/>
+            <circle cx="212" cy="110" r="2.4" fill="#D4AF37" class="ct-dot-c" style="animation-delay:.16s"/>
+            <circle cx="110" cy="212" r="2.4" fill="#D4AF37" class="ct-dot-c" style="animation-delay:.24s"/>
+            <circle cx="8"   cy="110" r="2.4" fill="#D4AF37" class="ct-dot-c" style="animation-delay:.32s"/>
+            <!-- Tick marks at cardinal points -->
+            <g class="ct-ticks" stroke="#D4AF37" stroke-width="0.9" stroke-linecap="round">
+              <line x1="110" y1="13" x2="110" y2="25"/>
+              <line x1="207" y1="110" x2="195" y2="110"/>
+              <line x1="110" y1="207" x2="110" y2="195"/>
+              <line x1="13"  y1="110" x2="25"  y2="110"/>
+            </g>
+            <!-- Outer ring — draws itself (circumference: 2π×100 ≈ 628.3) -->
+            <circle class="ct-ring-outer" cx="110" cy="110" r="100"
+                    fill="none" stroke="#D4AF37" stroke-width="0.8"
+                    stroke-dasharray="628.3" stroke-dashoffset="628.3"
+                    stroke-linecap="round"/>
+            <!-- Inner ambient ring -->
+            <circle class="ct-ring-inner" cx="110" cy="110" r="85"
+                    fill="none" stroke="rgba(212,175,55,.2)" stroke-width="0.5"/>
+            <!-- Hairline innermost ring -->
+            <circle cx="110" cy="110" r="64"
+                    fill="none" stroke="rgba(212,175,55,.08)" stroke-width="0.4"/>
+          </svg>
+
+          <!-- Actual brand logo revealed after ring draws in -->
+          <div class="ct-logo-box">
+            <img src="/crepe-time-logo.png" alt="Crêpe Time Tunisia"
+                 class="ct-logo" width="92" height="92"/>
+          </div>
+        </div>
+
+        <!-- Brand identity text block -->
+        <div class="ct-identity">
+          <h1 class="ct-name">CR&#234;PE TIME</h1>
+          <div class="ct-rule"></div>
+          <p class="ct-sub">NABEUL &middot; TUNISIE</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scoped preloader styles — zero external dependencies -->
+    <style>
+      body { margin:0; padding:0; background:#0F0A1F; }
+
+      #app-preloader {
+        position:fixed; inset:0; z-index:9999;
+        display:flex; align-items:center; justify-content:center;
+        background:#0F0A1F;
+        transition:opacity .5s cubic-bezier(.4,0,.2,1);
+      }
+      .ct-bg-glow {
+        position:absolute; inset:0; pointer-events:none;
+        background:radial-gradient(ellipse 58% 58% at 50% 50%,
+          rgba(76,29,149,.24) 0%, rgba(59,7,100,.08) 55%, transparent 75%);
+      }
+      .ct-stage {
+        position:relative; z-index:1;
+        display:flex; flex-direction:column; align-items:center; gap:32px;
+      }
+
+      /* Medallion */
+      .ct-medallion { position:relative; width:220px; height:220px; }
+      .ct-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+
+      /* Outer ring draws in 1.75s with smooth ease */
+      .ct-ring-outer { animation:ct-ring-draw 1.75s cubic-bezier(.22,.61,.36,1) .05s forwards; }
+      @keyframes ct-ring-draw { to { stroke-dashoffset:0; } }
+
+      /* Inner ring fades after outer reaches halfway */
+      .ct-ring-inner { opacity:0; animation:ct-fade .7s ease .8s forwards; }
+
+      /* Ticks appear early with a fade */
+      .ct-ticks { opacity:0; animation:ct-fade .5s ease .35s forwards; }
+
+      /* Cardinal dots pop in with elastic spring */
+      .ct-dot-c { opacity:0; animation:ct-pop .5s cubic-bezier(.34,1.7,.64,1) forwards; }
+      @keyframes ct-pop {
+        from { opacity:0; transform-origin:center; transform:scale(0) rotate(-45deg); }
+        to   { opacity:1; transform:scale(1) rotate(0deg); }
+      }
+
+      /* Logo wrapper centred inside medallion */
+      .ct-logo-box {
+        position:absolute; inset:0;
+        display:flex; align-items:center; justify-content:center;
+      }
+      .ct-logo {
+        width:92px; height:92px; border-radius:22px; object-fit:cover;
+        box-shadow:
+          0 0 0 1.5px rgba(212,175,55,.5),
+          0 0 0 4px rgba(76,29,149,.4),
+          0 12px 48px rgba(76,29,149,.7),
+          0 0 80px rgba(212,175,55,.07);
+        opacity:0; transform:scale(.6) rotate(-4deg);
+        animation:ct-logo-in .8s cubic-bezier(.34,1.2,.64,1) .52s forwards;
+      }
+      @keyframes ct-logo-in { to { opacity:1; transform:scale(1) rotate(0deg); } }
+
+      /* Identity text block */
+      .ct-identity {
+        display:flex; flex-direction:column; align-items:center; gap:12px;
+        opacity:0; transform:translateY(16px);
+        animation:ct-rise .75s cubic-bezier(.22,.61,.36,1) 1.05s forwards;
+      }
+      @keyframes ct-rise { to { opacity:1; transform:translateY(0); } }
+
+      .ct-name {
+        margin:0;
+        font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+        font-size:22px; font-weight:600; letter-spacing:.36em; text-transform:uppercase;
+        /* Gold shimmer sweep */
+        background:linear-gradient(100deg,
+          #6B3D00 0%, #C8942A 20%, #F7E08A 42%, #FFFBE0 50%, #F7E08A 58%, #C8942A 78%, #6B3D00 100%);
+        background-size:260% auto;
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        background-clip:text; color:transparent;
+        animation:ct-shimmer 3.2s linear 2.0s infinite;
+      }
+      @keyframes ct-shimmer { to { background-position:260% center; } }
+
+      .ct-rule {
+        height:1px; width:0;
+        background:linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+        animation:ct-rule-grow .6s cubic-bezier(.25,.46,.45,.94) 1.42s forwards;
+      }
+      @keyframes ct-rule-grow { to { width:58px; } }
+
+      .ct-sub {
+        margin:0; font-family:system-ui,-apple-system,sans-serif;
+        font-size:9px; font-weight:700; letter-spacing:.42em; text-transform:uppercase;
+        color:rgba(212,175,55,.46);
+      }
+
+      @keyframes ct-fade { to { opacity:1; } }
+    </style>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
