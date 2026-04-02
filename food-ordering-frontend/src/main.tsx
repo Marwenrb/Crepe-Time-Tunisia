@@ -9,10 +9,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
 import { API_BASE_URL } from "./lib/runtime-config";
 
-// ── Keep Render backend awake (free tier sleeps after 15 min) ───────────────
-// Fires on page load + every 14 min so the first user never hits a cold start.
-// Uses no-cors so CORS headers are not required for this lightweight ping.
-if (API_BASE_URL) {
+// ── Keep Render backend awake — skip in local dev to avoid console noise ────
+if (API_BASE_URL && !API_BASE_URL.includes("localhost")) {
   const ping = () =>
     fetch(`${API_BASE_URL}/health`, { mode: "no-cors" }).catch(() => {});
   ping();
@@ -20,11 +18,7 @@ if (API_BASE_URL) {
 }
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -39,3 +33,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </Router>
   </React.StrictMode>
 );
+
+// ── Dismiss the HTML preloader once React has painted its first frame ────────
+const dismissPreloader = () => {
+  const el = document.getElementById("app-preloader");
+  if (!el) return;
+  el.style.opacity = "0";
+  setTimeout(() => el.remove(), 450);
+};
+requestAnimationFrame(() => requestAnimationFrame(dismissPreloader));
