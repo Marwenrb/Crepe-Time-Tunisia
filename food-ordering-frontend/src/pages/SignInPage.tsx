@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 type FormData = { email: string; password: string };
 
@@ -18,9 +19,7 @@ const SignInPage = () => {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
-  const emailValue = watch("email");
-  const passwordValue = watch("password");
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -43,23 +42,79 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 sm:px-6 py-10">
-      <div className="w-full max-w-md space-y-6 rounded-2xl border border-crepe-purple/10 bg-white p-6 sm:p-8 shadow-2xl">
+    <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 py-10 overflow-hidden" style={{ background: "#0F0A1F" }}>
+      {/* ── Animated background glow orbs ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        {/* Top-left purple glow */}
+        <motion.div
+          animate={{ scale: [1, 1.08, 1], opacity: [0.2, 0.35, 0.2] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-40 -left-40 w-80 h-80 rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(76,29,149,0.5) 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+        />
 
-        {/* Header */}
-        <div className="flex flex-col items-center gap-3 pb-2">
+        {/* Bottom-right gold glow */}
+        <motion.div
+          animate={{ scale: [1, 1.05, 1], opacity: [0.15, 0.28, 0.15] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+
+        {/* Center subtle ring */}
+        <motion.div
+          animate={{ scale: [0.95, 1.02, 0.95], opacity: [0.08, 0.15, 0.08] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(59,7,100,0.3) 0%, transparent 70%)",
+            filter: "blur(70px)",
+          }}
+        />
+      </div>
+
+      {/* ── Card content ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-md"
+        style={{ perspective: "1000px" }}
+      >
+        <div
+          className="space-y-6 rounded-3xl backdrop-blur-xl p-8 sm:p-10 border"
+          style={{
+            background: "rgba(255, 255, 255, 0.10)",
+            borderColor: "rgba(212, 175, 55, 0.2)",
+            boxShadow: `
+              0 8px 32px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 0 80px rgba(76, 29, 149, 0.15)
+            `,
+            WebkitBackdropFilter: "blur(16px)",
+          }}
+        >        {/* Header */}
+        <div className="flex flex-col items-center gap-4 pb-2">
           <Logo size="lg" showTagline={true} asLink={true} />
-          <h1 className="text-2xl font-bold text-crepe-purple tracking-tight">Connexion</h1>
-          <p className="text-sm text-muted-foreground text-center">
-            Bienvenue ! Connectez-vous pour suivre vos commandes.
-          </p>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-white tracking-tight">Connexion</h1>
+            <p className="text-sm text-white/60 text-center mt-2">
+              Bienvenue ! Connectez-vous pour suivre vos commandes.
+            </p>
+          </div>
         </div>
 
         {/* Google Sign In */}
         <Button
           type="button"
           variant="outline"
-          className="w-full h-11 border-2 border-gray-200 hover:border-crepe-purple/40 hover:bg-crepe-purple/5 font-medium transition-all"
+          className="w-full h-11 border border-white/20 hover:border-crepe-gold/40 hover:bg-white/5 font-medium transition-all text-white"
           onClick={handleGoogleSignIn}
           disabled={isLoading}
         >
@@ -75,48 +130,46 @@ const SignInPage = () => {
         {/* Divider */}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-gray-200" />
+            <span className="w-full border-t border-white/10" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-3 text-muted-foreground tracking-wider">ou</span>
+            <span className="px-3 text-white/40 tracking-wider font-medium" style={{ background: "rgba(15, 10, 31, 0.8)" }}>ou</span>
           </div>
         </div>
 
-        {/* Email / Password form */}
+        {/* Email / Password form — NO test data visible */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-sm font-medium">Adresse email</Label>
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium text-white">Adresse email</Label>
             <Input
               id="email"
               type="email"
               placeholder="votre@email.com"
-              value={emailValue ?? ""}
-              className="h-11 border-gray-200 focus:border-crepe-purple focus:ring-crepe-purple/20"
+              className="h-11 border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-crepe-gold focus:ring-crepe-gold/20 focus:bg-white/10"
               {...register("email", { required: "L'email est requis" })}
             />
             {errors.email && (
-              <p className="text-xs text-red-500">{errors.email.message}</p>
+              <p className="text-xs text-red-400">{errors.email.message}</p>
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-sm font-medium">Mot de passe</Label>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-sm font-medium text-white">Mot de passe</Label>
             <Input
               id="password"
               type="password"
               placeholder="••••••••"
-              value={passwordValue ?? ""}
-              className="h-11 border-gray-200 focus:border-crepe-purple focus:ring-crepe-purple/20"
+              className="h-11 border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-crepe-gold focus:ring-crepe-gold/20 focus:bg-white/10"
               {...register("password", { required: "Le mot de passe est requis", minLength: 6 })}
             />
             {errors.password && (
-              <p className="text-xs text-red-500">{errors.password.message}</p>
+              <p className="text-xs text-red-400">{errors.password.message}</p>
             )}
           </div>
 
           <Button
             type="submit"
-            className="w-full h-11 bg-crepe-purple hover:bg-crepe-purple-light text-white font-semibold tracking-wide transition-all shadow-md hover:shadow-crepe-purple/30"
+            className="w-full h-11 bg-gradient-to-r from-crepe-purple to-crepe-purple-light hover:shadow-lg hover:shadow-crepe-purple/40 text-white font-semibold tracking-wide transition-all"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -131,13 +184,14 @@ const SignInPage = () => {
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-white/50">
           Pas encore de compte ?{" "}
-          <Link to="/register" className="font-semibold text-crepe-purple hover:text-crepe-purple-light hover:underline transition-colors">
+          <Link to="/register" className="font-semibold text-crepe-gold hover:text-crepe-gold-light hover:underline transition-colors">
             Créer un compte
           </Link>
         </p>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
