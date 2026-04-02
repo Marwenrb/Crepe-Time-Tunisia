@@ -11,6 +11,43 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000,
+    // Target modern browsers for smaller bundles
+    target: "es2020",
+    // Increase warning limit for vendor chunks
+    chunkSizeWarningLimit: 600,
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Source maps for production debugging (optional, remove for smaller deploy)
+    sourcemap: false,
+    // Rollup options for optimal chunk splitting
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime
+          "vendor-react": ["react", "react-dom"],
+          // Router
+          "vendor-router": ["react-router-dom"],
+          // UI library (Radix)
+          "vendor-ui": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-label",
+            "@radix-ui/react-separator",
+            "@radix-ui/react-slot",
+          ],
+          // Animation
+          "vendor-animation": ["framer-motion"],
+          // Forms & validation
+          "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod"],
+          // Data fetching
+          "vendor-data": ["axios", "react-query", "@supabase/supabase-js"],
+        },
+      },
+    },
+    // Minification
+    minify: "esbuild",
   },
 });

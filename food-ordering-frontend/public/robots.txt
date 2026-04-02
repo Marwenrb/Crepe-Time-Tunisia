@@ -1,0 +1,23 @@
+# =============================================================================
+# Crêpe Time Tunisia — robots.txt
+# https://crepetime.tn
+# =============================================================================
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://crepetime.tn/sitemap.xml
+
+# Block crawling of auth, API, and admin pages
+Disallow: /auth/
+Disallow: /api-docs
+Disallow: /api-status
+Disallow: /manage-restaurant
+Disallow: /business-insights
+Disallow: /optimization
+Disallow: /user-profile
+Disallow: /order-status
+
+# Block common bot paths
+Disallow: /cdn-cgi/

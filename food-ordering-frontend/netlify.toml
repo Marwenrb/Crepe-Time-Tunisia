@@ -1,28 +1,59 @@
-# Netlify configuration — Crêpe Time Tunisia
-# Base directory: food-ordering-frontend (à configurer dans Netlify UI)
+# =============================================================================
+# Crêpe Time Tunisia — Production Netlify Configuration
+# Domain: crepetime.tn | Backend: crepe-time-tunisia.onrender.com
+# =============================================================================
 
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command   = "npm run build"
+  publish   = "dist"
 
-# Redirect all requests to index.html for client-side routing (SPA)
+# ─── SPA Client-Side Routing ─────────────────────────────────────────────────
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from   = "/*"
+  to     = "/index.html"
   status = 200
 
-# Cache headers for static assets (especially large images like hero.png)
+# ─── Security Headers (all pages) ───────────────────────────────────────────
 [[headers]]
-  for = "/hero.png"
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection       = "1; mode=block"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "camera=(), microphone=(), geolocation=(self)"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+# ─── Cache: Vite hashed assets (JS, CSS, images) — 1 year immutable ─────────
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ─── Cache: Static public images — 1 year ───────────────────────────────────
+[[headers]]
+  for = "/*.png"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/landing.png"
+  for = "/*.ico"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# ─── Cache: Web manifest & robots — 1 day ───────────────────────────────────
 [[headers]]
-  for = "/appDownload.png"
+  for = "/site.webmanifest"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Type  = "application/xml; charset=utf-8"
