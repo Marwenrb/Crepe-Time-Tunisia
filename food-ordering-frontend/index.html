@@ -61,9 +61,6 @@
     <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
     <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
 
-    <!-- ─── Preload critical assets ───────────────────────────────────── -->
-    <link rel="preload" href="/hero.png" as="image" fetchpriority="high" />
-
     <!-- ─── Fonts (preconnect + swap) ─────────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -132,6 +129,58 @@
     </script>
   </head>
   <body>
+    <!-- ─── Initial page preloader (removed by main.tsx after React mounts) ─ -->
+    <div id="app-preloader" aria-hidden="true">
+      <div class="ct-ring">
+        <div class="ct-track"></div>
+        <div class="ct-arc"></div>
+        <div class="ct-inner"></div>
+        <div class="ct-emoji">🥞</div>
+      </div>
+      <p class="ct-label">Crêpe Time Tunisia</p>
+    </div>
+    <style>
+      #app-preloader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 22px;
+        background: #0F0A1F;
+        transition: opacity 0.45s ease;
+      }
+      .ct-ring {
+        position: relative; width: 90px; height: 90px;
+      }
+      .ct-track {
+        position: absolute; inset: 0; border-radius: 50%;
+        border: 3px solid rgba(76,29,149,0.25);
+      }
+      .ct-arc {
+        position: absolute; inset: 0; border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #D4AF37;
+        animation: ct-spin 0.85s linear infinite;
+      }
+      .ct-inner {
+        position: absolute; inset: 9px; border-radius: 50%;
+        border: 2px solid rgba(76,29,149,0.15);
+      }
+      .ct-emoji {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px; user-select: none;
+      }
+      .ct-label {
+        color: rgba(212,175,55,0.75);
+        font-size: 10px; letter-spacing: 0.28em;
+        text-transform: uppercase; margin: 0;
+        font-family: system-ui,-apple-system,sans-serif; font-weight: 600;
+      }
+      @keyframes ct-spin {
+        to { transform: rotate(360deg); }
+      }
+      body { margin:0; padding:0; background:#0F0A1F; }
+    </style>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
