@@ -20,12 +20,26 @@ const ApiStatusPage = lazy(() => import("./pages/ApiStatusPage"));
 const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage"));
 const PerformancePage = lazy(() => import("./pages/PerformancePage"));
 
-// ─── Loading fallback ───────────────────────────────────────────────────────
+// ─── Premium loading fallback ───────────────────────────────────────────────
 const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[60vh]">
-    <div className="relative">
-      <div className="w-12 h-12 rounded-full border-4 border-purple-200 border-t-purple-600 animate-spin" />
+  <div className="flex flex-col items-center justify-center min-h-[70vh] gap-5 select-none">
+    {/* Spinning ring with crêpe emoji centre */}
+    <div className="relative w-20 h-20">
+      {/* Outer glow track */}
+      <div className="absolute inset-0 rounded-full border-[3px] border-crepe-purple/10" />
+      {/* Spinning arc — gold on purple track */}
+      <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-crepe-gold animate-spin" style={{ animationDuration: "900ms" }} />
+      {/* Inner subtle ring */}
+      <div className="absolute inset-[6px] rounded-full border-[2px] border-crepe-purple/10" />
+      {/* Emoji centred */}
+      <div className="absolute inset-0 flex items-center justify-center text-2xl">
+        🥞
+      </div>
     </div>
+    {/* Brand label */}
+    <p className="text-xs font-semibold tracking-[0.25em] uppercase text-crepe-purple/50">
+      Crêpe Time…
+    </p>
   </div>
 );
 
@@ -104,22 +118,6 @@ const AppRoutes = () => {
           }
         />
         <Route
-          path="/api-docs"
-          element={
-            <Layout showHero={false}>
-              <Lazy><ApiDocsPage /></Lazy>
-            </Layout>
-          }
-        />
-        <Route
-          path="/api-status"
-          element={
-            <Layout showHero={false}>
-              <Lazy><ApiStatusPage /></Lazy>
-            </Layout>
-          }
-        />
-        <Route
           path="/order-status"
           element={
             <Layout showHero={false}>
@@ -159,6 +157,22 @@ const AppRoutes = () => {
             element={
               <Layout showHero={false}>
                 <Lazy><PerformancePage /></Lazy>
+              </Layout>
+            }
+          />
+          <Route
+            path="/api-docs"
+            element={
+              <Layout showHero={false}>
+                <Lazy><ApiDocsPage /></Lazy>
+              </Layout>
+            }
+          />
+          <Route
+            path="/api-status"
+            element={
+              <Layout showHero={false}>
+                <Lazy><ApiStatusPage /></Lazy>
               </Layout>
             }
           />

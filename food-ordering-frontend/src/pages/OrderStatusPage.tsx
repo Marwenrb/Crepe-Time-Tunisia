@@ -23,8 +23,6 @@ import {
   ChefHat,
   Truck,
   LogIn,
-  UserCircle,
-  CreditCard,
 } from "lucide-react";
 import { useAppContext } from "@/contexts/AppContext";
 import type { Order } from "@/types";
@@ -122,16 +120,6 @@ const OrderStatusPage = () => {
             <p className="text-muted-foreground">
               Pour voir vos commandes, connectez-vous. Si vous venez de commander en tant qu&apos;invité, votre commande s&apos;affichera automatiquement.
             </p>
-            <div className="flex flex-col gap-2 text-sm mb-4">
-              <div className="flex items-center gap-2">
-                <UserCircle className="h-4 w-4 text-crepe-purple" />
-                <span>Identifiants test : test@user.com / 12345678</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4 text-crepe-purple" />
-                <span>Ou utilisez votre compte personnel</span>
-              </div>
-            </div>
             <Link to="/sign-in">
               <Button className="w-full font-bold bg-crepe-purple hover:bg-crepe-purple-light mt-4">
                 <LogIn className="h-4 w-4 mr-2" />
