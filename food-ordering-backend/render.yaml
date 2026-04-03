@@ -20,7 +20,7 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: FRONTEND_URL
-        value: https://crepetime.tn
+        value: https://crepetime.tn,https://www.crepetime.tn,https://crepetime.netlify.app
       - key: BACKEND_URL
         sync: false
       - key: WHATSAPP_RESTAURANT_PHONE

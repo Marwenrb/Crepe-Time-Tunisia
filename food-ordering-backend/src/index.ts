@@ -41,7 +41,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 200,
   message: { message: "Too many requests, please try again later." },
   standardHeaders: true,
   legacyHeaders: false,
@@ -67,9 +67,21 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send(
-    `<h1>🧇 Crêpe Time Tunisia — API Server</h1><p>Backend is running. Visit <a href='${process.env.FRONTEND_URL || "http://localhost:5173"}'>Crêpe Time</a> to place an order.</p>`
-  );
+  const frontendUrl = (process.env.FRONTEND_URL || "http://localhost:5173").split(",")[0].trim();
+  // In production, redirect browsers to the frontend; bots/curl get a simple JSON response
+  if (process.env.NODE_ENV === "production") {
+    const accept = req.headers.accept || "";
+    if (accept.includes("text/html")) {
+      res.redirect(301, frontendUrl);
+      return;
+    }
+  }
+  res.json({
+    service: "Crêpe Time Tunisia — API",
+    status: "running",
+    frontend: frontendUrl,
+    docs: "/api/health",
+  });
 });
 
 const healthHandler = async (req: Request, res: Response) => {
@@ -90,6 +102,17 @@ app.use("/api/my/restaurant", myRestaurantRoute);
 app.use("/api/restaurant", restaurantRoute);
 app.use("/api/order", orderRoute);
 app.use("/api/business-insights", analyticsRoute);
+
+// 404 for unknown API routes
+app.use("/api/*", (req: Request, res: Response) => {
+  res.status(404).json({ message: "API endpoint not found" });
+});
+
+// Global error handler
+app.use((err: Error, req: Request, res: Response, _next: Function) => {
+  console.error("Unhandled error:", err.message);
+  res.status(500).json({ message: "Internal server error" });
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
