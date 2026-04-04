@@ -12,7 +12,7 @@ const AuthCallbackPage = lazy(() => import("./pages/AuthCallbackPage"));
 const UserProfilePage = lazy(() => import("./pages/UserProfilePage"));
 const ManageRestaurantPage = lazy(() => import("./pages/ManageRestaurantPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
-const MenuPage = lazy(() => import("./pages/MenuPage"));
+// MenuPage removed — /menu now renders DetailPage directly (no URL change)
 const DetailPage = lazy(() => import("./pages/DetailPage"));
 const OrderStatusPage = lazy(() => import("./pages/OrderStatusPage"));
 const ApiDocsPage = lazy(() => import("./pages/ApiDocsPage"));
@@ -86,7 +86,7 @@ const AppRoutes = () => {
           path="/menu"
           element={
             <Layout showHero={false}>
-              <Lazy><MenuPage /></Lazy>
+              <Lazy><DetailPage /></Lazy>
             </Layout>
           }
         />

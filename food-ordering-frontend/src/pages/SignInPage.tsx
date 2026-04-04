@@ -80,7 +80,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-[#0F0A1F] overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center bg-[#0F0A1F] overflow-x-hidden py-6">
       {/* ── Ambient orbs ── */}
       <div
         aria-hidden="true"
@@ -102,41 +102,48 @@ const SignInPage = () => {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
-        {/* ── Premium Brand Badge ── */}
-        <div className="flex flex-col items-center mb-10 animate-fade-in-up">
-          <div className="relative mb-5">
-            {/* Breathing glow halo — composited opacity+scale animation */}
+        {/* ── Premium Brand Badge ─────────────────────────────────────────
+            160×160 self-contained medallion.
+            ALL rings are absolutely-positioned INSIDE the 160px box —
+            nothing overflows, nothing gets clipped by a parent.
+              inset-[9px]  → 142×142 outer decoration ring
+              inset-[16px] → 128×128 mid decoration ring
+              inset-[32px] → 96×96  logo circle
+        ── */}
+        <div className="flex flex-col items-center pb-6 animate-fade-in-up">
+          <div className="relative w-[160px] h-[160px] mb-3">
+            {/* Ambient glow — fills full 160px area, composited animation */}
             <div
               aria-hidden="true"
-              className="absolute -inset-6 rounded-full animate-glow-pulse pointer-events-none"
-              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 65%)" }}
+              className="absolute inset-0 rounded-full pointer-events-none animate-glow-pulse"
+              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.16) 0%, transparent 68%)" }}
             />
-            {/* Outer decoration ring */}
-            <div className="absolute -inset-[11px] rounded-full border border-[#D4AF37]/15" />
-            {/* Inner decoration ring */}
-            <div className="absolute -inset-[5px] rounded-full border border-[#D4AF37]/32" />
-            {/* Logo circle — no overflow:hidden, logo floats inside */}
+            {/* Outer ring */}
+            <div className="absolute inset-[9px] rounded-full border border-[#D4AF37]/15 pointer-events-none" />
+            {/* Mid ring */}
+            <div className="absolute inset-[16px] rounded-full border border-[#D4AF37]/28 pointer-events-none" />
+            {/* Logo circle — 96×96, perfectly centred */}
             <div
-              className="relative h-24 w-24 rounded-full flex items-center justify-center"
+              className="absolute inset-[32px] rounded-full flex items-center justify-center"
               style={{
                 background: "linear-gradient(155deg, #1C1040 0%, #0F0A1F 100%)",
                 boxShadow:
-                  "0 0 0 1.5px rgba(212,175,55,0.55), 0 8px 40px rgba(76,29,149,0.55), inset 0 1px 0 rgba(212,175,55,0.12)",
+                  "0 0 0 1.5px rgba(212,175,55,0.55), 0 8px 32px rgba(76,29,149,0.5), inset 0 1px 0 rgba(212,175,55,0.10)",
               }}
             >
               <img
                 src={BRAND.logo}
                 alt="Crêpe Time Tunisia"
                 loading="eager"
-                className="h-[70px] w-[70px] object-contain animate-float"
-                style={{ filter: "drop-shadow(0 3px 14px rgba(212,175,55,0.4))" }}
+                className="w-[58px] h-[58px] object-contain animate-float"
+                style={{ filter: "drop-shadow(0 2px 14px rgba(212,175,55,0.42))" }}
               />
             </div>
           </div>
           <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.2em] font-light uppercase">
             Crêpe Time
           </h1>
-          <div className="mt-2 h-px w-10 bg-gradient-to-r from-transparent via-[#D4AF37]/55 to-transparent" />
+          <div className="mt-1.5 h-px w-8 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent" />
         </div>
 
         {/* ── Card (outer gradient ring) ── */}

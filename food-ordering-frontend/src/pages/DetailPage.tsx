@@ -119,7 +119,12 @@ const LoadingState = () => (
 
 // ── Main page component ──────────────────────────────────────────────────────
 const DetailPage = () => {
-  const { restaurantId } = useParams();
+  const { restaurantId: _rid } = useParams();
+  // Fallback: renders correctly at /menu (no URL param) or /detail/:id
+  const restaurantId =
+    _rid ??
+    (import.meta.env.VITE_RESTAURANT_ID as string | undefined) ??
+    "3188b88d-b11f-4265-8e35-6f1d49c2b1dc";
   const navigate = useNavigate();
 
   const { restaurant, isLoading } = useGetRestaurant(restaurantId);
