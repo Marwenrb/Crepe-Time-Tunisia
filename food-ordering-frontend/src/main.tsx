@@ -9,11 +9,11 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
 import { API_BASE_URL } from "./lib/runtime-config";
 
-// ── Keep Render backend awake — skip in local dev to avoid console noise ────
+// ── Keep Render backend awake — delay first ping to not block critical loads ─
 if (API_BASE_URL && !API_BASE_URL.includes("localhost")) {
   const ping = () =>
     fetch(`${API_BASE_URL}/health`, { mode: "no-cors" }).catch(() => {});
-  ping();
+  setTimeout(ping, 5000);
   setInterval(ping, 14 * 60 * 1000);
 }
 
@@ -34,16 +34,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// ── Dismiss preloader: React must have painted AND 2.6 s minimum must pass ──
-// Animation sequence peaks at ~2.0s (shimmer starts), so 2.6s lets it breathe.
+// ── Dismiss preloader once React paints — reduced from 2.6s to 1.8s ─────────
 const _preloaderStart = performance.now();
-const _MIN_MS = 2600;
+const _MIN_MS = 1800;
 
 const dismissPreloader = () => {
   const el = document.getElementById("app-preloader");
   if (!el) return;
   el.style.opacity = "0";
-  setTimeout(() => el.remove(), 500);
+  setTimeout(() => el.remove(), 400);
 };
 
 requestAnimationFrame(() =>

@@ -61,12 +61,19 @@
     <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
     <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
 
-    <!-- ─── Fonts (preconnect + swap) ─────────────────────────────────── -->
+    <!-- ─── Fonts (non-render-blocking, swap) ──────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
 
     <!-- ─── DNS Prefetch for Backend & Supabase ──────────────────────── -->
@@ -262,11 +269,12 @@
       @keyframes ct-shimmer { to { background-position:260% center; } }
 
       .ct-rule {
-        height:1px; width:0;
+        height:1px; width:58px;
         background:linear-gradient(90deg, transparent 0%, #D4AF37 50%, transparent 100%);
+        transform:scaleX(0); transform-origin:center;
         animation:ct-rule-grow .6s cubic-bezier(.25,.46,.45,.94) 1.42s forwards;
       }
-      @keyframes ct-rule-grow { to { width:58px; } }
+      @keyframes ct-rule-grow { to { transform:scaleX(1); } }
 
       .ct-sub {
         margin:0; font-family:system-ui,-apple-system,sans-serif;
