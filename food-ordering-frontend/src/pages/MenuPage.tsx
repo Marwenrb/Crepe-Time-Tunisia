@@ -6,10 +6,10 @@ import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 const CACHE_KEY = "crepetime_restaurant_id";
 
 /** Hardcoded restaurant ID — env var takes precedence, fallback to known UUID */
-const STATIC_RESTAURANT_ID = (
-  import.meta.env.VITE_RESTAURANT_ID ||
-  "3188b88d-b11f-4265-8e35-6f1d49c2b1dc"
-).trim();
+const sanitizeId = (v: string) => v.trim().replace(/^[^a-f0-9]*([\da-f-]{36})[^a-f0-9]*$/i, "$1");
+const STATIC_RESTAURANT_ID = sanitizeId(
+  import.meta.env.VITE_RESTAURANT_ID || "3188b88d-b11f-4265-8e35-6f1d49c2b1dc"
+);
 
 const MenuPage = () => {
   const navigate = useNavigate();

@@ -306,13 +306,14 @@ const FlavorCard = memo(function FlavorCard({
       <AnimatePresence>
         {hovered && !reducedMotion && (
           <motion.div
-            className="absolute -inset-px rounded-2xl pointer-events-none"
+            className="absolute -inset-1 rounded-[20px] pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             style={{
-              boxShadow: `0 0 36px ${flavor.glow}, 0 0 72px ${flavor.glow}55`,
+              background: `linear-gradient(135deg, ${flavor.glow}40, transparent 50%, ${flavor.glow}20)`,
+              filter: "blur(12px)",
             }}
           />
         )}
@@ -322,21 +323,21 @@ const FlavorCard = memo(function FlavorCard({
       <div
         className="relative overflow-hidden rounded-2xl"
         style={{
-          height: "clamp(220px, 28vw, 288px)",
-          background: "rgba(15, 10, 31, 0.82)",
-          border: `1px solid ${hovered ? flavor.borderColor : "rgba(255,255,255,0.07)"}`,
+          height: "clamp(240px, 30vw, 320px)",
+          background: "rgba(15, 10, 31, 0.88)",
+          border: `1px solid ${hovered ? flavor.borderColor : "rgba(255,255,255,0.06)"}`,
           backdropFilter: "blur(24px)",
           transition: "border-color 0.35s ease, box-shadow 0.35s ease",
           boxShadow: hovered
-            ? `0 24px 64px ${flavor.glow}40, inset 0 1px 0 rgba(255,255,255,0.12)`
+            ? `0 24px 64px ${flavor.glow}40, 0 0 0 1px ${flavor.borderColor}40, inset 0 1px 0 rgba(255,255,255,0.12)`
             : "0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         {/* Zooming background image */}
         <motion.div
           className="absolute inset-0"
-          animate={hovered && !reducedMotion ? { scale: 1.1 } : { scale: 1 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          animate={hovered && !reducedMotion ? { scale: 1.12 } : { scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
           <img
             src={flavor.image}
@@ -349,21 +350,22 @@ const FlavorCard = memo(function FlavorCard({
             className="absolute inset-0 transition-all duration-500"
             style={{
               background: hovered
-                ? `linear-gradient(to top, rgba(15,10,31,0.97) 0%, rgba(15,10,31,0.5) 55%, transparent 100%)`
-                : `linear-gradient(to top, rgba(15,10,31,1) 0%, rgba(15,10,31,0.75) 50%, rgba(15,10,31,0.25) 100%)`,
+                ? `linear-gradient(to top, rgba(15,10,31,0.98) 0%, rgba(15,10,31,0.55) 50%, rgba(15,10,31,0.15) 100%)`
+                : `linear-gradient(to top, rgba(15,10,31,1) 0%, rgba(15,10,31,0.78) 45%, rgba(15,10,31,0.2) 100%)`,
             }}
           />
         </motion.div>
 
-        {/* Tag badge */}
+        {/* Tag badge — glass pill */}
         <div className="absolute top-3 right-3 z-10">
           <span
-            className="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase"
+            className="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
             style={{
-              background: `${flavor.glow}28`,
+              background: `linear-gradient(135deg, ${flavor.glow}20, ${flavor.glow}08)`,
               border: `1px solid ${flavor.borderColor}`,
-              color: "#D4AF37",
-              backdropFilter: "blur(12px)",
+              color: "#E5C76B",
+              backdropFilter: "blur(16px)",
+              boxShadow: `0 2px 8px ${flavor.glow}15`,
             }}
           >
             {flavor.tag}
@@ -371,43 +373,48 @@ const FlavorCard = memo(function FlavorCard({
         </div>
 
         {/* Bottom content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-2xl leading-none">{flavor.emoji}</span>
-            <span className="font-heading font-bold text-white text-sm sm:text-base leading-tight">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
+          <div className="flex items-center gap-2.5 mb-2">
+            <span className="text-2xl leading-none drop-shadow-lg">{flavor.emoji}</span>
+            <span className="font-heading font-bold text-white text-sm sm:text-base leading-tight drop-shadow-md">
               {flavor.name}
             </span>
           </div>
 
           <motion.p
-            className="text-xs leading-relaxed mb-2"
+            className="text-xs sm:text-[13px] leading-relaxed mb-3"
             initial={false}
             animate={
               hovered && !reducedMotion
-                ? { opacity: 1, y: 0 }
-                : { opacity: 0.55, y: 3 }
+                ? { opacity: 0.9, y: 0 }
+                : { opacity: 0.5, y: 3 }
             }
             transition={{ duration: 0.3 }}
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "rgba(255,255,255,0.65)" }}
           >
             {flavor.description}
           </motion.p>
 
-          {/* Hover action */}
+          {/* Hover CTA — gold pill */}
           <motion.div
             initial={false}
             animate={
               hovered && !reducedMotion
                 ? { opacity: 1, y: 0 }
-                : { opacity: 0, y: 6 }
+                : { opacity: 0, y: 8 }
             }
-            transition={{ duration: 0.28, delay: 0.04 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
           >
             <span
-              className="text-xs font-bold tracking-wider uppercase"
-              style={{ color: "#D4AF37" }}
+              className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full"
+              style={{
+                color: "#0F0A1F",
+                background: "linear-gradient(135deg, #E5C76B, #D4AF37)",
+                boxShadow: "0 2px 12px rgba(212,175,55,0.35)",
+              }}
             >
-              Commander →
+              Commander
+              <ArrowRight className="w-3 h-3" />
             </span>
           </motion.div>
         </div>
@@ -424,6 +431,22 @@ const FlavorCard = memo(function FlavorCard({
               style={{
                 background: `linear-gradient(90deg, transparent, ${flavor.borderColor}, transparent)`,
                 transformOrigin: "left",
+              }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Corner accent glow on hover */}
+        <AnimatePresence>
+          {hovered && !reducedMotion && (
+            <motion.div
+              className="absolute top-0 left-0 w-24 h-24 pointer-events-none z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              style={{
+                background: `radial-gradient(ellipse at top left, ${flavor.glow}30, transparent 70%)`,
               }}
             />
           )}

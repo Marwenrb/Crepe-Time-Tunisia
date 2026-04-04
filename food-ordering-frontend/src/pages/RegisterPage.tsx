@@ -90,7 +90,7 @@ const RegisterPage = () => {
               <img
                 src={BRAND.logo}
                 alt="Crêpe Time Tunisia"
-                className="h-full w-full object-cover object-center animate-float"
+                className="h-full w-full object-contain p-1 animate-float"
               />
             </div>
           </div>
