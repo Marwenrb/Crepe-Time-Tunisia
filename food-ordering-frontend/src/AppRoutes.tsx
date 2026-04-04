@@ -1,14 +1,14 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import Layout from "./layouts/Layout";
-import HomePage from "./pages/HomePage";
-import AuthCallbackPage from "./pages/AuthCallbackPage";
-import SignInPage from "./pages/SignInPage";
-import RegisterPage from "./pages/RegisterPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminRoute from "./auth/AdminRoute";
 
-// ─── Lazy-loaded heavy pages ────────────────────────────────────────────────
+// ── Every page lazy-loaded — smaller initial bundle ─────────────────────────
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SignInPage = lazy(() => import("./pages/SignInPage"));
+const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const AuthCallbackPage = lazy(() => import("./pages/AuthCallbackPage"));
 const UserProfilePage = lazy(() => import("./pages/UserProfilePage"));
 const ManageRestaurantPage = lazy(() => import("./pages/ManageRestaurantPage"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
@@ -20,30 +20,19 @@ const ApiStatusPage = lazy(() => import("./pages/ApiStatusPage"));
 const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage"));
 const PerformancePage = lazy(() => import("./pages/PerformancePage"));
 
-// ─── Premium loading fallback ───────────────────────────────────────────────
+// ── Premium loading fallback ───────────────────────────────────────────────
 const PageLoader = () => (
   <div className="flex flex-col items-center justify-center min-h-[70vh] gap-5 select-none">
-    {/* Spinning ring with crêpe emoji centre */}
     <div className="relative w-20 h-20">
-      {/* Outer glow track */}
       <div className="absolute inset-0 rounded-full border-[3px] border-crepe-purple/10" />
-      {/* Spinning arc — gold on purple track */}
       <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-crepe-gold animate-spin" style={{ animationDuration: "900ms" }} />
-      {/* Inner subtle ring */}
       <div className="absolute inset-[6px] rounded-full border-[2px] border-crepe-purple/10" />
-      {/* Emoji centred */}
-      <div className="absolute inset-0 flex items-center justify-center text-2xl">
-        🥞
-      </div>
+      <div className="absolute inset-0 flex items-center justify-center text-2xl">🥞</div>
     </div>
-    {/* Brand label */}
-    <p className="text-xs font-semibold tracking-[0.25em] uppercase text-crepe-purple/50">
-      Crêpe Time…
-    </p>
+    <p className="text-xs font-semibold tracking-[0.25em] uppercase text-crepe-purple/50">Crêpe Time…</p>
   </div>
 );
 
-// ─── Suspense wrapper ───────────────────────────────────────────────────────
 const Lazy = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageLoader />}>{children}</Suspense>
 );
@@ -72,7 +61,7 @@ const AppRoutes = () => {
           path="/"
           element={
             <Layout showHero>
-              <HomePage />
+              <Lazy><HomePage /></Lazy>
             </Layout>
           }
         />
@@ -80,7 +69,7 @@ const AppRoutes = () => {
           path="/sign-in"
           element={
             <Layout showHero={false}>
-              <SignInPage />
+              <Lazy><SignInPage /></Lazy>
             </Layout>
           }
         />
@@ -88,11 +77,11 @@ const AppRoutes = () => {
           path="/register"
           element={
             <Layout showHero={false}>
-              <RegisterPage />
+              <Lazy><RegisterPage /></Lazy>
             </Layout>
           }
         />
-        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+        <Route path="/auth/callback" element={<Lazy><AuthCallbackPage /></Lazy>} />
         <Route
           path="/menu"
           element={

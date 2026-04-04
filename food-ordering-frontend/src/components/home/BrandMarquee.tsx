@@ -1,6 +1,7 @@
 import { memo } from "react";
 import Marquee from "react-fast-marquee";
 
+/* ── Brand phrases ─────────────────────────────────────────────────────────── */
 const PHRASES = [
   "Crêpe Time Nabeul",
   "L'évasion la plus douce",
@@ -8,45 +9,62 @@ const PHRASES = [
   "Saveurs d'exception",
 ] as const;
 
-const Diamond = () => (
-  <svg
-    width="10"
-    height="10"
-    viewBox="0 0 10 10"
-    className="inline-block mx-1 opacity-70"
-    style={{ filter: "drop-shadow(0 0 3px rgba(212,175,55,0.6))" }}
-  >
-    <path d="M5 0L10 5L5 10L0 5Z" fill="url(#dmnd)" />
-    <defs>
-      <linearGradient id="dmnd" x1="0" y1="0" x2="10" y2="10">
-        <stop offset="0%" stopColor="#E5C76B" />
-        <stop offset="100%" stopColor="#C9A227" />
-      </linearGradient>
-    </defs>
-  </svg>
+/* ── Luxury separator — animated golden star ───────────────────────────────── */
+const Separator = () => (
+  <span className="inline-flex items-center justify-center mx-5 sm:mx-7" aria-hidden>
+    <span
+      className="relative flex items-center justify-center w-[18px] h-[18px]"
+      style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.5))" }}
+    >
+      {/* Outer rotating halo ring */}
+      <span
+        className="absolute inset-0 rounded-full"
+        style={{
+          border: "1px solid rgba(212,175,55,0.2)",
+          animation: "sep-rotate 12s linear infinite",
+        }}
+      />
+      {/* Core 4-point star */}
+      <svg width="10" height="10" viewBox="0 0 10 10" className="relative z-10">
+        <path
+          d="M5 0 L6.2 3.8 L10 5 L6.2 6.2 L5 10 L3.8 6.2 L0 5 L3.8 3.8Z"
+          fill="url(#sep-grad)"
+        />
+        <defs>
+          <linearGradient id="sep-grad" x1="0" y1="0" x2="10" y2="10">
+            <stop offset="0%" stopColor="#F7E08A" />
+            <stop offset="50%" stopColor="#D4AF37" />
+            <stop offset="100%" stopColor="#B8901F" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </span>
+  </span>
 );
 
-const MarqueeItem = ({ text, accent }: { text: string; accent?: boolean }) => (
+/* ── Single phrase item ────────────────────────────────────────────────────── */
+const Phrase = ({ text, primary }: { text: string; primary?: boolean }) => (
   <span
-    className="inline-flex items-center mx-4 sm:mx-6 font-heading text-sm sm:text-base md:text-lg font-semibold tracking-[0.2em] sm:tracking-[0.25em] uppercase whitespace-nowrap select-none"
+    className="inline-flex items-center font-heading font-semibold tracking-[0.22em] uppercase whitespace-nowrap select-none"
     style={
-      accent
+      primary
         ? {
+            fontSize: "clamp(0.8rem, 1.5vw, 1.05rem)",
             background:
-              "linear-gradient(90deg, #E5C76B 0%, #FFF8E1 40%, #D4AF37 70%, #C9A227 100%)",
-            backgroundSize: "200% 100%",
-            animation: "marquee-shimmer 3s ease-in-out infinite",
+              "linear-gradient(95deg, #C9A227 0%, #E5C76B 25%, #FFF8E1 50%, #E5C76B 75%, #C9A227 100%)",
+            backgroundSize: "300% 100%",
+            animation: "mq-txt-shimmer 4s ease-in-out infinite",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             filter:
-              "drop-shadow(0 0 8px rgba(212,175,55,0.5)) drop-shadow(0 1px 2px rgba(0,0,0,0.4))",
+              "drop-shadow(0 0 10px rgba(212,175,55,0.35)) drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
           }
         : {
-            color: "rgba(229,199,107,0.55)",
-            letterSpacing: "0.3em",
-            fontSize: "0.7em",
-            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
+            fontSize: "clamp(0.6rem, 1.1vw, 0.78rem)",
+            color: "rgba(229,199,107,0.45)",
+            letterSpacing: "0.32em",
+            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))",
           }
     }
   >
@@ -54,118 +72,128 @@ const MarqueeItem = ({ text, accent }: { text: string; accent?: boolean }) => (
   </span>
 );
 
-const BrandMarquee = () => {
-  return (
-    <section
-      className="relative overflow-hidden py-2.5 sm:py-3"
-      aria-label="Brand tagline marquee"
-    >
-      {/* Deep layered background */}
+/* ── Main Marquee ──────────────────────────────────────────────────────────── */
+const BrandMarquee = () => (
+  <section
+    className="relative overflow-hidden py-3 sm:py-3.5"
+    aria-label="Brand tagline"
+  >
+    {/* Multi-stop purple gradient background */}
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          "linear-gradient(135deg, #1E0A3C 0%, #2E1065 25%, #4C1D95 50%, #3B0764 75%, #1E0A3C 100%)",
+      }}
+    />
+
+    {/* Subtle inner glow — centred gold radial */}
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background:
+          "radial-gradient(ellipse 70% 100% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%)",
+      }}
+    />
+
+    {/* Animated gold light streak — sweeps left to right */}
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background:
+          "linear-gradient(90deg, transparent 0%, transparent 35%, rgba(212,175,55,0.07) 46%, rgba(255,248,225,0.10) 50%, rgba(212,175,55,0.07) 54%, transparent 65%, transparent 100%)",
+        backgroundSize: "250% 100%",
+        animation: "mq-sweep 7s ease-in-out infinite",
+      }}
+    />
+
+    {/* Top ornamental border — triple hairline */}
+    <div className="absolute top-0 inset-x-0 z-10">
       <div
-        className="absolute inset-0"
+        className="h-px"
         style={{
           background:
-            "linear-gradient(135deg, #2E1065 0%, #4C1D95 40%, #3B0764 70%, #2E1065 100%)",
+            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.08) 15%, rgba(212,175,55,0.45) 50%, rgba(212,175,55,0.08) 85%, transparent 95%)",
         }}
       />
-
-      {/* Subtle noise texture overlay */}
       <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E\")",
-        }}
-      />
-
-      {/* Animated gold light sweep */}
-      <div
-        className="absolute inset-0 pointer-events-none"
+        className="h-px mt-px"
         style={{
           background:
-            "linear-gradient(90deg, transparent 0%, transparent 30%, rgba(212,175,55,0.06) 45%, rgba(212,175,55,0.12) 50%, rgba(212,175,55,0.06) 55%, transparent 70%, transparent 100%)",
-          backgroundSize: "200% 100%",
-          animation: "marquee-light-sweep 6s ease-in-out infinite",
-        }}
-      />
-
-      {/* Top ornamental border — double line with glow */}
-      <div className="absolute top-0 left-0 right-0 z-10">
-        <div
-          className="h-px"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.15) 20%, rgba(212,175,55,0.5) 50%, rgba(212,175,55,0.15) 80%, transparent 95%)",
-          }}
-        />
-        <div
-          className="h-px mt-px"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 15%, rgba(212,175,55,0.08) 30%, rgba(212,175,55,0.2) 50%, rgba(212,175,55,0.08) 70%, transparent 85%)",
-          }}
-        />
-      </div>
-
-      {/* Marquee content */}
-      <Marquee speed={30} gradient={false} pauseOnHover className="relative z-10">
-        {Array.from({ length: 5 }).map((_, i) =>
-          PHRASES.map((phrase, j) => (
-            <span key={`${i}-${j}`} className="inline-flex items-center">
-              <MarqueeItem text={phrase} accent={j === 0} />
-              <Diamond />
-            </span>
-          ))
-        )}
-      </Marquee>
-
-      {/* Bottom ornamental border — double line with glow */}
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <div
-          className="h-px"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 15%, rgba(212,175,55,0.08) 30%, rgba(212,175,55,0.2) 50%, rgba(212,175,55,0.08) 70%, transparent 85%)",
-          }}
-        />
-        <div
-          className="h-px mt-px"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.15) 20%, rgba(212,175,55,0.5) 50%, rgba(212,175,55,0.15) 80%, transparent 95%)",
-          }}
-        />
-      </div>
-
-      {/* Edge fade masks */}
-      <div
-        className="absolute inset-y-0 left-0 w-16 sm:w-24 z-20 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to right, #2E1065, transparent)",
+            "linear-gradient(90deg, transparent 12%, rgba(212,175,55,0.04) 25%, rgba(212,175,55,0.18) 50%, rgba(212,175,55,0.04) 75%, transparent 88%)",
         }}
       />
       <div
-        className="absolute inset-y-0 right-0 w-16 sm:w-24 z-20 pointer-events-none"
+        className="h-px mt-px"
         style={{
           background:
-            "linear-gradient(to left, #2E1065, transparent)",
+            "linear-gradient(90deg, transparent 20%, rgba(212,175,55,0.02) 35%, rgba(212,175,55,0.08) 50%, rgba(212,175,55,0.02) 65%, transparent 80%)",
         }}
       />
+    </div>
 
-      {/* Inline keyframes */}
-      <style>{`
-        @keyframes marquee-shimmer {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes marquee-light-sweep {
-          0%, 100% { background-position: -100% 0; }
-          50% { background-position: 200% 0; }
-        }
-      `}</style>
-    </section>
-  );
-};
+    {/* Scrolling content */}
+    <Marquee speed={28} gradient={false} pauseOnHover className="relative z-10">
+      {Array.from({ length: 4 }).map((_, i) =>
+        PHRASES.map((phrase, j) => (
+          <span key={`${i}-${j}`} className="inline-flex items-center">
+            <Phrase text={phrase} primary={j === 0} />
+            <Separator />
+          </span>
+        )),
+      )}
+    </Marquee>
+
+    {/* Bottom ornamental border — mirror of top */}
+    <div className="absolute bottom-0 inset-x-0 z-10">
+      <div
+        className="h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 20%, rgba(212,175,55,0.02) 35%, rgba(212,175,55,0.08) 50%, rgba(212,175,55,0.02) 65%, transparent 80%)",
+        }}
+      />
+      <div
+        className="h-px mt-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 12%, rgba(212,175,55,0.04) 25%, rgba(212,175,55,0.18) 50%, rgba(212,175,55,0.04) 75%, transparent 88%)",
+        }}
+      />
+      <div
+        className="h-px mt-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.08) 15%, rgba(212,175,55,0.45) 50%, rgba(212,175,55,0.08) 85%, transparent 95%)",
+        }}
+      />
+    </div>
+
+    {/* Edge fade masks — blend into surrounding content */}
+    <div
+      className="absolute inset-y-0 left-0 w-20 sm:w-32 z-20 pointer-events-none"
+      style={{ background: "linear-gradient(to right, #1E0A3C, transparent)" }}
+    />
+    <div
+      className="absolute inset-y-0 right-0 w-20 sm:w-32 z-20 pointer-events-none"
+      style={{ background: "linear-gradient(to left, #1E0A3C, transparent)" }}
+    />
+
+    {/* Keyframes — GPU-composited (transform / opacity only) */}
+    <style>{`
+      @keyframes mq-txt-shimmer {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      @keyframes mq-sweep {
+        0%, 100% { background-position: -100% 0; }
+        50% { background-position: 250% 0; }
+      }
+      @keyframes sep-rotate {
+        to { transform: rotate(360deg); }
+      }
+    `}</style>
+  </section>
+);
 
 export default memo(BrandMarquee);

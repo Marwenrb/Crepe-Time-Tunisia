@@ -25,6 +25,12 @@
     Permissions-Policy        = "camera=(), microphone=(), geolocation=(self)"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
 
+# ─── Cache: HTML — always revalidate ────────────────────────────────────────
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # ─── Cache: Vite hashed assets (JS, CSS) — 1 year immutable ─────────────────
 [[headers]]
   for = "/assets/*"
