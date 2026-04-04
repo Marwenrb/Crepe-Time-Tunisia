@@ -8,6 +8,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Mail, Lock, Loader2 } from "lucide-react";
+import { BRAND } from "@/config/brand";
 import { supabase } from "@/lib/supabase";
 
 const GoogleIcon = () => (
@@ -106,7 +107,7 @@ const SignInPage = () => {
           <div className="relative mb-3">
             <div className="absolute inset-0 rounded-full bg-[#D4AF37]/15 blur-2xl animate-glow-pulse pointer-events-none" />
             <img
-              src="/logo.png"
+              src={BRAND.logo}
               alt="Crêpe Time Tunisia"
               className="relative w-16 h-16 object-contain animate-float drop-shadow-[0_0_18px_rgba(212,175,55,0.35)]"
             />

@@ -110,7 +110,7 @@ const BackToTop = () => {
                   "linear-gradient(135deg, #F7E07C 0%, #E5C76B 20%, #D4AF37 50%, #C2940E 80%, #B8901F 100%)",
                 color: "#4C1D95",
               }}
-              aria-label={`Retour en haut — ${Math.round(scrollProgress)}% de la page`}
+              aria-label="Retour en haut"
             >
               {/* Circular progress ring */}
               <svg
@@ -172,26 +172,7 @@ const BackToTop = () => {
                 <ChevronUp className="w-4.5 h-4.5 sm:w-5 sm:h-5" strokeWidth={2.8} aria-hidden />
               </motion.span>
 
-              {/* Micro percentage indicator — shows on hover */}
-              {!reducedMotion && (
-                <motion.span
-                  className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-black pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(76,29,149,0.96) 0%, rgba(59,18,117,0.98) 100%)",
-                    color: "#D4AF37",
-                    boxShadow:
-                      "0 0 0 1.5px rgba(212,175,55,0.50), 0 2px 6px rgba(76,29,149,0.50)",
-                  }}
-                  variants={{
-                    rest: { scale: 0, opacity: 0 },
-                    hover: { scale: 1, opacity: 1 },
-                  }}
-                  transition={{ duration: 0.24, ease: EASE }}
-                >
-                  {Math.round(scrollProgress)}
-                </motion.span>
-              )}
+              {/* Progress indicator removed — clean minimal look */}
             </button>
           </motion.div>
         </motion.div>

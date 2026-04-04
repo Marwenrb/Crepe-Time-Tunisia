@@ -9,16 +9,22 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
 import { API_BASE_URL } from "./lib/runtime-config";
 
-// ── Keep Render backend awake — delay first ping to not block critical loads ─
+// ── Keep Render backend awake — ping immediately so it wakes up fast ─────────
 if (API_BASE_URL && !API_BASE_URL.includes("localhost")) {
   const ping = () =>
     fetch(`${API_BASE_URL}/health`, { mode: "no-cors" }).catch(() => {});
-  setTimeout(ping, 5000);
+  ping();
   setInterval(ping, 14 * 60 * 1000);
 }
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 3,
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 15000),
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

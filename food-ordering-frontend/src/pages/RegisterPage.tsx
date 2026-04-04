@@ -8,6 +8,7 @@ import * as authApi from "@/api/authApi";
 import { useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { User, Mail, Phone, Lock, Loader2 } from "lucide-react";
+import { BRAND } from "@/config/brand";
 
 /* ─── Validation ──────────────────────────────────────────── */
 const registerSchema = z.object({
@@ -81,12 +82,17 @@ const RegisterPage = () => {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
-        {/* Brand header */}
-        <div className="flex items-center gap-2 mb-8">
-          <span className="text-2xl" role="img" aria-label="crêpe">
-            🥞
-          </span>
-          <h1 className="text-2xl font-bold text-[#D4AF37] tracking-wide">
+        {/* Brand header — matches SignIn */}
+        <div className="relative z-10 flex flex-col items-center mb-8 animate-fade-in-up">
+          <div className="relative mb-3">
+            <div className="absolute inset-0 rounded-full bg-[#D4AF37]/15 blur-2xl animate-glow-pulse pointer-events-none" />
+            <img
+              src={BRAND.logo}
+              alt="Crêpe Time Tunisia"
+              className="relative w-16 h-16 object-contain animate-float drop-shadow-[0_0_18px_rgba(212,175,55,0.35)]"
+            />
+          </div>
+          <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.15em] font-light uppercase">
             Crêpe Time
           </h1>
         </div>
@@ -106,9 +112,9 @@ const RegisterPage = () => {
               className="flex flex-col gap-[10px] px-8 pb-[0.4em] bg-[#0F0A1F] rounded-[25px] transition-all duration-[400ms]"
             >
               {/* Heading */}
-              <p className="text-center my-8 text-white text-[1.2em]">
-                Create Account
-              </p>
+              <h2 className="text-center text-white/80 text-sm font-light tracking-[0.2em] uppercase pt-6 pb-2">
+                Créer un compte
+              </h2>
 
               {/* Name field */}
               <div>
