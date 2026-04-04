@@ -1,176 +1,173 @@
-# 🧇 Crêpe Time Tunisia
+<p align="center">
+  <img src="food-ordering-frontend/public/crepe-time-logo.png" width="120" alt="Crêpe Time" />
+</p>
 
-[![Vite](https://img.shields.io/badge/Vite-7.x-646CFF?logo=vite)](https://vitejs.dev)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org)
-[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase)](https://supabase.com)
-[![Tailwind](https://img.shields.io/badge/Tailwind-3.x-06B6D4?logo=tailwindcss)](https://tailwindcss.com)
+<h1 align="center">Crêpe Time Tunisia</h1>
 
-### *The Sweetest Escape*
+<p align="center">
+  <strong>Full-stack artisan crêpe ordering platform — React · Express · Supabase</strong>
+</p>
 
-> Plateforme premium de commande de crêpes artisanales — Full-Stack React + Node + Supabase  
-> Livraison à domicile & retrait en boutique | Notification WhatsApp | Google OAuth
+<p align="center">
+  <a href="https://crepetime.tn">crepetime.tn</a>
+</p>
 
-**Repository:** [github.com/Marwenrb/Crepe-Time-Tunisia](https://github.com/Marwenrb/Crepe-Time-Tunisia)  
-**Développeur:** [Marwen Rabai](https://marwen-rabai.netlify.app) — rbmarwenrb@gmail.com
-
----
-
-## Aperçu
-
-**Crêpe Time Tunisia** est une application web complète de commande de crêpes artisanales pour Nabeul. Les clients parcourent le menu, ajoutent au panier, passent commande (paiement à la livraison), et suivent l'état en temps réel. Le restaurant reçoit chaque commande via WhatsApp.
-
-### Fonctionnalités
-
-- **Menu interactif** — 12 crêpes artisanales avec descriptions et prix TND
-- **Panier dynamique** — Ajout, suppression, modification des quantités
-- **Commande simplifiée** — Paiement à la livraison ou retrait en boutique
-- **Notification WhatsApp** — Message automatique au restaurant
-- **Suivi de commande** — Statuts en temps réel
-- **Panel admin** — Gestion restaurant, menu, statuts
-- **Tableau de bord analytique** — Statistiques de ventes
-- **Authentification** — Email + Google OAuth (Supabase Auth)
-- **Upload d'images** — Cloudinary
-- **Design responsive** — Interface premium purple/gold
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind" />
+</p>
 
 ---
 
-## Stack technique
+## Overview
 
-| Couche | Technologies |
-|--------|-------------|
-| **Frontend** | React 18, TypeScript, Vite 7, Tailwind CSS, Shadcn/ui |
-| **Backend** | Node.js, Express, TypeScript |
-| **Base de données** | Supabase (PostgreSQL) |
-| **Authentification** | Supabase Auth (email + Google OAuth) |
-| **Images** | Cloudinary |
-| **Notifications** | WhatsApp (wa.me) |
-| **Sécurité** | Helmet, CORS, express-rate-limit |
+Production-grade food ordering system built for **Crêpe Time**, an artisan crêperie in Nabeul, Tunisia. Customers browse the menu, build a cart, place orders (cash on delivery), and track status in real time. The restaurant receives instant WhatsApp notifications for every order.
 
----
+**Live:** [crepetime.tn](https://crepetime.tn)
 
-## Démarrage rapide
+## Features
 
-### Une commande (recommandé)
+- **Interactive menu** — categorized items with modal detail view, quantity controls, dynamic cart
+- **Dual checkout** — authenticated users & guest ordering (no account required)
+- **Real-time order tracking** — live status updates via Supabase Realtime
+- **WhatsApp notifications** — automatic order alerts to the restaurant
+- **Admin dashboard** — restaurant management, menu editor, order status control, business analytics
+- **Google OAuth + email auth** — Supabase Auth with implicit flow
+- **Image uploads** — Cloudinary integration for menu item & restaurant photos
+- **Responsive design** — premium dark purple/gold theme, mobile-first
 
-```bash
-npm run dev
+## Architecture
+
+```
+┌──────────────────┐        ┌──────────────────┐        ┌──────────────────┐
+│   React SPA      │  API   │   Express API    │  SQL   │   Supabase       │
+│   Netlify        │◄──────►│   Render         │◄──────►│   PostgreSQL     │
+│   crepetime.tn   │  HTTPS │   onrender.com   │        │   Auth · Storage │
+└──────────────────┘        └──────────────────┘        └──────────────────┘
+                                     │
+                              ┌──────┴──────┐
+                              │  Cloudinary  │
+                              │  WhatsApp    │
+                              └─────────────┘
 ```
 
-> Lance backend (port 5000) et frontend (port 5173) en parallèle.
+| Layer | Stack |
+|-------|-------|
+| **Frontend** | React 18, TypeScript, Vite 7, Tailwind CSS, Radix UI, Framer Motion, React Query |
+| **Backend** | Node.js, Express 4, TypeScript, Helmet, CORS, express-rate-limit |
+| **Database** | Supabase (PostgreSQL), Row Level Security, Realtime subscriptions |
+| **Auth** | Supabase Auth — email/password + Google OAuth (implicit flow) |
+| **Storage** | Cloudinary (images), Supabase Storage |
+| **Notifications** | WhatsApp Business API + wa.me deep links |
 
-### Prérequis
-
-- **Node.js** v18+ et **npm** v9+
-- **Compte Supabase** (gratuit) — [supabase.com](https://supabase.com)
-- **Cloudinary** (gratuit) — pour l'upload d'images
-- **Google Cloud** (optionnel) — pour OAuth Google
-
-### Configuration
-
-1. **Cloner** le projet
-2. **Supabase** : Créer un projet, exécuter les migrations SQL dans l'ordre : `001_initial_schema.sql`, `002_supabase_auth.sql`, `003_realtime_and_email_logs.sql`
-3. **Backend** : Copier `food-ordering-backend/.env.example` → `.env`, remplir les variables
-4. **Frontend** : Copier `food-ordering-frontend/.env.example` → `.env`, remplir les variables
-5. **Seed** (une fois) : `npm run seed`
-6. **Démarrer** : `npm run dev`
-
-Ouvrir **http://localhost:5173**
-
-> Identifiants admin : voir [CREDENTIALS.md](./CREDENTIALS.md)
-
----
-
-## Structure du projet
+## Project Structure
 
 ```
 crepe-time-tunisia/
-├── food-ordering-backend/     # API Node.js + Express + Supabase
+├── food-ordering-frontend/          # React + Vite + Tailwind SPA
 │   ├── src/
-│   │   ├── controllers/
-│   │   ├── lib/
-│   │   ├── middleware/
-│   │   ├── routes/
-│   │   └── services/
-│   ├── scripts/
-│   │   └── seed-restaurant.ts
-│   └── .env.example
-├── food-ordering-frontend/    # React + Vite + Tailwind
+│   │   ├── api/                     # API hooks (react-query)
+│   │   ├── auth/                    # Route guards (ProtectedRoute, AdminRoute)
+│   │   ├── components/              # UI components + home sections
+│   │   ├── config/                  # Brand, menu categories, images
+│   │   ├── contexts/                # Auth state (AppContext)
+│   │   ├── forms/                   # Checkout, restaurant, profile forms
+│   │   ├── lib/                     # API client, Supabase, runtime config
+│   │   └── pages/                   # Route pages
+│   ├── public/                      # Static assets, PWA manifest, SEO
+│   ├── netlify.toml                 # Build + SPA redirect + security headers
+│   └── vite.config.ts               # Build config, chunk splitting
+│
+├── food-ordering-backend/           # Express + TypeScript API
 │   ├── src/
-│   │   ├── api/
-│   │   ├── auth/
-│   │   ├── components/
-│   │   ├── config/
-│   │   ├── contexts/
-│   │   ├── forms/
-│   │   ├── layouts/
-│   │   ├── lib/
-│   │   └── pages/
-│   └── .env.example
-├── supabase/
-│   └── migrations/
-├── GUIDE_DEMARRAGE.md
-├── DEVELOPER_GUIDE.md
-├── DEPLOYMENT_QUICKSTART.md
-├── GOOGLE_OAUTH_SETUP.md
-├── CREDENTIALS.md
-└── README.md
+│   │   ├── controllers/             # Business logic
+│   │   ├── lib/                     # Supabase client, transforms
+│   │   ├── middleware/              # Auth, admin guard, validation
+│   │   ├── routes/                  # REST endpoints
+│   │   └── services/                # WhatsApp notifications
+│   ├── scripts/                     # DB seed, connection check
+│   └── render.yaml                  # Render blueprint
+│
+└── supabase/
+    ├── migrations/                  # SQL schema (4 migrations)
+    └── functions/                   # Edge functions
 ```
 
----
+## Getting Started
 
-## Déploiement
+### Prerequisites
 
-| Plateforme | Frontend | Backend |
-|------------|----------|---------|
-| **Vercel** | ✅ | — |
-| **Netlify** | ✅ | — |
-| **Render** | — | ✅ |
-| **Coolify** | ✅ | ✅ |
+- Node.js 18+ and npm 9+
+- [Supabase](https://supabase.com) project (free tier)
+- [Cloudinary](https://cloudinary.com) account (free tier)
+- Google Cloud Console (optional — for OAuth)
 
-### Frontend (Vercel / Netlify)
+### Setup
 
-- Root Directory : `food-ordering-frontend`
-- Build : `npm run build`
-- Output : `dist`
-- Variables : `VITE_API_BASE_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-- Netlify : voir [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md)
+```bash
+# Clone
+git clone https://github.com/Marwenrb/Crepe-Time-Tunisia.git
+cd Crepe-Time-Tunisia
 
-### Backend (Render)
+# Configure environment
+cp food-ordering-backend/.env.example food-ordering-backend/.env
+cp food-ordering-frontend/.env.example food-ordering-frontend/.env
+# Edit both .env files with your credentials
 
-- Root Directory : `food-ordering-backend`
-- Build : `npm install && npm run build`
-- Start : `npm start`
-- Variables : `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `JWT_SECRET_KEY`, `FRONTEND_URL`, etc.
+# Run Supabase migrations (in order)
+# 001_initial_schema.sql → 002_supabase_auth.sql → 003_realtime_and_email_logs.sql
 
-Voir [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) pour Vercel + Render.  
-Voir [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md) pour le déploiement Netlify.
+# Seed the database
+npm run seed
 
----
+# Start development (backend + frontend)
+npm run dev
+```
 
-## Documentation
+Frontend: `http://localhost:5173` — Backend: `http://localhost:5000`
 
-| Fichier | Description |
-|---------|-------------|
-| [GUIDE_DEMARRAGE.md](./GUIDE_DEMARRAGE.md) | Guide complet de démarrage |
-| [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) | Architecture et conventions |
-| [DEPLOYMENT_QUICKSTART.md](./DEPLOYMENT_QUICKSTART.md) | Déploiement Vercel + Render |
-| [NETLIFY_DEPLOY.md](./NETLIFY_DEPLOY.md) | Déploiement Netlify (env complet) |
-| [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md) | Configuration Google OAuth |
-| [NOTIFICATIONS_SETUP.md](./NOTIFICATIONS_SETUP.md) | Realtime + Resend emails |
-| [CREDENTIALS.md](./CREDENTIALS.md) | Comptes de test (seed) |
-| [CREDENTIALS_BACKUP.md](./CREDENTIALS_BACKUP.md) | Backup credentials (hors projet) |
+## Deployment
 
----
+| Service | Platform | Root Directory | Build | Start |
+|---------|----------|---------------|-------|-------|
+| **Frontend** | Netlify | `food-ordering-frontend` | `npm run build` | Static (`dist/`) |
+| **Backend** | Render | `food-ordering-backend` | `npm install && npm run build` | `npm start` |
 
-## Auteurs & Contact
+### Environment Variables
 
-- **Crêpe Time Tunisia** — [GitHub](https://github.com/Marwenrb/Crepe-Time-Tunisia)
-- **Développeur:** [Marwen Rabai](https://marwen-rabai.netlify.app) — Portfolio
-- **Email:** rbmarwenrb@gmail.com
+**Frontend** (Netlify):
+- `VITE_API_BASE_URL` — backend URL
+- `VITE_SUPABASE_URL` — Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` — Supabase anon/publishable key
+- `VITE_RESTAURANT_ID` — restaurant UUID
 
----
+**Backend** (Render):
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — Supabase connection
+- `JWT_SECRET_KEY` — token signing
+- `FRONTEND_URL` — allowed CORS origins (comma-separated)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
+- `WHATSAPP_RESTAURANT_PHONE` — restaurant notification number
 
-## Licence
+## API Routes
 
-[MIT](LICENSE)
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/restaurant/:id` | Public | Get restaurant by ID |
+| `GET` | `/api/restaurant/search/:city` | Public | Search restaurants |
+| `POST` | `/api/order/create` | User | Create authenticated order |
+| `POST` | `/api/order/create-guest` | Public | Create guest order |
+| `GET` | `/api/order/track/:orderId` | Public | Track order status |
+| `GET` | `/api/auth/validate-token` | User | Validate session |
+| `GET/POST/PUT` | `/api/my/user` | User | User profile CRUD |
+| `GET/POST/PUT` | `/api/my/restaurant` | Admin | Restaurant management |
+| `PATCH` | `/api/my/restaurant/order/:id/status` | Admin | Update order status |
+| `GET` | `/api/business-insights` | Admin | Analytics dashboard |
+| `GET` | `/health` | Public | Health check |
+
+## License
+
+[MIT](LICENSE) — Marouan Rabai
