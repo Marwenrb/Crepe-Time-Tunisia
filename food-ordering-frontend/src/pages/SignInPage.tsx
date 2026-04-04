@@ -104,13 +104,15 @@ const SignInPage = () => {
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
         {/* Brand header */}
         <div className="relative z-10 flex flex-col items-center mb-8 animate-fade-in-up">
-          <div className="relative mb-3">
-            <div className="absolute inset-0 rounded-full bg-[#D4AF37]/15 blur-2xl animate-glow-pulse pointer-events-none" />
-            <img
-              src={BRAND.logo}
-              alt="Crêpe Time Tunisia"
-              className="relative w-16 h-16 object-contain animate-float drop-shadow-[0_0_18px_rgba(212,175,55,0.35)]"
-            />
+          <div className="relative mb-3 group">
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#D4AF37]/30 to-[#4C1D95]/20 opacity-80 blur-md animate-glow-pulse pointer-events-none" />
+            <div className="relative h-16 w-16 rounded-xl overflow-hidden ring-2 ring-[#D4AF37]/50 ring-offset-2 ring-offset-[#0F0A1F] shadow-lg shadow-[#D4AF37]/15">
+              <img
+                src={BRAND.logo}
+                alt="Crêpe Time Tunisia"
+                className="h-full w-full object-cover object-center animate-float"
+              />
+            </div>
           </div>
           <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.15em] font-light uppercase">
             Crêpe Time

@@ -283,6 +283,8 @@ const FlavorCard = memo(function FlavorCard({
 }) {
   const [hovered, setHovered] = useState(false);
 
+  const toggleActive = useCallback(() => setHovered((p) => !p), []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 44 }}
@@ -293,7 +295,11 @@ const FlavorCard = memo(function FlavorCard({
       whileTap={{ scale: 0.975 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
+      onClick={toggleActive}
       className="relative group cursor-pointer"
+      tabIndex={0}
+      role="button"
+      aria-label={`${flavor.name} — ${flavor.tag}`}
       style={{ transformStyle: "preserve-3d" }}
     >
       {/* Outer glow ring */}
@@ -861,42 +867,71 @@ const WowExperienceSection = () => {
 
       {/* ─── PART 2 — Interactive Flavor Explorer ──────────────────────────── */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-14 sm:py-16 lg:py-20">
+
+        {/* Ambient glow behind section */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse, rgba(212,175,55,0.04) 0%, transparent 65%)",
+            filter: "blur(60px)",
+          }}
+          aria-hidden
+        />
+
         {/* Section header */}
         <motion.div
           initial={reducedMotion ? {} : { opacity: 0, y: 24 }}
           whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-10 sm:mb-12"
+          className="text-center mb-10 sm:mb-14"
         >
+          {/* Pill badge with subtle glow */}
           <span
-            className="inline-block mb-3 px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.14em] uppercase"
+            className="inline-flex items-center gap-1.5 mb-4 px-5 py-2 rounded-full text-xs font-bold tracking-[0.16em] uppercase"
             style={{
-              background: "rgba(109,40,217,0.12)",
-              border: "1px solid rgba(109,40,217,0.28)",
-              color: "rgba(167,139,250,0.9)",
+              background: "linear-gradient(135deg, rgba(109,40,217,0.15) 0%, rgba(212,175,55,0.08) 100%)",
+              border: "1px solid rgba(212,175,55,0.18)",
+              color: "#E5C76B",
+              boxShadow: "0 0 20px rgba(212,175,55,0.06), inset 0 1px 0 rgba(255,255,255,0.06)",
             }}
           >
+            <Sparkles className="w-3 h-3" aria-hidden />
             Explorer les saveurs
           </span>
+
+          {/* Heading with animated gradient */}
           <h3
             className="font-heading font-bold"
             style={{
-              fontSize: "clamp(1.5rem, 3.5vw, 2.6rem)",
-              background: "linear-gradient(135deg, #FFFFFF 0%, #E5C76B 50%, #D4AF37 100%)",
+              fontSize: "clamp(1.6rem, 4vw, 2.8rem)",
+              background: "linear-gradient(135deg, #FFFFFF 0%, #F7E08A 30%, #D4AF37 60%, #E5C76B 100%)",
+              backgroundSize: "200% 100%",
+              animation: "mq-txt-shimmer 6s ease-in-out infinite",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               letterSpacing: "-0.025em",
+              lineHeight: 1.2,
             }}
           >
             Choisissez votre moment de plaisir
           </h3>
+
+          {/* Ornamental line under heading */}
+          <div className="flex items-center justify-center gap-3 mt-4 mb-2">
+            <div className="h-px w-12 sm:w-16" style={{ background: "linear-gradient(to right, transparent, rgba(212,175,55,0.3))" }} />
+            <svg width="8" height="8" viewBox="0 0 10 10" aria-hidden>
+              <path d="M5 0 L6.2 3.8 L10 5 L6.2 6.2 L5 10 L3.8 6.2 L0 5 L3.8 3.8Z" fill="#D4AF37" opacity="0.5" />
+            </svg>
+            <div className="h-px w-12 sm:w-16" style={{ background: "linear-gradient(to left, transparent, rgba(212,175,55,0.3))" }} />
+          </div>
+
           <p
-            className="mt-2.5 text-sm sm:text-base max-w-sm mx-auto leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.45)" }}
+            className="mt-2 text-sm sm:text-base max-w-md mx-auto leading-relaxed"
+            style={{ color: "rgba(255,255,255,0.5)" }}
           >
-            Survolez chaque saveur pour la découvrir.
+            Touchez chaque saveur pour la découvrir.
           </p>
         </motion.div>
 
@@ -912,22 +947,25 @@ const WowExperienceSection = () => {
           ))}
         </div>
 
-        {/* Bottom CTA link */}
+        {/* Bottom CTA link — premium style */}
         <motion.div
           initial={reducedMotion ? {} : { opacity: 0, y: 16 }}
           whileInView={reducedMotion ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-          className="text-center mt-10 sm:mt-12"
+          className="text-center mt-10 sm:mt-14"
         >
           <Link
             to="/menu"
-            className="group inline-flex items-center gap-2 text-sm font-semibold tracking-wide transition-all duration-300"
-            style={{ color: "rgba(212,175,55,0.8)" }}
+            className="group inline-flex items-center gap-2.5 px-7 py-3 rounded-full text-sm font-semibold tracking-wide transition-all duration-300"
+            style={{
+              background: "linear-gradient(135deg, rgba(212,175,55,0.12) 0%, rgba(109,40,217,0.08) 100%)",
+              border: "1px solid rgba(212,175,55,0.22)",
+              color: "#E5C76B",
+              boxShadow: "0 0 24px rgba(212,175,55,0.05)",
+            }}
           >
-            <span className="border-b border-current border-opacity-40 group-hover:border-opacity-100 transition-all duration-300 pb-0.5">
-              Voir toutes les saveurs
-            </span>
+            <span>Voir toutes les saveurs</span>
             <ArrowRight
               className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5"
               aria-hidden

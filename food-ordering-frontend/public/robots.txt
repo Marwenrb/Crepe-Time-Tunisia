@@ -11,6 +11,8 @@ Sitemap: https://crepetime.tn/sitemap.xml
 
 # Block crawling of auth, API, and admin pages
 Disallow: /auth/
+Disallow: /sign-in
+Disallow: /register
 Disallow: /api-docs
 Disallow: /api-status
 Disallow: /manage-restaurant
