@@ -102,10 +102,13 @@ export const PremiumMenuCard = ({
         <motion.img
           src={imageUrl}
           alt={menuItem.name}
+          width={400}
+          height={300}
           className="w-full h-full object-cover"
           whileHover={{ scale: 1.08 }}
           transition={{ duration: 0.55, ease: EASE_OUT_EXPO }}
           loading="lazy"
+          decoding="async"
         />
 
         {/* Dark scrim at bottom of image */}

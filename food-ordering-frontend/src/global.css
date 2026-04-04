@@ -78,10 +78,19 @@
   }
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-foreground antialiased;
     overflow-x: hidden;
+  }
+  /* GPU-promote elements that use filter: blur — avoids forced layout/repaint */
+  [style*="filter: blur"],
+  [style*="filter:blur"],
+  [style*="backdrop-filter"] {
+    will-change: transform;
+    transform: translateZ(0);
   }
 }
 

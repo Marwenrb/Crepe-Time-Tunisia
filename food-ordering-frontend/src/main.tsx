@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 
 // ── Dismiss preloader once React paints ──────────────────────────────────────
 const _preloaderStart = performance.now();
-const _MIN_MS = 600;
+const _MIN_MS = 200;
 
 const dismissPreloader = () => {
   const el = document.getElementById("app-preloader");

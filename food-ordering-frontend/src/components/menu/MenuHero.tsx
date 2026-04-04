@@ -57,9 +57,13 @@ export const MenuHero = ({ restaurant }: Props) => {
         <img
           src={restaurant.imageUrl}
           alt={restaurant.restaurantName}
+          width={1200}
+          height={520}
           className="w-full h-full object-cover object-center scale-105"
           style={{ filter: "brightness(0.55) saturate(1.2)" }}
           loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
         {/* Dark radial gradient from bottom */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A1F] via-[#0F0A1F]/60 to-transparent" />
@@ -67,20 +71,20 @@ export const MenuHero = ({ restaurant }: Props) => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#4C1D95]/40 via-transparent to-[#4C1D95]/25" />
       </div>
 
-      {/* ── Animated glow orbs (inline animate to avoid Variants typing issues) ── */}
-      <motion.div
-        animate={ORB_ANIMATE}
+      {/* ── Static glow orbs (no infinite animations — saves GPU/CPU) ── */}
+      <div
         className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full pointer-events-none"
         style={{
           background: "radial-gradient(circle, rgba(76,29,149,0.45) 0%, transparent 70%)",
           filter: "blur(40px)",
+          opacity: 0.24,
         }}
       />
-      <motion.div
-        animate={{ ...ORB_ANIMATE, transition: { ...ORB_ANIMATE.transition, delay: 2.5 } }}
+      <div
         style={{
           background: "radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%)",
           filter: "blur(50px)",
+          opacity: 0.24,
         }}
         className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full pointer-events-none"
       />

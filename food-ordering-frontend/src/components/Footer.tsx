@@ -36,7 +36,11 @@ const Footer = () => {
                 <img
                   src={BRAND.logo}
                   alt={BRAND.name}
+                  width={56}
+                  height={56}
                   className="h-full w-full object-cover object-center"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const el = e.target as HTMLImageElement;
                     el.src = "/logo.png";
@@ -163,30 +167,30 @@ const Footer = () => {
           <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
             <div className="flex flex-col gap-1.5">
               <span className="text-crepe-gold/90 text-xs font-semibold uppercase tracking-wider">Contact</span>
-              <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors min-h-[44px] py-1">
                 <Phone className="h-3.5 w-3.5" />
                 {CONTACT.phone}
               </a>
-              <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors min-h-[44px] py-1">
                 <MessageCircle className="h-3.5 w-3.5" />
                 WhatsApp
               </a>
-              <span className="flex items-center gap-2 text-white/80 text-sm">
+              <span className="flex items-center gap-2 text-white/80 text-sm min-h-[44px] py-1">
                 <MapPin className="h-3.5 w-3.5" />
                 {CONTACT.address}
               </span>
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-crepe-gold/90 text-xs font-semibold uppercase tracking-wider">Suivez-nous</span>
-              <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={CONTACT.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors min-h-[44px] py-1">
                 <Instagram className="h-3.5 w-3.5" />
                 Crêpe Time
               </a>
-              <a href={`https://tiktok.com/@${CONTACT.tiktok}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={`https://tiktok.com/@${CONTACT.tiktok}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors min-h-[44px] py-1">
                 <TikTokIcon className="h-3.5 w-3.5" />
                 Crêpe Time
               </a>
-              <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors">
+              <a href={CONTACT.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white/90 hover:text-crepe-gold text-sm transition-colors min-h-[44px] py-1">
                 <Facebook className="h-3.5 w-3.5" />
                 Crêpe Time
               </a>

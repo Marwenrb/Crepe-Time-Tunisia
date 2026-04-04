@@ -17,7 +17,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     // Enable CSS code splitting
     cssCodeSplit: true,
-    // Source maps for production debugging (optional, remove for smaller deploy)
+    // Source maps disabled for smaller deploy
     sourcemap: false,
     // Rollup options for optimal chunk splitting
     rollupOptions: {
@@ -38,16 +38,20 @@ export default defineConfig({
             "@radix-ui/react-separator",
             "@radix-ui/react-slot",
           ],
-          // Animation
+          // Animation — separate chunk, loaded on demand
           "vendor-animation": ["framer-motion"],
           // Forms & validation
           "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod"],
           // Data fetching
           "vendor-data": ["axios", "react-query", "@supabase/supabase-js"],
+          // Icons — tree-shaken but keep in own chunk
+          "vendor-icons": ["lucide-react"],
         },
       },
     },
     // Minification
     minify: "esbuild",
+    // Aggressive tree-shaking
+    modulePreload: { polyfill: false },
   },
 });

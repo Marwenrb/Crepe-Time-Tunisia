@@ -23,10 +23,14 @@ const Hero = () => {
         ref={imgRef}
         src={heroBanner}
         alt="Crepe Time - Hero Banner"
+        width={1200}
+        height={400}
         className={`w-full h-40 sm:h-56 md:h-72 lg:max-h-[500px] xl:max-h-[600px] object-cover object-center transition-opacity duration-500 ${
           isLoading ? "opacity-0" : "opacity-100"
         }`}
         loading="eager"
+        fetchPriority="high"
+        decoding="async"
         onLoad={() => setIsLoading(false)}
       />
     </div>

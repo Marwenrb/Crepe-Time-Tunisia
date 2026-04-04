@@ -78,38 +78,32 @@ const FEATURES = [
 const SectionBackground = memo(function SectionBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      {/* Dominant purple orb — top left */}
-      <motion.div
+      {/* Dominant purple orb — top left (static for performance) */}
+      <div
         className="absolute -top-48 -left-32 w-[600px] h-[600px] rounded-full"
         style={{
           background:
             "radial-gradient(circle, rgba(109,40,217,0.45) 0%, transparent 68%)",
           filter: "blur(80px)",
         }}
-        animate={{ scale: [1, 1.15, 1], x: [0, 20, 0], y: [0, -12, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
       {/* Gold accent orb — upper right */}
-      <motion.div
+      <div
         className="absolute -top-20 right-0 w-96 h-96 rounded-full"
         style={{
           background:
             "radial-gradient(circle, rgba(212,175,55,0.28) 0%, transparent 70%)",
           filter: "blur(88px)",
         }}
-        animate={{ scale: [1, 1.2, 1], x: [0, -24, 0], y: [0, 18, 0] }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 2 }}
       />
       {/* Deep violet orb — bottom center */}
-      <motion.div
+      <div
         className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[700px] h-64 rounded-full"
         style={{
           background:
             "radial-gradient(ellipse, rgba(76,29,149,0.6) 0%, transparent 70%)",
           filter: "blur(72px)",
         }}
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 4 }}
       />
       {/* Fine noise grid */}
       <div

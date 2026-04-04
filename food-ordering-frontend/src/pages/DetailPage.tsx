@@ -305,6 +305,8 @@ const DetailPage = () => {
           style={{
             background: "radial-gradient(circle, #7C3AED 0%, transparent 70%)",
             filter: "blur(60px)",
+            willChange: "transform",
+            transform: "translateZ(0)",
           }}
         />
         <div
@@ -312,6 +314,8 @@ const DetailPage = () => {
           style={{
             background: "radial-gradient(circle, #D4AF37 0%, transparent 70%)",
             filter: "blur(80px)",
+            willChange: "transform",
+            transform: "translateZ(0)",
           }}
         />
         <div
@@ -319,6 +323,8 @@ const DetailPage = () => {
           style={{
             background: "radial-gradient(circle, #3B0764 0%, transparent 70%)",
             filter: "blur(70px)",
+            willChange: "transform",
+            transform: "translateZ(0)",
           }}
         />
       </div>

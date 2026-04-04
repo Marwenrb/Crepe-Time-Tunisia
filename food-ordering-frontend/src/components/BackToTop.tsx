@@ -22,13 +22,19 @@ const BackToTop = () => {
 
   // Track scroll position, progress, and show/hide button
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = Math.min((scrollY / docHeight) * 100, 100);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min((scrollY / docHeight) * 100, 100) : 0;
 
-      setScrollProgress(progress);
-      setIsVisible(scrollY > SCROLL_THRESHOLD);
+        setScrollProgress(progress);
+        setIsVisible(scrollY > SCROLL_THRESHOLD);
+        ticking = false;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

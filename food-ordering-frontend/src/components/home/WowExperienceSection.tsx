@@ -184,74 +184,60 @@ function useMagneticButton(strength = 0.38) {
 const BackgroundAmbience = memo(() => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
     {/* Purple orb — top-left */}
-    <motion.div
+    <div
       className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full"
       style={{
         background: "radial-gradient(circle, rgba(109, 40, 217, 0.55) 0%, transparent 70%)",
         filter: "blur(72px)",
+        willChange: "transform",
       }}
-      animate={{ scale: [1, 1.18, 1], x: [0, 24, 0], y: [0, -18, 0] }}
-      transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
     />
     {/* Gold orb — top-right */}
-    <motion.div
+    <div
       className="absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full"
       style={{
         background: "radial-gradient(circle, rgba(212, 175, 55, 0.35) 0%, transparent 70%)",
         filter: "blur(88px)",
+        willChange: "transform",
       }}
-      animate={{ scale: [1, 1.14, 1], x: [0, -28, 0], y: [0, 22, 0] }}
-      transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
     />
     {/* Deep purple orb — bottom-center */}
-    <motion.div
+    <div
       className="absolute -bottom-28 left-1/2 -translate-x-1/2 w-[700px] h-[280px] rounded-full"
       style={{
         background: "radial-gradient(ellipse, rgba(76, 29, 149, 0.7) 0%, transparent 70%)",
         filter: "blur(64px)",
       }}
-      animate={{ scale: [1, 1.08, 1] }}
-      transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-    />
-    {/* Rose accent orb — mid-right */}
-    <motion.div
-      className="absolute top-1/2 -right-16 w-72 h-72 rounded-full"
-      style={{
-        background: "radial-gradient(circle, rgba(244, 63, 94, 0.18) 0%, transparent 70%)",
-        filter: "blur(60px)",
-      }}
-      animate={{ scale: [1, 1.22, 1], y: [0, -30, 0] }}
-      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
     />
 
-    {/* Floating micro-particles */}
-    {Array.from({ length: 16 }, (_, i) => (
+    {/* Floating micro-particles — reduced from 16 to 6 for performance */}
+    {Array.from({ length: 6 }, (_, i) => (
       <motion.div
         key={i}
         className="absolute rounded-full"
         style={{
-          width: i % 4 === 0 ? 3 : 2,
-          height: i % 4 === 0 ? 3 : 2,
+          width: i % 3 === 0 ? 3 : 2,
+          height: i % 3 === 0 ? 3 : 2,
           background:
             i % 3 === 0
               ? "rgba(212, 175, 55, 0.7)"
               : i % 3 === 1
               ? "rgba(139, 92, 246, 0.6)"
               : "rgba(255, 255, 255, 0.35)",
-          left: `${8 + ((i * 5.9) % 84)}%`,
-          top: `${10 + ((i * 7.1) % 80)}%`,
+          left: `${8 + ((i * 14) % 84)}%`,
+          top: `${10 + ((i * 17) % 80)}%`,
+          willChange: "transform, opacity",
         }}
         animate={{
-          y: [0, -22 - (i % 5) * 8, 0],
+          y: [0, -22 - (i % 3) * 10, 0],
           x: [0, i % 2 === 0 ? 12 : -12, 0],
           opacity: [0.15, 0.65, 0.15],
-          scale: [0.7, 1.5, 0.7],
         }}
         transition={{
-          duration: 3.5 + (i % 6) * 0.8,
+          duration: 4 + (i % 4) * 1.2,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: i * 0.35,
+          delay: i * 0.6,
         }}
       />
     ))}
@@ -735,9 +721,12 @@ const WowExperienceSection = () => {
                 <img
                   src={nutellaBananeFeature}
                   alt="Crêpe Nutella Banane signature"
+                  width={350}
+                  height={270}
                   className="w-full object-cover"
                   style={{ height: "clamp(180px, 24vw, 270px)" }}
                   loading="lazy"
+                  decoding="async"
                 />
                 <div
                   className="absolute inset-0"
@@ -776,9 +765,12 @@ const WowExperienceSection = () => {
                 <img
                   src={pistacheRose}
                   alt="Crêpe Pistache Rose"
+                  width={240}
+                  height={215}
                   className="w-full object-cover"
                   style={{ height: "clamp(150px, 18vw, 215px)" }}
                   loading="lazy"
+                  decoding="async"
                 />
                 <div
                   className="absolute inset-0"
@@ -815,9 +807,12 @@ const WowExperienceSection = () => {
                 <img
                   src={fraiseCreme}
                   alt="Crêpe Fraise Crème"
+                  width={160}
+                  height={145}
                   className="w-full object-cover"
                   style={{ height: "clamp(110px, 12vw, 145px)" }}
                   loading="lazy"
+                  decoding="async"
                 />
                 <div
                   className="absolute inset-0"
