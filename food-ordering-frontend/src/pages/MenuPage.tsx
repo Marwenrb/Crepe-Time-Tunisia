@@ -6,7 +6,10 @@ import { API_BASE_URL, HAS_WORKING_API_URL } from "@/lib/runtime-config";
 const CACHE_KEY = "crepetime_restaurant_id";
 
 /** Hardcoded restaurant ID — env var takes precedence, fallback to known UUID */
-const sanitizeId = (v: string) => v.trim().replace(/^[^a-f0-9]*([\da-f-]{36})[^a-f0-9]*$/i, "$1");
+const sanitizeId = (v: string) => {
+  const match = v.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+  return match ? match[0] : v.trim();
+};
 const STATIC_RESTAURANT_ID = sanitizeId(
   import.meta.env.VITE_RESTAURANT_ID || "3188b88d-b11f-4265-8e35-6f1d49c2b1dc"
 );

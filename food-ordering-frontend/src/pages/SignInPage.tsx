@@ -102,21 +102,41 @@ const SignInPage = () => {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
-        {/* Brand header */}
-        <div className="relative z-10 flex flex-col items-center mb-8 animate-fade-in-up">
-          <div className="relative mb-3 group">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#D4AF37]/30 to-[#4C1D95]/20 opacity-80 blur-md animate-glow-pulse pointer-events-none" />
-            <div className="relative h-16 w-16 rounded-xl overflow-hidden ring-2 ring-[#D4AF37]/50 ring-offset-2 ring-offset-[#0F0A1F] shadow-lg shadow-[#D4AF37]/15">
+        {/* ── Premium Brand Badge ── */}
+        <div className="flex flex-col items-center mb-10 animate-fade-in-up">
+          <div className="relative mb-5">
+            {/* Breathing glow halo — composited opacity+scale animation */}
+            <div
+              aria-hidden="true"
+              className="absolute -inset-6 rounded-full animate-glow-pulse pointer-events-none"
+              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.18) 0%, transparent 65%)" }}
+            />
+            {/* Outer decoration ring */}
+            <div className="absolute -inset-[11px] rounded-full border border-[#D4AF37]/15" />
+            {/* Inner decoration ring */}
+            <div className="absolute -inset-[5px] rounded-full border border-[#D4AF37]/32" />
+            {/* Logo circle — no overflow:hidden, logo floats inside */}
+            <div
+              className="relative h-24 w-24 rounded-full flex items-center justify-center"
+              style={{
+                background: "linear-gradient(155deg, #1C1040 0%, #0F0A1F 100%)",
+                boxShadow:
+                  "0 0 0 1.5px rgba(212,175,55,0.55), 0 8px 40px rgba(76,29,149,0.55), inset 0 1px 0 rgba(212,175,55,0.12)",
+              }}
+            >
               <img
                 src={BRAND.logo}
                 alt="Crêpe Time Tunisia"
-                className="h-full w-full object-contain p-1 animate-float"
+                loading="eager"
+                className="h-[70px] w-[70px] object-contain animate-float"
+                style={{ filter: "drop-shadow(0 3px 14px rgba(212,175,55,0.4))" }}
               />
             </div>
           </div>
-          <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.15em] font-light uppercase">
+          <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.2em] font-light uppercase">
             Crêpe Time
           </h1>
+          <div className="mt-2 h-px w-10 bg-gradient-to-r from-transparent via-[#D4AF37]/55 to-transparent" />
         </div>
 
         {/* ── Card (outer gradient ring) ── */}

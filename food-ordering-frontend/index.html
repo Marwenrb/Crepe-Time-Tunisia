@@ -61,12 +61,16 @@
     <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
     <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
 
+    <!-- ─── Critical image preload — brand logo used in preloader & auth pages ─ -->
+    <link rel="preload" as="image" href="/crepe-time-logo.png" fetchpriority="high" />
+
     <!-- ─── Fonts (non-render-blocking, swap) ──────────────────────────── -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
       as="style"
+      crossorigin
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
     />
     <link
@@ -75,6 +79,12 @@
       media="print"
       onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- ─── DNS Prefetch for Backend & Supabase ──────────────────────── -->
     <link rel="dns-prefetch" href="https://crepe-time-tunisia.onrender.com" />
@@ -256,7 +266,7 @@
 
       .ct-name {
         margin:0;
-        font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+        font-family: Georgia, 'Times New Roman', serif;
         font-size:22px; font-weight:600; letter-spacing:.36em; text-transform:uppercase;
         /* Gold shimmer sweep */
         background:linear-gradient(100deg,

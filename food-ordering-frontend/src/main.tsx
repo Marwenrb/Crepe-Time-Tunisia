@@ -40,9 +40,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// ── Dismiss preloader once React paints — reduced from 2.6s to 1.8s ─────────
+// ── Dismiss preloader once React paints ──────────────────────────────────────
 const _preloaderStart = performance.now();
-const _MIN_MS = 1800;
+const _MIN_MS = 600;
 
 const dismissPreloader = () => {
   const el = document.getElementById("app-preloader");
