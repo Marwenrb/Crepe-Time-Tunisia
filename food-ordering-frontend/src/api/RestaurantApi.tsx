@@ -9,9 +9,12 @@ export const useGetRestaurant = (restaurantId?: string) => {
       throw new Error("API base URL is not configured");
     }
 
-    const response = await fetch(
-      `${API_BASE_URL}/api/restaurant/${restaurantId}`
-    );
+    // No UUID (e.g. at /menu): discover restaurant by city — no hardcoded ID needed
+    const url = restaurantId
+      ? `${API_BASE_URL}/api/restaurant/${restaurantId}`
+      : `${API_BASE_URL}/api/restaurant/default/Nabeul`;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error("Failed to get restaurant");
@@ -21,10 +24,11 @@ export const useGetRestaurant = (restaurantId?: string) => {
   };
 
   const { data: restaurant, isLoading } = useQuery(
-    "fetchRestaurant",
+    // Per-ID key prevents stale-cache collision between /menu and /detail/:id
+    ["fetchRestaurant", restaurantId ?? "default"],
     getRestaurantByIdRequest,
     {
-      enabled: !!restaurantId,
+      enabled: true, // always run — falls back to /default/Nabeul when no UUID
     }
   );
 
