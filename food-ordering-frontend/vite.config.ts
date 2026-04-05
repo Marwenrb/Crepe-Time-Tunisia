@@ -38,8 +38,7 @@ export default defineConfig({
             "@radix-ui/react-separator",
             "@radix-ui/react-slot",
           ],
-          // Animation — separate chunk, loaded on demand
-          "vendor-animation": ["framer-motion"],
+
           // Forms & validation
           "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod"],
           // Data fetching

@@ -25,7 +25,7 @@ const Header = () => {
     <header
       className={`
         relative sticky top-0 z-50 h-14 sm:h-16 md:h-[72px] flex items-center shrink-0
-        transition-all duration-300 ease-out
+        transition-[background-color,border-color] duration-300 ease-out
         bg-white/90 sm:bg-white/95 backdrop-blur-xl
         border-b border-crepe-gold/20
         ${scrolled ? "shadow-header-scrolled border-crepe-purple/5" : "shadow-header"}
@@ -37,12 +37,12 @@ const Header = () => {
       <div className="container relative mx-auto flex justify-between items-center w-full px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
-          className="group flex items-center gap-3 sm:gap-4 shrink-0 min-w-0 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]"
+          className="group flex items-center gap-3 sm:gap-4 shrink-0 min-w-0 transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]"
         >
           {/* Logo — premium container with subtle glow */}
           <div className="relative flex-shrink-0">
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-crepe-gold/30 to-crepe-purple/20 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
-            <div className="relative h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 ring-offset-2 ring-offset-white shadow-lg shadow-crepe-purple/5 transition-all duration-300 group-hover:ring-crepe-gold group-hover:shadow-crepe-gold/20">
+            <div className="relative h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 ring-offset-2 ring-offset-white shadow-lg shadow-crepe-purple/5 transition-[ring-color] duration-300 group-hover:ring-crepe-gold">
               <img
                 src={BRAND.logo}
                 alt={BRAND.name}

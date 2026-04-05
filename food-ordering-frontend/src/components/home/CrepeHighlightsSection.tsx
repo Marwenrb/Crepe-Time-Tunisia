@@ -11,18 +11,21 @@ const HIGHLIGHTS: CrepeHighlight[] = [
     name: "Crêpe Nutella Banane",
     description: "Une combinaison irrésistible de Nutella généreux et de bananes fraîches.",
     imageUrl: nutellaBananeFeature,
+    avifUrl: "/nutella-bg.avif",
   },
   {
     id: "2",
     name: "Crêpe Lotus Biscoff",
     description: "Le spéculoos caramélisé sur une crêpe dorée, un classique réinventé.",
     imageUrl: lotusBiscoffImage,
+    avifUrl: "/lotus-bg.avif",
   },
   {
     id: "3",
     name: "Crêpe Time Signature",
     description: "Notre recette exclusive : un mélange secret de saveurs premium.",
     imageUrl: signatureImage,
+    avifUrl: "/signature-bg.avif",
   },
 ];
 

@@ -74,7 +74,9 @@ const HomePage = () => {
   return (
     <div className="flex flex-col">
       {/* Hero content: search card */}
-      <div className="relative z-10 mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="relative z-10 mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16"
+        style={{ animation: "hero-fade-in-up 0.5s cubic-bezier(0.22,1,0.36,1) both" }}
+      >
         <h1 className="flex flex-col items-center gap-1 sm:gap-1.5">
           <span className="flex items-center gap-2 sm:gap-3">
             <span className="h-px w-6 sm:w-8" style={{ background: "linear-gradient(to right, transparent, #D4AF37)" }} />

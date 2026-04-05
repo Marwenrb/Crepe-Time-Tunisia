@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from "react";
+import { memo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
@@ -7,6 +7,7 @@ export interface CrepeHighlight {
   name: string;
   description: string;
   imageUrl: string;
+  avifUrl?: string;
 }
 
 interface CrepeHighlightCardProps {
@@ -22,7 +23,6 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
 
   const rotateX = useSpring(useTransform(y, [-100, 100], [8, -8]));
   const rotateY = useSpring(useTransform(x, [-100, 100], [-8, 8]));
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = rectRef.current ?? cardRef.current?.getBoundingClientRect();
@@ -39,14 +39,12 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     rectRef.current = e.currentTarget.getBoundingClientRect();
-    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
     rectRef.current = null;
-    setIsHovered(false);
   };
 
   return (
@@ -71,25 +69,25 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
         to="/menu"
         className="block relative overflow-hidden rounded-xl border border-crepe-gold/25 bg-crepe-purple-dark/95 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-crepe-gold focus:ring-offset-2 focus:ring-offset-crepe-purple"
         style={{
-          boxShadow: isHovered
-            ? "0 20px 40px -12px rgba(0,0,0,0.4), 0 0 24px rgba(212, 175, 55, 0.12)"
-            : "0 8px 24px -8px rgba(0,0,0,0.3)",
-          transition: "box-shadow 0.3s ease",
+          boxShadow: "0 8px 24px -8px rgba(0,0,0,0.3)",
         }}
         title={`Voir ${item.name} au menu — Cliquez pour découvrir`}
         aria-label={`${item.name} — Cliquez pour voir le menu complet`}
       >
         <div className="relative aspect-[4/3] overflow-hidden">
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            width={640}
-            height={480}
-            loading="lazy"
-            decoding="async"
-            sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+          <picture>
+            {item.avifUrl && <source srcSet={item.avifUrl} type="image/avif" />}
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              width={640}
+              height={480}
+              loading="lazy"
+              decoding="async"
+              sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </picture>
           <div
             className="absolute inset-0 bg-gradient-to-t from-crepe-purple-dark via-transparent to-transparent opacity-85"
             style={{ background: "linear-gradient(to top, #3B0764 0%, transparent 50%, transparent 100%)" }}
