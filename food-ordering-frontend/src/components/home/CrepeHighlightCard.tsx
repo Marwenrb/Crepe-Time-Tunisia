@@ -16,6 +16,7 @@ interface CrepeHighlightCardProps {
 
 const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -24,8 +25,10 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
+    const rect = rectRef.current ?? cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    rectRef.current = rect;
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     const percentX = (e.clientX - centerX) / (rect.width / 2);
@@ -34,9 +37,15 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
     y.set(percentY * 100);
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+    setIsHovered(true);
+  };
+
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
+    rectRef.current = null;
     setIsHovered(false);
   };
 
@@ -48,7 +57,7 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
         rotateX,
@@ -74,7 +83,11 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
           <img
             src={item.imageUrl}
             alt={item.name}
+            width={640}
+            height={480}
             loading="lazy"
+            decoding="async"
+            sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div

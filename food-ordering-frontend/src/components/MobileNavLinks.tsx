@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { UtensilsCrossed, Package, LogIn, ChevronRight } from "lucide-react";
 import UsernameMenu from "./UsernameMenu";
 import { useAppContext } from "@/contexts/AppContext";
 
 type Props = { onClose: () => void };
-
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 type NavItemDef = {
   to: string;
@@ -57,23 +54,18 @@ const NavItem = ({
   const [hovered, setHovered] = useState(false);
 
   return (
-    <motion.div
-      className="relative"
-      whileHover={active ? {} : { x: 3 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ duration: 0.18, ease: EASE }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
+    <div
+      className="relative transition-transform duration-200 hover:translate-x-[3px] active:scale-[0.97]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Animated gold left bar */}
-      <motion.span
+      <span
         className="absolute left-0 inset-y-0 my-auto w-[3px] rounded-r-full pointer-events-none"
-        animate={{
+        style={{
           height: active ? "52%" : "0%",
           opacity: active ? 1 : 0,
-        }}
-        transition={{ duration: 0.22, ease: EASE }}
-        style={{
+          transition: "height 220ms ease, opacity 220ms ease",
           background: "linear-gradient(180deg, #E5C76B 0%, #D4AF37 100%)",
           boxShadow: "0 0 8px rgba(212,175,55,0.55)",
         }}
@@ -152,7 +144,7 @@ const NavItem = ({
           />
         )}
       </Link>
-    </motion.div>
+    </div>
   );
 };
 
@@ -186,11 +178,7 @@ const MobileNavLinks = ({ onClose }: Props) => {
           </div>
         ) : (
           <Link to="/sign-in" className="w-full" onClick={onClose}>
-            <motion.div
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.18, ease: EASE }}
-            >
+            <div className="transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.97]">
               <Button
                 className="w-full font-semibold gap-2 rounded-xl text-white text-sm h-11"
                 style={{
@@ -203,7 +191,7 @@ const MobileNavLinks = ({ onClose }: Props) => {
                 <LogIn className="h-4 w-4" />
                 Connexion
               </Button>
-            </motion.div>
+            </div>
           </Link>
         )}
       </div>

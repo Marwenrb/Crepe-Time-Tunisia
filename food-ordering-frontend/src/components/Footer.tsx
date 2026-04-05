@@ -1,5 +1,4 @@
 import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from "lucide-react";
-import { motion } from "framer-motion";
 import { BRAND } from "@/config/brand";
 
 const CONTACT = {
@@ -27,11 +26,7 @@ const Footer = () => {
           {/* Brand — centered signature stamp */}
           <div className="flex flex-col items-center gap-3">
             {/* Logo — centered above the text mark */}
-            <motion.div
-              className="relative shrink-0"
-              whileHover={{ scale: 1.06 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <div className="relative shrink-0 transition-transform duration-300 hover:scale-105">
               <div className="relative h-12 w-12 sm:h-14 sm:w-14 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 shadow-lg bg-white/10">
                 <img
                   src={BRAND.logo}
@@ -54,7 +49,7 @@ const Footer = () => {
                   CT
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/*
              * Centered brand text mark
@@ -63,12 +58,7 @@ const Footer = () => {
              * — Hairline expands from center outward (transformOrigin: center,
              *   symmetric gradient) to match the centered composition.
              */}
-            <motion.div
-              className="flex flex-col items-center gap-1.5 cursor-default"
-              initial="rest"
-              whileHover="hover"
-              animate="rest"
-            >
+            <div className="group flex flex-col items-center gap-1.5 cursor-default">
               {/* ── Brand name with shine sweep ── */}
               <div className="relative overflow-hidden leading-tight">
                 <span
@@ -87,80 +77,53 @@ const Footer = () => {
                   {BRAND.name}
                 </span>
 
-                <motion.span
+                <span
                   aria-hidden="true"
-                  className="absolute inset-y-0 pointer-events-none"
+                  className="absolute inset-y-0 pointer-events-none -translate-x-[120%] group-hover:translate-x-[260%] transition-transform duration-700 ease-out"
                   style={{
                     width: "55%",
                     background:
                       "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-                    skewX: -18,
+                    transform: "skewX(-18deg)",
                   }}
-                  variants={{
-                    rest: { x: "-120%" },
-                    hover: { x: "260%" },
-                  }}
-                  transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                 />
               </div>
 
               {/* ── Hairline — expands symmetrically from center ── */}
-              <motion.span
+              <span
                 aria-hidden="true"
-                className="block h-px w-full"
+                className="block h-px w-full scale-x-50 opacity-50 group-hover:scale-x-100 group-hover:opacity-90 transition-all duration-500"
                 style={{
                   background:
                     "linear-gradient(to right, transparent, rgba(212,175,55,0.7), transparent)",
                   transformOrigin: "center",
                 }}
-                variants={{
-                  rest: { scaleX: 0.5, opacity: 0.5 },
-                  hover: { scaleX: 1, opacity: 0.9 },
-                }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               />
 
               {/* ── Tagline ── */}
-              <motion.span
-                className="flex items-center gap-2"
-                variants={{
-                  rest: { y: 0, opacity: 0.7 },
-                  hover: { y: -2, opacity: 1 },
-                }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <motion.span
+              <span className="flex items-center gap-2 opacity-70 translate-y-0 group-hover:opacity-100 group-hover:-translate-y-0.5 transition-all duration-300">
+                <span
                   aria-hidden="true"
-                  className="text-[8px] inline-block"
+                  className="text-[8px] inline-block group-hover:rotate-[72deg] group-hover:scale-110 transition-transform duration-500"
                   style={{ color: "rgba(212,175,55,0.8)" }}
-                  variants={{
-                    rest: { rotate: 0, scale: 1 },
-                    hover: { rotate: 72, scale: 1.1 },
-                  }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   ✦
-                </motion.span>
+                </span>
                 <span
                   className="text-[10px] sm:text-[11px] font-bold tracking-[0.28em] uppercase"
                   style={{ color: "rgba(212,175,55,0.9)" }}
                 >
                   {BRAND.tagline}
                 </span>
-                <motion.span
+                <span
                   aria-hidden="true"
-                  className="text-[8px] inline-block"
+                  className="text-[8px] inline-block group-hover:-rotate-[72deg] group-hover:scale-110 transition-transform duration-500"
                   style={{ color: "rgba(212,175,55,0.8)" }}
-                  variants={{
-                    rest: { rotate: 0, scale: 1 },
-                    hover: { rotate: -72, scale: 1.1 },
-                  }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   ✦
-                </motion.span>
-              </motion.span>
-            </motion.div>
+                </span>
+              </span>
+            </div>
           </div>
 
           {/* Contact + Social inline */}

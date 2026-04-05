@@ -2,6 +2,8 @@ import { memo, useRef } from "react";
 import { motion } from "framer-motion";
 import CrepeHighlightCard, { type CrepeHighlight } from "./CrepeHighlightCard";
 import nutellaBananeFeature from "@/assets/hero/Crêpe Nutella Banane feature.jpg";
+import lotusBiscoffImage from "@/assets/menu-items/lotus-biscoff.jpg";
+import signatureImage from "@/assets/menu-items/crepe-time-signature.jpg";
 
 const HIGHLIGHTS: CrepeHighlight[] = [
   {
@@ -14,13 +16,13 @@ const HIGHLIGHTS: CrepeHighlight[] = [
     id: "2",
     name: "Crêpe Lotus Biscoff",
     description: "Le spéculoos caramélisé sur une crêpe dorée, un classique réinventé.",
-    imageUrl: "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=85",
+    imageUrl: lotusBiscoffImage,
   },
   {
     id: "3",
     name: "Crêpe Time Signature",
     description: "Notre recette exclusive : un mélange secret de saveurs premium.",
-    imageUrl: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=85",
+    imageUrl: signatureImage,
   },
 ];
 

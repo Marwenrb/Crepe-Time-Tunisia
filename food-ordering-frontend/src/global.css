@@ -11,7 +11,7 @@
     --crepe-dark: #0F0A1F;
     --crepe-text: #FFFFFF;
     --crepe-text-muted: #E5E5E5;
-    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-heading: Georgia, 'Times New Roman', serif;
 
     --card: 0 0% 100%;
     --card-foreground: 263 67% 35%;

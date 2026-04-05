@@ -1,9 +1,7 @@
-import { memo, lazy, Suspense } from "react";
-import { motion } from "framer-motion";
+import { memo, lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
-import BrandMarquee from "@/components/home/BrandMarquee";
-import { LuxurySignatureTitle } from "@/components/home/LuxurySignatureTitle";
+const BrandMarquee = lazy(() => import("@/components/home/BrandMarquee"));
 
 // ── Below-the-fold sections: lazy-loaded to cut initial JS ──────────────────
 const CrepeHighlightsSection = lazy(() => import("@/components/home/CrepeHighlightsSection"));
@@ -23,10 +21,38 @@ const LazySection = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<SectionLoader />}>{children}</Suspense>
 );
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
+const DeferredSection = ({
+  children,
+  minHeight = "min-h-[160px]",
+}: {
+  children: React.ReactNode;
+  minHeight?: string;
+}) => {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const target = mountRef.current;
+    if (!target || isVisible) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setIsVisible(true);
+        observer.disconnect();
+      },
+      { rootMargin: "40px 0px" }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  return (
+    <div ref={mountRef}>
+      {isVisible ? <LazySection>{children}</LazySection> : <div className={minHeight} aria-hidden="true" />}
+    </div>
+  );
 };
 
 const HomePage = () => {
@@ -48,12 +74,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col">
       {/* Hero content: search card */}
-      <motion.div
-        className="relative z-10 mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16"
-        initial={fadeInUp.initial}
-        animate={fadeInUp.animate}
-        transition={fadeInUp.transition}
-      >
+      <div className="relative z-10 mx-auto w-full max-w-4xl bg-white rounded-xl sm:rounded-2xl shadow-xl py-6 sm:py-8 lg:py-10 px-4 sm:px-6 lg:px-8 flex flex-col gap-4 sm:gap-5 text-center -mt-8 sm:-mt-12 lg:-mt-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <h1 className="flex flex-col items-center gap-1 sm:gap-1.5">
           <span className="flex items-center gap-2 sm:gap-3">
             <span className="h-px w-6 sm:w-8" style={{ background: "linear-gradient(to right, transparent, #D4AF37)" }} />
@@ -63,7 +84,20 @@ const HomePage = () => {
             <span className="h-px w-6 sm:w-8" style={{ background: "linear-gradient(to left, transparent, #D4AF37)" }} />
           </span>
 
-          <LuxurySignatureTitle />
+          <span
+            className="font-heading font-bold leading-none"
+            style={{
+              fontSize: "clamp(1.3rem, 3.2vw, 2.4rem)",
+              letterSpacing: "-0.02em",
+              background: "linear-gradient(135deg, #2E1065 0%, #4C1D95 35%, #7C3AED 70%, #A78BFA 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              filter: "drop-shadow(0 1px 10px rgba(76,29,149,0.25))",
+            }}
+          >
+            La Signature
+          </span>
 
           <span
             className="font-heading font-black leading-none"
@@ -94,23 +128,25 @@ const HomePage = () => {
         <div className="w-full max-w-2xl mx-auto">
           <SearchBar placeHolder="Rechercher une crepe..." onSubmit={handleSearchSubmit} city="Nabeul" />
         </div>
-      </motion.div>
+      </div>
 
       {/* Premium brand marquee */}
       <div className="mt-8 sm:mt-10">
-        <BrandMarquee />
+        <DeferredSection minHeight="min-h-[56px]">
+          <BrandMarquee />
+        </DeferredSection>
       </div>
 
-      <LazySection><AppExperienceSection /></LazySection>
+      <DeferredSection><AppExperienceSection /></DeferredSection>
 
       <div className="mt-6 sm:mt-10">
-        <LazySection><CrepeHighlightsSection /></LazySection>
+        <DeferredSection><CrepeHighlightsSection /></DeferredSection>
       </div>
 
-      <LazySection><WowExperienceSection /></LazySection>
-      <LazySection><TestimonialCarousel /></LazySection>
-      <LazySection><AppDownloadSection /></LazySection>
-      <LazySection><CallToActionSection /></LazySection>
+      <DeferredSection><WowExperienceSection /></DeferredSection>
+      <DeferredSection><TestimonialCarousel /></DeferredSection>
+      <DeferredSection><AppDownloadSection /></DeferredSection>
+      <DeferredSection><CallToActionSection /></DeferredSection>
     </div>
   );
 };
