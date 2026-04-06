@@ -91,8 +91,8 @@ const KEYFRAMES = `
 
   /* Outer glow ring breathing */
   @keyframes ab-glow-breathe {
-    0%, 100% { box-shadow: 0 0 12px 3px rgba(212,175,55,0.12), 0 0 30px 6px rgba(212,175,55,0.06); }
-    50%      { box-shadow: 0 0 18px 5px rgba(212,175,55,0.18), 0 0 40px 10px rgba(212,175,55,0.1); }
+    0%, 100% { filter: drop-shadow(0 0 12px rgba(212,175,55,0.12)) drop-shadow(0 0 30px rgba(212,175,55,0.06)); }
+    50%      { filter: drop-shadow(0 0 18px rgba(212,175,55,0.18)) drop-shadow(0 0 40px rgba(212,175,55,0.1)); }
   }
   .ab-outer-glow {
     animation: ab-glow-breathe 4s ease-in-out infinite;

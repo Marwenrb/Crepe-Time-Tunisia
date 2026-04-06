@@ -55,8 +55,8 @@ const KEYFRAMES = `
   }
   .mh-info-strip { animation: mh-glow-pulse 4s ease-in-out infinite; }
   @keyframes mh-glow-pulse {
-    0%, 100% { box-shadow: 0 0 10px 2px rgba(212,175,55,0.06); }
-    50%      { box-shadow: 0 0 18px 4px rgba(212,175,55,0.12); }
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(212,175,55,0.06)); }
+    50%      { filter: drop-shadow(0 0 18px rgba(212,175,55,0.12)); }
   }
 `;
 
