@@ -10,8 +10,8 @@ const KEYFRAMES = `
     to   { transform: rotate(360deg); }
   }
   @keyframes mn-glow-breathe {
-    0%, 100% { filter: drop-shadow(0 0 10px rgba(212,175,55,0.12)) drop-shadow(0 0 24px rgba(212,175,55,0.06)); }
-    50%      { filter: drop-shadow(0 0 16px rgba(212,175,55,0.22)) drop-shadow(0 0 36px rgba(212,175,55,0.1)); }
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1; }
   }
   .mn-link {
     position: relative;

@@ -43,6 +43,7 @@ const Layout = ({ children, showHero = false }: Props) => {
             loop
             playsInline
             poster="/hero-home.avif"
+            preload="none"
             className="w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[620px] xl:h-[700px] object-cover"
             style={{ objectPosition: "center 25%", transform: "scale(1.12)" }}
           >

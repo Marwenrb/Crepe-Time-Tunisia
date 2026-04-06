@@ -673,11 +673,12 @@ const KEYFRAMES = `
 
   /* ── Stats card subtle pulse ── */
   @keyframes hc-stats-glow {
-    0%, 100% { filter: drop-shadow(0 0 14px rgba(212,175,55,0.1)) drop-shadow(0 0 40px rgba(212,175,55,0.05)); }
-    50%      { filter: drop-shadow(0 0 20px rgba(212,175,55,0.16)) drop-shadow(0 0 50px rgba(212,175,55,0.08)); }
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1; }
   }
   .hc-stats-wrap {
     animation: hc-stats-glow 4s ease-in-out infinite;
+    will-change: opacity;
   }
 `;
 

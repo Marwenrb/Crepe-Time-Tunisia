@@ -5,26 +5,16 @@ import heroVideo from "@/assets/hero/Golden_Crêpe_Video_Generation.mp4";
 /* ── UIVerse-grade keyframes ─────────────────────────────────────────────── */
 const KEYFRAMES = `
   @keyframes vhs-neon-breathe {
-    0%, 100% {
-      box-shadow:
-        0 0 0.6em 0.15em var(--glow-color),
-        0 0 2.5em 0.6em var(--glow-spread),
-        inset 0 0 0.5em 0.1em var(--glow-color);
-    }
-    50% {
-      box-shadow:
-        0 0 1em 0.25em var(--glow-color),
-        0 0 3.5em 0.9em var(--glow-spread),
-        inset 0 0 0.75em 0.15em var(--glow-color);
-    }
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.02); }
   }
   @keyframes vhs-halo-breathe {
     0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(1); }
     50%      { opacity: 0.55; transform: translate(-50%, -50%) scale(1.08); }
   }
   @keyframes vhs-border-sweep {
-    from { background-position: 0% 50%; }
-    to   { background-position: 200% 50%; }
+    from { opacity: 0.7; transform: translateX(-10%); }
+    to   { opacity: 1; transform: translateX(10%); }
   }
   @keyframes vhs-grain {
     0%, 100% { transform: translate(0, 0); }
@@ -106,8 +96,9 @@ const VideoHeroSection = () => {
         loop
         muted
         playsInline
+        poster="/hero-home.avif"
         className="absolute inset-0 h-full w-full object-cover"
-        preload="metadata"
+        preload="none"
       >
         <source src={heroVideo} type="video/mp4" />
       </video>
@@ -229,6 +220,8 @@ const VideoHeroSection = () => {
               WebkitBackdropFilter: "blur(12px)",
               textShadow: "0 0 0.5em var(--glow-color)",
               animation: "vhs-neon-breathe 3s ease-in-out infinite",
+              boxShadow:
+                "0 0 0.6em 0.15em var(--glow-color), 0 0 2.5em 0.6em var(--glow-spread), inset 0 0 0.5em 0.1em var(--glow-color)",
             } as React.CSSProperties}
           >
             Commander Maintenant

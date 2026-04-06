@@ -29,17 +29,17 @@ const FOOTER_KEYFRAMES = `
     to   { transform: rotate(360deg); }
   }
   @keyframes ft-glow-breathe {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.25)) drop-shadow(0 0 20px rgba(212,175,55,0.08)); }
-    50%      { filter: drop-shadow(0 0 14px rgba(212,175,55,0.4)) drop-shadow(0 0 28px rgba(212,175,55,0.12)); }
+    0%, 100% { opacity: 0.85; }
+    50%      { opacity: 1; }
   }
-  .ft-logo-ring { animation: ft-glow-breathe 3.5s ease-in-out infinite; }
+  .ft-logo-ring { animation: ft-glow-breathe 3.5s ease-in-out infinite; will-change: opacity; }
   @keyframes ft-line-pulse {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
   }
   @keyframes ft-line-shimmer {
-    0%   { background-position: -200% center; }
-    100% { background-position: 200% center; }
+    0%   { opacity: 0.5; transform: translateX(-30%); }
+    100% { opacity: 1; transform: translateX(30%); }
   }
 
 `;
@@ -205,7 +205,6 @@ const Footer = () => {
               height: "6px",
               borderRadius: "3px",
               background: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 25%, rgba(212,175,55,0.45) 50%, rgba(212,175,55,0.15) 75%, transparent 100%)",
-              filter: "blur(4px)",
               animation: "ft-line-pulse 3s ease-in-out infinite",
             }}
           />
@@ -215,10 +214,9 @@ const Footer = () => {
               width: "100%",
               height: "1.5px",
               borderRadius: "1px",
-              backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 10%, rgba(212,175,55,0.55) 35%, rgba(255,255,255,0.95) 50%, rgba(212,175,55,0.55) 65%, rgba(212,175,55,0.15) 90%, transparent 100%)",
-              backgroundSize: "200% 100%",
+              background: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 10%, rgba(212,175,55,0.55) 35%, rgba(255,255,255,0.95) 50%, rgba(212,175,55,0.55) 65%, rgba(212,175,55,0.15) 90%, transparent 100%)",
               animation: "ft-line-shimmer 4s ease-in-out infinite",
-              boxShadow: "0 0 8px rgba(212,175,55,0.35), 0 0 20px rgba(212,175,55,0.12)",
+              willChange: "transform, opacity",
             }}
           />
           {/* Secondary accent line */}
@@ -227,9 +225,9 @@ const Footer = () => {
               width: "50%",
               height: "1px",
               borderRadius: "1px",
-              backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.08) 15%, rgba(212,175,55,0.35) 40%, rgba(255,248,225,0.55) 50%, rgba(212,175,55,0.35) 60%, rgba(212,175,55,0.08) 85%, transparent 100%)",
-              backgroundSize: "200% 100%",
+              background: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.08) 15%, rgba(212,175,55,0.35) 40%, rgba(255,248,225,0.55) 50%, rgba(212,175,55,0.35) 60%, rgba(212,175,55,0.08) 85%, transparent 100%)",
               animation: "ft-line-shimmer 4s ease-in-out infinite 0.4s",
+              willChange: "transform, opacity",
             }}
           />
         </div>
