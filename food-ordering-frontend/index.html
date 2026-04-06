@@ -28,10 +28,13 @@
     <meta name="format-detection" content="telephone=no" />
 
     <!-- ─── Favicons & PWA ────────────────────────────────────────────── -->
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#D4AF37" />
+    <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <!-- ─── Open Graph (Facebook / LinkedIn / WhatsApp) ───────────────── -->
@@ -43,11 +46,11 @@
       content="Crêperie premium à Nabeul. Crêpes artisanales sucrées et salées livrées chez vous. Commandez en ligne dès maintenant !"
     />
     <meta property="og:url" content="https://crepetime.tn/" />
-    <meta property="og:image" content="https://crepetime.tn/crepe-time-logo.png" />
+    <meta property="og:image" content="https://crepetime.tn/og-image.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Logo Crêpe Time Tunisia — Crêperie Premium" />
+    <meta property="og:image:alt" content="Crêpe Time Tunisia — Crêperie premium à Nabeul. Crêpes artisanales, commande en ligne." />
     <meta property="og:locale" content="fr_TN" />
     <meta property="og:locale:alternate" content="ar_TN" />
 
@@ -58,12 +61,11 @@
       name="twitter:description"
       content="Commandez nos crêpes artisanales en ligne. Livraison à domicile à Nabeul, Tunisie."
     />
-    <meta name="twitter:image" content="https://crepetime.tn/crepe-time-logo.png" />
-    <meta name="twitter:image:alt" content="Logo Crêpe Time Tunisia" />
+    <meta name="twitter:image" content="https://crepetime.tn/og-image.png" />
+    <meta name="twitter:image:alt" content="Crêpe Time Tunisia — Crêperie premium à Nabeul" />
 
     <!-- ─── LCP image preload ───────────────────────────────────────────── -->
     <link rel="preload" as="image" href="/hero-home.avif" fetchpriority="high" type="image/avif" />
-    <link rel="preload" as="image" href="/crepe-time-logo.png" fetchpriority="low" />
 
     <!-- ─── Preconnect for critical third-party origins ─────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -108,7 +110,11 @@
       "description": "Crêperie premium à Nabeul, Tunisie. Crêpes artisanales sucrées et salées, livraison à domicile et retrait en boutique.",
       "url": "https://crepetime.tn",
       "logo": "https://crepetime.tn/crepe-time-logo.png",
-      "image": "https://crepetime.tn/hero.png",
+      "image": [
+        "https://crepetime.tn/og-image.png",
+        "https://crepetime.tn/crepe-time-logo.png",
+        "https://crepetime.tn/hero-home.avif"
+      ],
       "servesCuisine": ["Crêpes", "Desserts", "French", "Tunisian"],
       "priceRange": "$$",
       "currenciesAccepted": "TND",
