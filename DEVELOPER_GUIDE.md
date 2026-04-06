@@ -37,6 +37,7 @@
 15. [Future Roadmap](#future-roadmap)
 16. [Conventions de code](#conventions-de-code)
 17. [Dépannage](#dépannage)
+18. [Réinitialisation du mot de passe](#réinitialisation-du-mot-de-passe)
 
 ---
 
@@ -679,6 +680,34 @@ Stop-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess
 # Redémarrer le terminal si les commandes ne sont pas reconnues
 # Fermez PowerShell et rouvrez-le
 ```
+
+---
+
+## 18. Réinitialisation du mot de passe
+
+> **Guide complet d'implémentation :** [`PASSWORD_RESET_GUIDE.md`](PASSWORD_RESET_GUIDE.md)
+
+### État actuel
+La réinitialisation du mot de passe **n'est pas encore implémentée**. La page de connexion contient un lien "Forgot Password" désactivé (`<Link to="#">`).
+
+### Flux
+1. L'utilisateur demande une réinitialisation → `supabase.auth.resetPasswordForEmail()`
+2. Supabase envoie un email via Resend (automatique)
+3. L'utilisateur clique sur le lien → redirigé vers l'app avec un token `type=recovery`
+4. L'utilisateur définit un nouveau mot de passe → `supabase.auth.updateUser({ password })`
+
+**Aucune modification backend requise** — Supabase Auth gère tout nativement.
+
+### Fichiers à créer / modifier
+| Fichier | Action |
+|---------|--------|
+| `src/pages/ForgotPasswordPage.tsx` | **Nouveau** — formulaire de saisie d'email |
+| `src/pages/ResetPasswordPage.tsx` | **Nouveau** — formulaire de nouveau mot de passe |
+| `src/api/authApi.ts` | **Ajouter** `requestPasswordReset()` + `updatePassword()` |
+| `src/AppRoutes.tsx` | **Ajouter** routes `/forgot-password` + `/reset-password` |
+| `src/pages/SignInPage.tsx` | **Corriger** le lien de `#` vers `/forgot-password` |
+
+Consultez [`PASSWORD_RESET_GUIDE.md`](PASSWORD_RESET_GUIDE.md) pour le code complet, la checklist de tests et le dépannage.
 
 ---
 

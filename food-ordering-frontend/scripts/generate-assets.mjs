@@ -18,7 +18,7 @@ async function generateOGImage() {
 
   // Load the logo and resize to fit nicely in the card
   const logoBuffer = await sharp(LOGO)
-    .resize(320, 320, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .resize(360, 360, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
 
@@ -50,16 +50,16 @@ async function generateOGImage() {
       <rect x="24" y="24" width="1152" height="582" rx="16" fill="none" stroke="#D4AF37" stroke-width="2" opacity="0.4"/>
 
       <!-- Gold divider line -->
-      <line x1="120" y1="418" x2="1080" y2="418" stroke="url(#goldLine)" stroke-width="1.5"/>
+      <line x1="120" y1="430" x2="1080" y2="430" stroke="url(#goldLine)" stroke-width="1.5"/>
 
       <!-- Brand name -->
-      <text x="600" y="490" text-anchor="middle" font-family="Georgia,Times,serif" font-size="52" font-weight="bold" fill="url(#gold)" letter-spacing="3">Crêpe Time Tunisia</text>
+      <text x="600" y="480" text-anchor="middle" font-family="Georgia,Times,serif" font-size="58" font-weight="bold" fill="url(#gold)" letter-spacing="4">Crêpe Time</text>
 
       <!-- Tagline -->
-      <text x="600" y="540" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="24" fill="#E8D5B7" letter-spacing="5" opacity="0.9">CRÊPERIE PREMIUM À NABEUL</text>
+      <text x="600" y="535" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#E8D5B7" letter-spacing="6" opacity="0.9">THE SWEETEST ESCAPE</text>
 
       <!-- CTA subtitle -->
-      <text x="600" y="585" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#D4AF37" letter-spacing="2" opacity="0.7">Commande en ligne · Livraison à domicile</text>
+      <text x="600" y="585" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#D4AF37" letter-spacing="2" opacity="0.7">Crêperie Premium à Nabeul · Commande en ligne</text>
     </svg>
   `);
 
@@ -73,7 +73,7 @@ async function generateOGImage() {
   })
     .composite([
       { input: textOverlay, top: 0, left: 0 },
-      { input: logoBuffer, top: 50, left: 440, blend: "over" },
+      { input: logoBuffer, top: 20, left: 420, blend: "over" },
     ])
     .png({ quality: 90 })
     .toFile(join(PUBLIC, "og-image.png"));
