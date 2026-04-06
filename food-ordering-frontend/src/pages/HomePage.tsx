@@ -57,10 +57,10 @@ const DeferredSection = ({
 const HomePage = () => {
   return (
     <div className="flex flex-col">
-      {/* Video hero */}
-      <DeferredSection minHeight="min-h-[60vh]">
+      {/* Video hero — loaded eagerly for LCP */}
+      <LazySection>
         <VideoHeroSection />
-      </DeferredSection>
+      </LazySection>
 
       {/* Premium brand marquee */}
       <div className="mt-2 sm:mt-10">
@@ -69,16 +69,16 @@ const HomePage = () => {
         </DeferredSection>
       </div>
 
-      <DeferredSection><AppExperienceSection /></DeferredSection>
+      <DeferredSection minHeight="min-h-[520px]"><AppExperienceSection /></DeferredSection>
 
       <div className="mt-3 sm:mt-10">
-        <DeferredSection><CrepeHighlightsSection /></DeferredSection>
+        <DeferredSection minHeight="min-h-[400px]"><CrepeHighlightsSection /></DeferredSection>
       </div>
 
-      <DeferredSection><WowExperienceSection /></DeferredSection>
-      <DeferredSection><TestimonialCarousel /></DeferredSection>
-      <DeferredSection><AppDownloadSection /></DeferredSection>
-      <DeferredSection><CallToActionSection /></DeferredSection>
+      <DeferredSection minHeight="min-h-[520px]"><WowExperienceSection /></DeferredSection>
+      <DeferredSection minHeight="min-h-[320px]"><TestimonialCarousel /></DeferredSection>
+      <DeferredSection minHeight="min-h-[350px]"><AppDownloadSection /></DeferredSection>
+      <DeferredSection minHeight="min-h-[280px]"><CallToActionSection /></DeferredSection>
     </div>
   );
 };

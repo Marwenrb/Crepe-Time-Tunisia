@@ -25,19 +25,22 @@ const KEYFRAMES = `
     position: absolute;
     left: 0;
     bottom: -3px;
-    width: 0;
+    width: 100%;
     height: 2px;
     background: linear-gradient(90deg, #D4AF37, #EDD060, #D4AF37);
     border-radius: 1px;
-    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: 0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.2);
+    will-change: transform;
   }
   .mn-link:hover {
     color: #D4AF37;
     text-shadow: 0 0 14px rgba(212,175,55,0.35);
   }
   .mn-link:hover::after {
-    width: 100%;
+    transform: scaleX(1);
   }
   .mn-link:focus-visible {
     outline: 2px solid #D4AF37;

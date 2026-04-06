@@ -63,9 +63,11 @@ const NavItem = ({
       <span
         className="absolute left-0 inset-y-0 my-auto w-[3px] rounded-r-full pointer-events-none"
         style={{
-          height: active ? "52%" : "0%",
+          height: "52%",
           opacity: active ? 1 : 0,
-          transition: "height 220ms ease, opacity 220ms ease",
+          transform: active ? "scaleY(1)" : "scaleY(0)",
+          transition: "transform 220ms ease, opacity 220ms ease",
+          transformOrigin: "center",
           background: "linear-gradient(180deg, #E5C76B 0%, #D4AF37 100%)",
           boxShadow: "0 0 8px rgba(212,175,55,0.55)",
         }}

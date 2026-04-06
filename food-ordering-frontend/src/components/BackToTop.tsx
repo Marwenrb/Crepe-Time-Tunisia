@@ -15,13 +15,9 @@ const triggerHaptic = (): void => {
 };
 
 // ─── Component ────────────────────────────────────────────
-const FOOTER_CLEARANCE = 20; // px above footer
-const DEFAULT_BOTTOM = 24;   // px from viewport bottom
-
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [bottomPx, setBottomPx] = useState(DEFAULT_BOTTOM);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -37,36 +33,15 @@ const BackToTop = () => {
         setScrollProgress(progress);
         setIsVisible(scrollY > SCROLL_THRESHOLD);
 
-        // Slide button up smoothly as footer enters viewport
-        const footer = document.querySelector('footer');
-        if (footer) {
-          const footerRect = footer.getBoundingClientRect();
-          const viewportH = window.innerHeight;
-          const btnHeight = 48; // button approximate height
-          if (footerRect.top < viewportH) {
-            // Footer is overlapping viewport — push button up
-            const needed = viewportH - footerRect.top + FOOTER_CLEARANCE;
-            // Cap so button doesn't fly off the top
-            const maxBottom = viewportH - btnHeight - 8;
-            setBottomPx(Math.min(needed, maxBottom));
-          } else {
-            setBottomPx(DEFAULT_BOTTOM);
-          }
-        } else {
-          setBottomPx(DEFAULT_BOTTOM);
-        }
-
         ticking = false;
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -92,7 +67,7 @@ const BackToTop = () => {
           exit={{ opacity: 0, scale: 0.7, y: 20 }}
           transition={{ duration: 0.28, ease: EASE }}
           className="fixed right-4 sm:right-6 z-50"
-          style={{ bottom: `${bottomPx}px`, transition: "bottom 0.25s ease-out" }}
+          style={{ bottom: "24px" }}
         >
           {/* Ultra-Compact Premium Button */}
           <motion.div

@@ -41,6 +41,22 @@ const FOOTER_KEYFRAMES = `
     0%   { background-position: -200% center; }
     100% { background-position: 200% center; }
   }
+  @keyframes ft-hud-scan {
+    0%, 100% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(800%); }
+  }
+  .ft-hud-row { position: relative; }
+  .ft-hud-row::before {
+    content: '';
+    position: absolute;
+    left: 8px; right: 8px; top: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--hud-accent, rgba(212,175,55,0.15)), transparent);
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .ft-hud-row:hover::before { opacity: 1; }
 `;
 
 const Footer = () => {
@@ -135,52 +151,111 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* ── Contact column — inline neon-accent row ── */}
+          {/* ── Contact column — Cyberpunk HUD terminal ── */}
           <div className="flex flex-col items-center gap-3">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80">
               Contact
             </span>
-            <div className="flex items-center justify-center gap-2 flex-wrap">
-              {/* Phone pill */}
-              <a
-                href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                className="group/c inline-flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 hover:scale-[1.03]"
-                style={{
-                  background: "rgba(212,175,55,0.06)",
-                  border: "1px solid rgba(212,175,55,0.18)",
-                  boxShadow: "0 0 12px rgba(212,175,55,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
-                }}
-              >
-                <Phone className="h-3.5 w-3.5 text-crepe-gold shrink-0" />
-                <span className="text-xs font-semibold text-white/80 group-hover/c:text-crepe-gold transition-colors whitespace-nowrap">{CONTACT.phone}</span>
-              </a>
-              {/* WhatsApp pill */}
-              <a
-                href={`https://wa.me/${CONTACT.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/c inline-flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 hover:scale-[1.03]"
-                style={{
-                  background: "rgba(37,211,102,0.06)",
-                  border: "1px solid rgba(37,211,102,0.2)",
-                  boxShadow: "0 0 12px rgba(37,211,102,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
-                }}
-              >
-                <MessageCircle className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                <span className="text-xs font-semibold text-white/80 group-hover/c:text-emerald-400 transition-colors">WhatsApp</span>
-              </a>
-              {/* Address pill */}
+            {/* HUD panel */}
+            <div className="relative w-full max-w-[270px]">
+              {/* Corner brackets */}
+              <span aria-hidden="true" className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-crepe-gold/35 pointer-events-none" />
+              <span aria-hidden="true" className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-crepe-gold/35 pointer-events-none" />
+              <span aria-hidden="true" className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-crepe-gold/35 pointer-events-none" />
+              <span aria-hidden="true" className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-crepe-gold/35 pointer-events-none" />
+
+              {/* Scanline sweep */}
               <span
-                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl"
+                aria-hidden="true"
+                className="absolute left-2 right-2 h-px pointer-events-none z-10"
                 style={{
-                  background: "rgba(139,92,246,0.05)",
-                  border: "1px solid rgba(139,92,246,0.15)",
-                  boxShadow: "0 0 12px rgba(139,92,246,0.04), inset 0 1px 0 rgba(255,255,255,0.03)",
+                  background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.35), transparent)",
+                  animation: "ft-hud-scan 4s ease-in-out infinite",
+                  willChange: "transform",
+                }}
+              />
+
+              <div
+                className="relative px-3 py-3"
+                style={{
+                  background: "rgba(15,10,31,0.8)",
+                  border: "1px solid rgba(212,175,55,0.1)",
+                  backdropFilter: "blur(8px)",
                 }}
               >
-                <MapPin className="h-3.5 w-3.5 text-violet-400 shrink-0" />
-                <span className="text-xs font-medium text-white/55">{CONTACT.address}</span>
-              </span>
+                {/* Scanlines texture */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 pointer-events-none opacity-[0.025]"
+                  style={{
+                    backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212,175,55,0.2) 2px, rgba(212,175,55,0.2) 4px)",
+                  }}
+                />
+
+                <div className="relative flex flex-col gap-1">
+                  {/* Phone */}
+                  <a
+                    href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+                    className="ft-hud-row group/r flex items-center gap-2.5 px-2 py-2 rounded-sm transition-colors duration-150 hover:bg-[rgba(212,175,55,0.06)]"
+                    style={{ "--hud-accent": "rgba(212,175,55,0.2)" } as React.CSSProperties}
+                  >
+                    <span
+                      className="flex items-center justify-center h-7 w-7 shrink-0"
+                      style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)", background: "rgba(212,175,55,0.1)" }}
+                    >
+                      <Phone className="h-3 w-3 text-crepe-gold" />
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[8px] font-mono uppercase tracking-[0.22em] text-crepe-gold/40 leading-none select-none">&gt; PHONE</span>
+                      <span className="text-xs font-semibold text-white/80 group-hover/r:text-crepe-gold transition-colors mt-0.5 tracking-wide">{CONTACT.phone}</span>
+                    </div>
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-crepe-gold/70 shrink-0 animate-pulse" />
+                  </a>
+
+                  <div className="h-px mx-3" style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent)" }} />
+
+                  {/* WhatsApp */}
+                  <a
+                    href={`https://wa.me/${CONTACT.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ft-hud-row group/r flex items-center gap-2.5 px-2 py-2 rounded-sm transition-colors duration-150 hover:bg-[rgba(37,211,102,0.05)]"
+                    style={{ "--hud-accent": "rgba(37,211,102,0.2)" } as React.CSSProperties}
+                  >
+                    <span
+                      className="flex items-center justify-center h-7 w-7 shrink-0"
+                      style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)", background: "rgba(37,211,102,0.1)" }}
+                    >
+                      <MessageCircle className="h-3 w-3 text-emerald-400" />
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[8px] font-mono uppercase tracking-[0.22em] text-emerald-400/40 leading-none select-none">&gt; WHATSAPP</span>
+                      <span className="text-xs font-semibold text-white/80 group-hover/r:text-emerald-400 transition-colors mt-0.5">Message Direct</span>
+                    </div>
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-400/70 shrink-0 animate-pulse" />
+                  </a>
+
+                  <div className="h-px mx-3" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.1), transparent)" }} />
+
+                  {/* Address */}
+                  <div
+                    className="ft-hud-row flex items-center gap-2.5 px-2 py-2"
+                    style={{ "--hud-accent": "rgba(139,92,246,0.15)" } as React.CSSProperties}
+                  >
+                    <span
+                      className="flex items-center justify-center h-7 w-7 shrink-0"
+                      style={{ clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)", background: "rgba(139,92,246,0.1)" }}
+                    >
+                      <MapPin className="h-3 w-3 text-violet-400" />
+                    </span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[8px] font-mono uppercase tracking-[0.22em] text-violet-400/40 leading-none select-none">&gt; LOCATION</span>
+                      <span className="text-xs font-medium text-white/50 mt-0.5">{CONTACT.address}</span>
+                    </div>
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-violet-400/40 shrink-0" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
