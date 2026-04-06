@@ -136,29 +136,32 @@ const Footer = () => {
           </div>
 
           {/* ── Contact column ── */}
-          <div className="flex flex-col items-center sm:items-center gap-2">
-            <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80">
               Contact
             </span>
-            <a
-              href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-              className="flex items-center gap-2.5 text-white/80 hover:text-crepe-gold text-sm transition-colors duration-200 min-h-[40px]"
-            >
-              <Phone className="h-4 w-4 shrink-0 opacity-60" />
-              <span>{CONTACT.phone}</span>
-            </a>
-            <a
-              href={`https://wa.me/${CONTACT.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2.5 text-white/80 hover:text-crepe-gold text-sm transition-colors duration-200 min-h-[40px]"
-            >
-              <MessageCircle className="h-4 w-4 shrink-0 opacity-60" />
-              <span>WhatsApp</span>
-            </a>
-            <div className="flex items-center gap-2.5 text-white/60 text-sm min-h-[40px]">
-              <MapPin className="h-4 w-4 shrink-0 opacity-60" />
-              <span>{CONTACT.address}</span>
+            {/* Compact horizontal chip row */}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <a
+                href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/80 hover:text-crepe-gold bg-white/[0.06] hover:bg-crepe-gold/10 border border-white/10 hover:border-crepe-gold/30 transition-all duration-200"
+              >
+                <Phone className="h-3.5 w-3.5 shrink-0 opacity-70" />
+                <span>{CONTACT.phone}</span>
+              </a>
+              <a
+                href={`https://wa.me/${CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/80 hover:text-crepe-gold bg-white/[0.06] hover:bg-crepe-gold/10 border border-white/10 hover:border-crepe-gold/30 transition-all duration-200"
+              >
+                <MessageCircle className="h-3.5 w-3.5 shrink-0 opacity-70" />
+                <span>WhatsApp</span>
+              </a>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/50 bg-white/[0.04] border border-white/8">
+                <MapPin className="h-3.5 w-3.5 shrink-0 opacity-60" />
+                <span>{CONTACT.address}</span>
+              </span>
             </div>
           </div>
 
