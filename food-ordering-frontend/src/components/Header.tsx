@@ -4,6 +4,18 @@ import MobileNav from "./MobileNav";
 import MainNav from "./MainNav";
 import { BRAND } from "@/config/brand";
 
+const HEADER_KEYFRAMES = `
+  @keyframes hdr-rotate-border {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes hdr-glow-breathe {
+    0%, 100% { box-shadow: 0 0 8px rgba(212,175,55,0.25), 0 0 20px rgba(212,175,55,0.08); }
+    50%      { box-shadow: 0 0 14px rgba(212,175,55,0.4), 0 0 28px rgba(212,175,55,0.12); }
+  }
+  .hdr-logo-ring { animation: hdr-glow-breathe 3.5s ease-in-out infinite; }
+`;
+
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,6 +43,8 @@ const Header = () => {
         ${scrolled ? "shadow-header-scrolled border-crepe-purple/5" : "shadow-header"}
       `}
     >
+      <style>{HEADER_KEYFRAMES}</style>
+
       {/* Premium gradient accent */}
       <div className="absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-transparent via-crepe-gold to-transparent opacity-60" />
 
@@ -39,24 +53,42 @@ const Header = () => {
           to="/"
           className="group flex items-center gap-3 sm:gap-4 shrink-0 min-w-0 transition-transform duration-300 hover:scale-[1.01] active:scale-[0.99]"
         >
-          {/* Logo — premium container with subtle glow */}
+          {/* Logo — Uiverse rotating conic-gradient border ring */}
           <div className="relative flex-shrink-0">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-crepe-gold/30 to-crepe-purple/20 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300" />
-            <div className="relative h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl overflow-hidden ring-2 ring-crepe-gold/50 ring-offset-2 ring-offset-white shadow-lg shadow-crepe-purple/5 transition-[ring-color] duration-300 group-hover:ring-crepe-gold">
-              <img
-                src={BRAND.logo}
-                alt={BRAND.name}
-                width={48}
-                height={48}
-                className="h-full w-full object-cover object-center"
-                loading="eager"
-                decoding="async"
-                onError={(e) => {
-                  const el = e.target as HTMLImageElement;
-                  el.src = "/logo.png";
-                  el.onerror = () => { el.style.display = "none"; };
+            {/* Rotating conic border container */}
+            <div
+              className="hdr-logo-ring relative rounded-2xl overflow-hidden"
+              style={{ padding: 2 }}
+            >
+              {/* Spinning conic gradient layer */}
+              <span
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  inset: "-120%",
+                  background:
+                    "conic-gradient(from 0deg, #D4AF37, transparent 18%, #7C3AED 38%, transparent 58%, #EDD060 78%, #D4AF37)",
+                  animation: "hdr-rotate-border 4s linear infinite",
+                  willChange: "transform",
                 }}
               />
+              {/* Inner logo container */}
+              <div className="relative h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl overflow-hidden bg-white">
+                <img
+                  src={BRAND.logo}
+                  alt={BRAND.name}
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-cover object-center"
+                  loading="eager"
+                  decoding="async"
+                  onError={(e) => {
+                    const el = e.target as HTMLImageElement;
+                    el.src = "/logo.png";
+                    el.onerror = () => { el.style.display = "none"; };
+                  }}
+                />
+              </div>
             </div>
           </div>
           {/* Brand text */}
