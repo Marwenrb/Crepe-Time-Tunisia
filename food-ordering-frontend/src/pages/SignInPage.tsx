@@ -80,23 +80,58 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-[#0F0A1F] overflow-x-hidden py-6">
+    <div
+      className="relative min-h-screen flex items-center justify-center overflow-x-hidden py-6"
+      style={{
+        background:
+          "linear-gradient(160deg, #1E0A3C 0%, #2E1065 28%, #4C1D95 50%, #3B0764 72%, #1E0A3C 100%)",
+      }}
+    >
+      {/* ── Gold accent line — top ── */}
+      <div className="absolute top-0 inset-x-0 z-10" aria-hidden="true">
+        <div
+          className="h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 10%, rgba(212,175,55,0.08) 20%, rgba(212,175,55,0.45) 50%, rgba(212,175,55,0.08) 80%, transparent 90%)",
+          }}
+        />
+      </div>
+
       {/* ── Ambient orbs ── */}
       <div
         aria-hidden="true"
-        className="absolute top-0 left-0 w-[280px] h-[280px] rounded-full opacity-20 blur-[80px] animate-orb-drift"
+        className="absolute top-[-8%] left-[-6%] w-[340px] h-[340px] rounded-full opacity-25 blur-[90px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(109,40,217,0.7) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(109,40,217,0.65) 0%, transparent 70%)",
         }}
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-[220px] h-[220px] rounded-full opacity-10 blur-[70px] animate-orb-drift"
+        className="absolute bottom-[-4%] right-[-4%] w-[260px] h-[260px] rounded-full opacity-15 blur-[75px]"
         style={{
           background:
-            "radial-gradient(circle, rgba(212,175,55,0.7) 0%, transparent 70%)",
-          animationDelay: "-7s",
+            "radial-gradient(circle, rgba(212,175,55,0.6) 0%, transparent 70%)",
+        }}
+      />
+      {/* Subtle center glow */}
+      <div
+        aria-hidden="true"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(212,175,55,0.5) 0%, transparent 65%)",
+        }}
+      />
+
+      {/* ── Subtle noise texture overlay ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: "180px 180px",
         }}
       />
 
@@ -164,11 +199,18 @@ const SignInPage = () => {
               </div>
 
               {/* Button row — Login + Sign Up side by side */}
-              <div className="flex justify-center flex-row mt-10">
+              <div className="flex justify-center flex-row mt-8 gap-2">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="py-2 px-6 rounded-[5px] mr-2 border-none outline-none transition-all duration-[400ms] bg-[#252525] text-white hover:bg-black disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="py-2.5 px-6 rounded-lg border-none outline-none transition-all duration-300 text-sm font-bold tracking-wide disabled:opacity-70 disabled:cursor-not-allowed"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%)",
+                    color: "#0F0A1F",
+                    boxShadow:
+                      "0 4px 16px rgba(212,175,55,0.35), 0 0 0 1px rgba(212,175,55,0.2)",
+                  }}
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
@@ -181,7 +223,12 @@ const SignInPage = () => {
                 </button>
                 <Link
                   to="/register"
-                  className="py-2 px-9 rounded-[5px] border-none outline-none transition-all duration-[400ms] bg-[#252525] text-white hover:bg-black text-center"
+                  className="py-2.5 px-8 rounded-lg border outline-none transition-all duration-300 text-sm font-semibold tracking-wide text-center"
+                  style={{
+                    background: "rgba(212,175,55,0.08)",
+                    borderColor: "rgba(212,175,55,0.3)",
+                    color: "#D4AF37",
+                  }}
                 >
                   Sign Up
                 </Link>
