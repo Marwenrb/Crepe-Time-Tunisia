@@ -9,8 +9,8 @@ export const BRAND = {
   fullName: "Crêpe Time Tunisia",
 
   /** Official logo — use this path everywhere */
-  logo: "/crepe-time-logo.png",
+  logo: "/crepe-time-logo.webp",
 
-  /** Favicon for browser tab */
-  favicon: "/favicon-32x32.png",
+  /** Favicon for browser tab (SVG preferred, PNG fallback) */
+  favicon: "/favicon.svg",
 } as const;

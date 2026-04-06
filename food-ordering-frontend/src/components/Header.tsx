@@ -10,10 +10,14 @@ const HEADER_KEYFRAMES = `
     to   { transform: rotate(360deg); }
   }
   @keyframes hdr-glow-breathe {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.25)) drop-shadow(0 0 20px rgba(212,175,55,0.08)); }
-    50%      { filter: drop-shadow(0 0 14px rgba(212,175,55,0.4)) drop-shadow(0 0 28px rgba(212,175,55,0.12)); }
+    0%, 100% { opacity: 0.7; }
+    50%      { opacity: 1; }
   }
-  .hdr-logo-ring { animation: hdr-glow-breathe 3.5s ease-in-out infinite; }
+  .hdr-logo-ring {
+    animation: hdr-glow-breathe 3.5s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(212,175,55,0.3), 0 0 22px rgba(212,175,55,0.1);
+    will-change: opacity;
+  }
 `;
 
 const Header = () => {
