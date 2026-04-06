@@ -76,12 +76,12 @@ const CrepeHighlightCard = ({ item, index }: CrepeHighlightCardProps) => {
       >
         <div className="relative aspect-[4/3] overflow-hidden">
           <picture>
-            {item.avifUrl && <source srcSet={item.avifUrl} type="image/avif" />}
+            {item.avifUrl && <source srcSet={`${item.avifUrl} 800w`} sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw" type="image/avif" />}
             <img
               src={item.imageUrl}
               alt={item.name}
-              width={640}
-              height={480}
+              width={602}
+              height={452}
               loading="lazy"
               decoding="async"
               sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 92vw"

@@ -45,6 +45,10 @@ export default defineConfig({
           "vendor-data": ["axios", "react-query", "@supabase/supabase-js"],
           // Icons — tree-shaken but keep in own chunk
           "vendor-icons": ["lucide-react"],
+          // Animation — isolated so non-animated pages skip the payload
+          "vendor-motion": ["framer-motion"],
+          // Marquee — small but worth isolating
+          "vendor-marquee": ["react-fast-marquee"],
         },
       },
     },

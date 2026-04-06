@@ -1,4 +1,4 @@
-import { memo, useRef } from "react";
+import React, { memo, useRef } from "react";
 import { motion } from "framer-motion";
 import CrepeHighlightCard, { type CrepeHighlight } from "./CrepeHighlightCard";
 import nutellaBananeFeature from "@/assets/hero/Crêpe Nutella Banane feature.jpg";
@@ -37,6 +37,7 @@ const CrepeHighlightsSection = () => {
       ref={sectionRef}
       className="relative py-10 sm:py-12 lg:py-14 overflow-hidden bg-crepe-purple"
       aria-labelledby="crepe-highlights-heading"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "0 600px" } as React.CSSProperties}
     >
       {/* Subtle gold overlay */}
       <div

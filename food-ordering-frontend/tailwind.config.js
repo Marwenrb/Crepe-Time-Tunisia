@@ -94,8 +94,9 @@ module.exports = {
           to: { opacity: "1", transform: "scale(1)" },
         },
         "shimmer": {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+          /* GPU-composited: moves a pseudo-overlay via transform, not backgroundPosition */
+          "0%":   { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
         },
         "glow-pulse": {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },

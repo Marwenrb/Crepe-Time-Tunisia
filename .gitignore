@@ -89,6 +89,10 @@ temp/
 # Screenshots (may contain sensitive info)
 screenshots/
 
+# Python cache (UI UX Pro Max skill scripts)
+__pycache__/
+*.pyc
+
 # Misc
 *.bak
 *.tmp

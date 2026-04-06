@@ -297,28 +297,28 @@ const DetailPage = () => {
         style={{ zIndex: 0 }}
       >
         <div
-          className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-30"
+          className="absolute -top-32 -left-32 w-[380px] h-[380px] rounded-full opacity-30"
           style={{
             background: "radial-gradient(circle, #7C3AED 0%, transparent 70%)",
-            filter: "blur(60px)",
+            filter: "blur(40px)",
             willChange: "transform",
             transform: "translateZ(0)",
           }}
         />
         <div
-          className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full opacity-20"
+          className="absolute top-1/2 right-0 w-[260px] h-[260px] rounded-full opacity-20"
           style={{
             background: "radial-gradient(circle, #D4AF37 0%, transparent 70%)",
-            filter: "blur(80px)",
+            filter: "blur(50px)",
             willChange: "transform",
             transform: "translateZ(0)",
           }}
         />
         <div
-          className="absolute bottom-0 left-1/3 w-[500px] h-[500px] rounded-full opacity-20"
+          className="absolute bottom-0 left-1/3 w-[320px] h-[320px] rounded-full opacity-20"
           style={{
             background: "radial-gradient(circle, #3B0764 0%, transparent 70%)",
-            filter: "blur(70px)",
+            filter: "blur(45px)",
             willChange: "transform",
             transform: "translateZ(0)",
           }}
@@ -333,7 +333,7 @@ const DetailPage = () => {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="container pt-8 pb-4 flex flex-col items-center text-center"
+          className="container pt-3 pb-1 flex flex-col items-center text-center"
         >
           <h1 className="flex flex-col items-center gap-1 sm:gap-1.5">
             {/* Eyebrow — fine ornamental line */}
@@ -377,7 +377,7 @@ const DetailPage = () => {
 
           {/* Separator */}
           <div
-            className="mt-5 h-px w-24 sm:w-32"
+            className="mt-2 h-px w-20 sm:w-28"
             style={{
               background:
                 "linear-gradient(to right, transparent, rgba(212,175,55,0.5), transparent)",
@@ -386,7 +386,7 @@ const DetailPage = () => {
         </motion.div>
 
         {/* 1. Hero */}
-        <div className="container pt-4 pb-0">
+        <div className="container pt-1 pb-0">
           <MenuHero restaurant={restaurant} />
         </div>
 
@@ -401,13 +401,13 @@ const DetailPage = () => {
         </div>
 
         {/* 3. Main content grid: menu left | cart right */}
-        <div className="container py-8 lg:py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-8">
+        <div className="container py-3 lg:py-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-5 lg:gap-6">
 
             {/* ── Menu Grid ── */}
             <div className="order-2 lg:order-1">
               {/* Section header */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(212,175,55,0.3), transparent)" }} />
                 <h2
                   className="text-white/60 text-xs font-semibold uppercase tracking-[0.2em] whitespace-nowrap"
@@ -426,7 +426,7 @@ const DetailPage = () => {
                   variants={gridVariants}
                   initial="hidden"
                   animate="visible"
-                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
+                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"
                 >
                   {filteredItems.length > 0 ? (
                     filteredItems.map((menuItem, i) => (

@@ -1,4 +1,3 @@
-// RegisterPage.tsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -8,7 +7,7 @@ import * as authApi from "@/api/authApi";
 import { useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { User, Mail, Phone, Lock, Loader2 } from "lucide-react";
-import { BRAND } from "@/config/brand";
+import AuthBrandPanel from "@/components/AuthBrandPanel";
 
 /* ─── Validation ──────────────────────────────────────────── */
 const registerSchema = z.object({
@@ -64,7 +63,7 @@ const RegisterPage = () => {
       {/* ── Ambient orbs ── */}
       <div
         aria-hidden="true"
-        className="absolute top-0 left-0 w-[420px] h-[420px] rounded-full opacity-20 blur-[120px] animate-orb-drift"
+        className="absolute top-0 left-0 w-[280px] h-[280px] rounded-full opacity-20 blur-[80px] animate-orb-drift"
         style={{
           background:
             "radial-gradient(circle, rgba(109,40,217,0.7) 0%, transparent 70%)",
@@ -72,7 +71,7 @@ const RegisterPage = () => {
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-[340px] h-[340px] rounded-full opacity-10 blur-[100px] animate-orb-drift"
+        className="absolute bottom-0 right-0 w-[220px] h-[220px] rounded-full opacity-10 blur-[70px] animate-orb-drift"
         style={{
           background:
             "radial-gradient(circle, rgba(212,175,55,0.7) 0%, transparent 70%)",
@@ -82,48 +81,7 @@ const RegisterPage = () => {
 
       {/* ── Content ── */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
-        {/* ── Premium Brand Badge ─────────────────────────────────────────
-            160×160 self-contained medallion.
-            ALL rings absolutely-positioned INSIDE the box — zero overflow.
-              inset-[9px]  → 142×142 outer decoration ring
-              inset-[16px] → 128×128 mid decoration ring
-              inset-[32px] → 96×96  logo circle
-        ── */}
-        <div className="flex flex-col items-center pb-6 animate-fade-in-up">
-          <div className="relative w-[160px] h-[160px] mb-3">
-            {/* Ambient glow — composited animation */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 rounded-full pointer-events-none animate-glow-pulse"
-              style={{ background: "radial-gradient(circle, rgba(212,175,55,0.16) 0%, transparent 68%)" }}
-            />
-            {/* Outer ring */}
-            <div className="absolute inset-[9px] rounded-full border border-[#D4AF37]/15 pointer-events-none" />
-            {/* Mid ring */}
-            <div className="absolute inset-[16px] rounded-full border border-[#D4AF37]/28 pointer-events-none" />
-            {/* Logo circle — 96×96 */}
-            <div
-              className="absolute inset-[32px] rounded-full flex items-center justify-center"
-              style={{
-                background: "linear-gradient(155deg, #1C1040 0%, #0F0A1F 100%)",
-                boxShadow:
-                  "0 0 0 1.5px rgba(212,175,55,0.55), 0 8px 32px rgba(76,29,149,0.5), inset 0 1px 0 rgba(212,175,55,0.10)",
-              }}
-            >
-              <img
-                src={BRAND.logo}
-                alt="Crêpe Time Tunisia"
-                loading="eager"
-                className="w-[58px] h-[58px] object-contain animate-float"
-                style={{ filter: "drop-shadow(0 2px 14px rgba(212,175,55,0.42))" }}
-              />
-            </div>
-          </div>
-          <h1 className="text-[#D4AF37] font-heading text-2xl tracking-[0.2em] font-light uppercase">
-            Crêpe Time
-          </h1>
-          <div className="mt-1.5 h-px w-8 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent" />
-        </div>
+        <AuthBrandPanel />
 
         {/* ── Card (outer gradient ring) ── */}
         <div
