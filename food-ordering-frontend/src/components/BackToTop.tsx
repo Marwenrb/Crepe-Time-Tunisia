@@ -37,15 +37,18 @@ const BackToTop = () => {
         setScrollProgress(progress);
         setIsVisible(scrollY > SCROLL_THRESHOLD);
 
-        // Push button up when footer enters viewport
+        // Slide button up smoothly as footer enters viewport
         const footer = document.querySelector('footer');
         if (footer) {
           const footerRect = footer.getBoundingClientRect();
           const viewportH = window.innerHeight;
+          const btnHeight = 48; // button approximate height
           if (footerRect.top < viewportH) {
-            // Footer is visible — position button above it
-            const overlap = viewportH - footerRect.top;
-            setBottomPx(overlap + FOOTER_CLEARANCE);
+            // Footer is overlapping viewport — push button up
+            const needed = viewportH - footerRect.top + FOOTER_CLEARANCE;
+            // Cap so button doesn't fly off the top
+            const maxBottom = viewportH - btnHeight - 8;
+            setBottomPx(Math.min(needed, maxBottom));
           } else {
             setBottomPx(DEFAULT_BOTTOM);
           }

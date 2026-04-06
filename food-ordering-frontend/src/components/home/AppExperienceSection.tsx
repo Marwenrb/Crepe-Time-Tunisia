@@ -1120,15 +1120,15 @@ const AppExperienceSection = () => {
             <Link
               to="/menu"
               aria-label="Commander vos crêpes maintenant"
-              className="axp-cta group relative inline-flex items-center justify-center gap-2.5 w-full sm:w-auto overflow-visible"
+              className="axp-cta group relative inline-flex items-center justify-center gap-1.5 max-w-[210px] sm:max-w-none sm:w-auto overflow-visible"
               style={{
                 "--glow-color": "rgb(212,175,55)",
                 "--glow-spread": "rgba(212,175,55,0.45)",
                 "--btn-bg": "rgb(26,18,51)",
-                border: "0.12em solid var(--glow-color)",
-                padding: "clamp(5px,1vw,9px) clamp(12px,2.2vw,22px)",
+                border: "0.1em solid var(--glow-color)",
+                padding: "4px 12px",
                 color: "var(--glow-color)",
-                fontSize: "clamp(0.68rem,1.2vw,0.82rem)",
+                fontSize: "0.68rem",
                 fontWeight: 800,
                 letterSpacing: "0.06em",
                 backgroundColor: "var(--btn-bg)",
@@ -1159,12 +1159,12 @@ const AppExperienceSection = () => {
                 } as React.CSSProperties}
               />
 
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center gap-1.5">
                 Commander maintenant
                 <svg
                   aria-hidden="true"
-                  width="15"
-                  height="15"
+                  width="13"
+                  height="13"
                   viewBox="0 0 16 16"
                   fill="none"
                   stroke="currentColor"

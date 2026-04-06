@@ -383,17 +383,17 @@ function CtaButton() {
     <Link
       to={MENU_HREF}
       aria-label="Commander vos crêpes maintenant"
-      className="hc-glow-btn group relative inline-flex items-center justify-center gap-2 w-full sm:w-auto font-bold overflow-visible"
+      className="hc-glow-btn group relative inline-flex items-center justify-center gap-1.5 max-w-[200px] sm:max-w-none sm:w-auto font-bold overflow-visible"
       style={{
         /* Gold glow palette — CSS custom props */
         "--glow-color": "rgb(212, 175, 55)",
         "--glow-spread": "rgba(212, 175, 55, 0.45)",
         "--glow-enhanced": "rgb(237, 208, 96)",
         "--btn-bg": "rgb(26, 18, 51)",
-        border: "0.12em solid var(--glow-color)",
-        padding: "clamp(5px,0.8vw,8px) clamp(10px,1.8vw,18px)",
+        border: "0.1em solid var(--glow-color)",
+        padding: "4px 10px",
         color: "var(--glow-color)",
-        fontSize: "clamp(0.65rem,1.1vw,0.78rem)",
+        fontSize: "0.68rem",
         fontWeight: 700,
         letterSpacing: "0.04em",
         backgroundColor: "var(--btn-bg)",
@@ -424,12 +424,12 @@ function CtaButton() {
         }}
       />
 
-      <span className="relative z-10 flex items-center gap-2">
+      <span className="relative z-10 flex items-center gap-1.5">
         Commander Maintenant
         <svg
           aria-hidden="true"
-          width="16"
-          height="16"
+          width="13"
+          height="13"
           viewBox="0 0 16 16"
           fill="none"
           stroke="currentColor"

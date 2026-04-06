@@ -218,7 +218,7 @@ const VideoHeroSection = () => {
         <div className="relative mt-6 sm:mt-8" style={show(0.45)}>
           <Link
             to="/search/Nabeul"
-            className="group relative inline-flex items-center gap-1.5 px-4 py-2 sm:px-7 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide overflow-visible transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]"
+            className="group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-6 sm:py-2.5 rounded-full text-[0.7rem] sm:text-sm font-bold tracking-wide overflow-visible transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]"
             style={{
               "--glow-color": "rgb(212, 175, 55)",
               "--glow-spread": "rgba(212, 175, 55, 0.4)",
