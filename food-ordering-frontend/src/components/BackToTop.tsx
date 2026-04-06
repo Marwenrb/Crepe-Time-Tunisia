@@ -18,6 +18,7 @@ const triggerHaptic = (): void => {
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [bottomOffset, setBottomOffset] = useState(16);
   const reducedMotion = useReducedMotion();
 
   // Track scroll position, progress, and show/hide button
@@ -33,6 +34,19 @@ const BackToTop = () => {
 
         setScrollProgress(progress);
         setIsVisible(scrollY > SCROLL_THRESHOLD);
+
+        // Keep button above footer copyright section
+        const footer = document.querySelector('footer');
+        if (footer) {
+          const footerRect = footer.getBoundingClientRect();
+          const vh = window.innerHeight;
+          if (footerRect.top < vh) {
+            setBottomOffset(vh - footerRect.top + 20);
+          } else {
+            setBottomOffset(16);
+          }
+        }
+
         ticking = false;
       });
     };
@@ -64,7 +78,8 @@ const BackToTop = () => {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.7, y: 20 }}
           transition={{ duration: 0.28, ease: EASE }}
-          className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50"
+          className="fixed right-4 sm:right-6 z-50"
+          style={{ bottom: bottomOffset, transition: "bottom 0.3s ease" }}
         >
           {/* Ultra-Compact Premium Button */}
           <motion.div

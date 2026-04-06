@@ -11,6 +11,7 @@
 import { motion } from "framer-motion";
 import { Restaurant } from "@/types";
 import { MapPin, Zap } from "lucide-react";
+import menuVideo from "@/assets/hero/Crêpe_Making_Cinematic_Food_Photography.mp4";
 
 const CUISINE_DISPLAY: Record<string, { label: string; icon: string }> = {
   "Crêpes":   { label: "Crêpes",     icon: "🥞" },
@@ -70,18 +71,16 @@ export const MenuHero = ({ restaurant }: Props) => {
 
       {/* ── Background layers ── */}
       <div className="absolute inset-0">
-        <img
-          src={restaurant.imageUrl}
-          alt={restaurant.restaurantName}
-          width={1200}
-          height={520}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
-          className="w-full h-full object-cover object-center scale-105"
-          style={{ filter: "brightness(0.45) saturate(1.3) contrast(1.05)" }}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-        />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover scale-110"
+          style={{ filter: "brightness(0.45) saturate(1.3) contrast(1.05)", objectPosition: "center 25%" }}
+        >
+          <source src={menuVideo} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A1F] via-[#0F0A1F]/65 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#4C1D95]/35 via-transparent to-[#4C1D95]/20" />
       </div>

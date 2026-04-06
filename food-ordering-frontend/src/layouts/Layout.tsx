@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import HeroContent from "@/components/home/HeroContent";
+import heroVideo from "@/assets/hero/Artisan_Crêpe_Video_Generation.mp4";
 
 const BackToTop = lazy(() => import("@/components/BackToTop"));
 
@@ -36,17 +37,17 @@ const Layout = ({ children, showHero = false }: Props) => {
       {showHero && (
         /* hero-critical class defined in inline <style> in index.html for CLS-free rendering */
         <div className="hero-critical">
-          <img
-            src="/hero-home.avif"
-            alt="Crepe Time - Hero Banner"
-            width={1200}
-            height={600}
-            sizes="100vw"
-            className="w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[620px] xl:h-[700px] object-cover object-center"
-            loading="eager"
-            fetchPriority="high"
-            decoding="sync"
-          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/hero-home.avif"
+            className="w-full h-[480px] sm:h-[520px] md:h-[560px] lg:h-[620px] xl:h-[700px] object-cover"
+            style={{ objectPosition: "center 25%", transform: "scale(1.12)" }}
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
           {/* Dark scrim so heading text is legible over any image */}
           <div
             aria-hidden="true"

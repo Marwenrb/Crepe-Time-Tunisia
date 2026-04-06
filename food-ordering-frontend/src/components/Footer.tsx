@@ -44,10 +44,16 @@ const Footer = () => {
         {/* ═══ Top: Brand + Contact + Social grid ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
 
-          {/* ── Brand column ── */}
+          {/* ── Brand column — UIVerse neon glow ── */}
           <div className="flex flex-col items-center sm:items-start gap-3">
             <div className="flex items-center gap-3">
-              <div className="relative h-11 w-11 rounded-lg overflow-hidden ring-1 ring-crepe-gold/40 bg-white/5">
+              <div
+                className="relative h-12 w-12 rounded-xl overflow-hidden bg-white/5"
+                style={{
+                  boxShadow: "0 0 12px rgba(212,175,55,0.5), 0 0 28px rgba(212,175,55,0.18), inset 0 0 6px rgba(212,175,55,0.12)",
+                  border: "1.5px solid rgba(212,175,55,0.55)",
+                }}
+              >
                 <img
                   src={BRAND.logo}
                   alt={BRAND.name}
@@ -71,21 +77,25 @@ const Footer = () => {
               </div>
               <div>
                 <span
-                  className="font-heading font-black block text-lg leading-tight"
+                  className="font-heading font-black block text-xl leading-tight"
                   style={{
-                    background: "linear-gradient(135deg, #E5C76B, #D4AF37 40%, #FFFFFF 70%, #E5C76B)",
+                    background: "linear-gradient(135deg, #E5C76B 0%, #D4AF37 22%, #FFFFFF 50%, #E5C76B 78%, #C9A227 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
+                    filter: "drop-shadow(0 0 10px rgba(212,175,55,0.6))",
                   }}
                 >
                   {BRAND.name}
                 </span>
                 <span
-                  className="text-[10px] font-semibold tracking-[0.2em] uppercase block"
-                  style={{ color: "rgba(212,175,55,0.7)" }}
+                  className="text-[10px] font-bold tracking-[0.25em] uppercase block mt-0.5"
+                  style={{
+                    color: "rgba(212,175,55,0.85)",
+                    textShadow: "0 0 14px rgba(212,175,55,0.4)",
+                  }}
                 >
-                  {BRAND.tagline}
+                  ✦ {BRAND.tagline} ✦
                 </span>
               </div>
             </div>
@@ -147,12 +157,13 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ═══ Divider ═══ */}
+        {/* ═══ Divider — gold neon glow ═══ */}
         <div
           aria-hidden="true"
           className="my-6 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 80%, transparent)",
+            background: "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.35) 20%, rgba(212,175,55,0.7) 50%, rgba(212,175,55,0.35) 80%, transparent 95%)",
+            boxShadow: "0 0 8px rgba(212,175,55,0.3), 0 0 24px rgba(212,175,55,0.1)",
           }}
         />
 
