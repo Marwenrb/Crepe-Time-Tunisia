@@ -33,6 +33,10 @@ const FOOTER_KEYFRAMES = `
     50%      { filter: drop-shadow(0 0 14px rgba(212,175,55,0.4)) drop-shadow(0 0 28px rgba(212,175,55,0.12)); }
   }
   .ft-logo-ring { animation: ft-glow-breathe 3.5s ease-in-out infinite; }
+  @keyframes ft-line-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
   @keyframes ft-line-shimmer {
     0%   { background-position: -200% center; }
     100% { background-position: 200% center; }
@@ -60,10 +64,10 @@ const Footer = () => {
 
       <div className="container mx-auto px-5 sm:px-6 pt-8 sm:pt-10 pb-6">
         {/* ═══ Top: Brand + Contact + Social grid ═══ */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 text-center sm:text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 text-center">
 
           {/* ── Brand column — matching Header logo ring ── */}
-          <div className="flex flex-col items-center sm:items-start gap-3">
+          <div className="flex flex-col items-center gap-3">
             <div className="flex items-center gap-3">
               {/* Rotating conic-gradient ring — same as Header */}
               <div className="relative flex-shrink-0">
@@ -108,19 +112,25 @@ const Footer = () => {
               </div>
               {/* Brand text — matching Header style */}
               <div className="flex flex-col min-w-0">
-                <span className="text-base sm:text-lg font-bold tracking-tight text-white leading-tight">
+                <span
+                  className="text-base sm:text-lg md:text-xl font-bold tracking-tight leading-tight"
+                  style={{
+                    background: "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 60%, #E5C76B 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
+                  }}
+                >
                   {BRAND.name}
                 </span>
-                <span
-                  className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] uppercase leading-tight"
-                  style={{ color: "rgba(212,175,55,0.9)" }}
-                >
+                <span className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] text-crepe-gold uppercase leading-tight opacity-90">
                   {BRAND.tagline}
                 </span>
               </div>
             </div>
 
-            <p className="text-white/50 text-xs leading-relaxed max-w-[220px] text-center sm:text-left mt-1">
+            <p className="text-white/50 text-xs leading-relaxed max-w-[220px] text-center mt-1">
               L&apos;art de la crêpe à Nabeul — saveurs authentiques, ingrédients frais, livré chez vous.
             </p>
           </div>
@@ -153,7 +163,7 @@ const Footer = () => {
           </div>
 
           {/* ── Social column ── */}
-          <div className="flex flex-col items-center sm:items-end gap-2">
+          <div className="flex flex-col items-center gap-2">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
               Suivez-nous
             </span>
@@ -174,19 +184,43 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ═══ Divider — animated gold shimmer line ═══ */}
-        <div
-          aria-hidden="true"
-          className="my-6"
-          style={{
-            height: "1.5px",
-            borderRadius: "1px",
-            backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 10%, rgba(212,175,55,0.55) 35%, rgba(255,255,255,0.9) 50%, rgba(212,175,55,0.55) 65%, rgba(212,175,55,0.15) 90%, transparent 100%)",
-            backgroundSize: "200% 100%",
-            animation: "ft-line-shimmer 4s ease-in-out infinite",
-            boxShadow: "0 0 10px rgba(212,175,55,0.35), 0 0 30px rgba(212,175,55,0.12)",
-          }}
-        />
+        {/* ═══ Divider — premium animated double shimmer with glow ═══ */}
+        <div aria-hidden="true" className="my-6 relative flex flex-col items-center gap-[3px]">
+          {/* Soft glow layer */}
+          <div
+            className="absolute inset-x-[10%] top-1/2 -translate-y-1/2"
+            style={{
+              height: "6px",
+              borderRadius: "3px",
+              background: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 25%, rgba(212,175,55,0.45) 50%, rgba(212,175,55,0.15) 75%, transparent 100%)",
+              filter: "blur(4px)",
+              animation: "ft-line-pulse 3s ease-in-out infinite",
+            }}
+          />
+          {/* Primary shimmer line */}
+          <div
+            style={{
+              width: "100%",
+              height: "1.5px",
+              borderRadius: "1px",
+              backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 10%, rgba(212,175,55,0.55) 35%, rgba(255,255,255,0.95) 50%, rgba(212,175,55,0.55) 65%, rgba(212,175,55,0.15) 90%, transparent 100%)",
+              backgroundSize: "200% 100%",
+              animation: "ft-line-shimmer 4s ease-in-out infinite",
+              boxShadow: "0 0 8px rgba(212,175,55,0.35), 0 0 20px rgba(212,175,55,0.12)",
+            }}
+          />
+          {/* Secondary accent line */}
+          <div
+            style={{
+              width: "50%",
+              height: "1px",
+              borderRadius: "1px",
+              backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.08) 15%, rgba(212,175,55,0.35) 40%, rgba(255,248,225,0.55) 50%, rgba(212,175,55,0.35) 60%, rgba(212,175,55,0.08) 85%, transparent 100%)",
+              backgroundSize: "200% 100%",
+              animation: "ft-line-shimmer 4s ease-in-out infinite 0.4s",
+            }}
+          />
+        </div>
 
         {/* ═══ Bottom bar ═══ */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
