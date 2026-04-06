@@ -1,21 +1,20 @@
-/**
- * Footer v3 — Celestial Forge Edition
+﻿/**
+ * Footer v4 — "La Maison" Edition
  *
- * Truly next-level Crêpe Time footer — not generic:
- *  - Rich purple gradient bg matching brand palette (#3B0764 → #4C1D95 → #0F0A1F)
- *  - Dual radial gold nebula orbs (warm ambient glow spots)
- *  - Frosted glass brand pillar with rotating conic-gradient neon halo
- *  - Social links as neon-bordered glass orbs with orbital hover animation
- *  - Contact items with gold accent bar + constellation connector dots
- *  - Double prismatic neon trim (top + bottom)
- *  - Constellation star-field dots (pure CSS, no canvas)
- *  - Circuit-trace separator with dual flowing dots
- *  - Desktop: 3-column layout (Contact | Brand pillar | Social)
- *  - Mobile: Brand top → Contact + Social side-by-side → Legal
- *  - ALL animations GPU-composited (transform + opacity + filter only)
+ * Design philosophy: Luxury maison signature, not tech-startup glass.
+ * Inspired by Laduree, Pierre Herme, Hermes — editorial, typographic, intentional.
+ *
+ * What makes it NOT generic:
+ *  1. Typography IS the design — display wordmark flanked by extending gold rules
+ *  2. Contact flows as one elegant horizontal strip with gold diamond separators
+ *  3. Social icons are bare — no boxes, no tiles, just presence + sliding underline
+ *  4. Deliberate negative space — elements breathe, nothing cramped
+ *  5. Single warm gold radial glow — no star fields, no flying dots
+ *  6. Everything centered, editorial, one-column — not a 3-col dashboard
+ *  7. ALL animations GPU-composited (transform + opacity + filter)
  */
 
-import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from "lucide-react";
+import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2, ExternalLink } from "lucide-react";
 import { BRAND } from "@/config/brand";
 
 const CONTACT = {
@@ -35,694 +34,358 @@ const TikTokIcon = ({ className, style }: { className?: string; style?: React.CS
 );
 
 /* ── GPU-composited keyframes + interactions ── */
-const FOOTER_STYLES = `
-  /* ── Keyframes (all GPU: transform / opacity / filter) ── */
-  @keyframes ft3-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+const STYLES = `
+  @keyframes ft-shimmer {
+    0%   { transform: translateX(-200%) skewX(-15deg); opacity: 0; }
+    15%  { opacity: 0.6; }
+    85%  { opacity: 0.08; }
+    100% { transform: translateX(300%) skewX(-15deg); opacity: 0; }
   }
-  @keyframes ft3-shimmer {
-    0%   { transform: translateX(-200%) skewX(-18deg); opacity: 0; }
-    12%  { opacity: 0.55; }
-    88%  { opacity: 0.1; }
-    100% { transform: translateX(300%) skewX(-18deg); opacity: 0; }
-  }
-  @keyframes ft3-dot-flow {
-    0%   { transform: translateX(0); opacity: 0; }
-    8%   { opacity: 1; }
-    92%  { opacity: 0.4; }
-    100% { transform: translateX(calc(100vw - 40px)); opacity: 0; }
-  }
-  @keyframes ft3-dot-flow-reverse {
-    0%   { transform: translateX(calc(100vw - 40px)); opacity: 0; }
-    8%   { opacity: 0.7; }
-    92%  { opacity: 0.3; }
-    100% { transform: translateX(0); opacity: 0; }
-  }
-  @keyframes ft3-glow-breathe {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.25)); }
-    50%      { filter: drop-shadow(0 0 18px rgba(212,175,55,0.6)); }
-  }
-  @keyframes ft3-nebula-drift {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
-    33%      { transform: translate(8px, -6px) scale(1.05); opacity: 0.5; }
-    66%      { transform: translate(-5px, 4px) scale(0.97); opacity: 0.3; }
-  }
-  @keyframes ft3-star-twinkle {
-    0%, 100% { opacity: 0.15; }
-    50%      { opacity: 0.6; }
-  }
-  @keyframes ft3-orb-pulse {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.06); }
+  @keyframes ft-glow-breathe {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(212,175,55,0.2)); }
+    50%      { filter: drop-shadow(0 0 16px rgba(212,175,55,0.5)); }
   }
 
-  /* ── Social orbs ── */
-  .ft3-orb {
-    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 220ms ease, background 220ms ease;
+  /* Social icon — sliding gold underline reveal */
+  .ft-social {
+    position: relative;
+    transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .ft3-orb:hover {
-    transform: translateY(-3px) scale(1.05);
-    border-color: rgba(212,175,55,0.5) !important;
-    background: rgba(212,175,55,0.1) !important;
+  .ft-social::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    right: 50%;
+    height: 1.5px;
+    background: #D4AF37;
+    border-radius: 1px;
+    transition: left 280ms cubic-bezier(0.22, 1, 0.36, 1),
+                right 280ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 280ms ease;
+    box-shadow: none;
   }
-  .ft3-orb:active { transform: scale(0.95); }
-  .ft3-orb .ft3-orb-icon {
-    transition: filter 220ms ease, color 220ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  .ft-social:hover::after {
+    left: 10%;
+    right: 10%;
+    box-shadow: 0 0 8px rgba(212,175,55,0.4);
   }
-  .ft3-orb:hover .ft3-orb-icon {
-    color: #E5C76B !important;
-    filter: drop-shadow(0 0 10px rgba(212,175,55,0.7));
-    transform: scale(1.12);
+  .ft-social:hover { transform: translateY(-2px); }
+  .ft-social:active { transform: scale(0.92); }
+  .ft-social .ft-social-ico {
+    transition: color 220ms ease, filter 220ms ease;
   }
-  .ft3-orb .ft3-orb-ring {
-    transition: opacity 280ms ease;
-    opacity: 0;
-  }
-  .ft3-orb:hover .ft3-orb-ring {
-    opacity: 1;
-  }
-  .ft3-orb .ft3-orb-label {
-    transition: color 220ms ease, text-shadow 220ms ease;
-  }
-  .ft3-orb:hover .ft3-orb-label {
-    color: #E5C76B !important;
-    text-shadow: 0 0 12px rgba(212,175,55,0.35);
-  }
-
-  /* ── Contact tiles ── */
-  .ft3-tile {
-    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-               border-color 220ms ease, background 220ms ease,
-               box-shadow 280ms ease;
-  }
-  .ft3-tile:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(212,175,55,0.15);
-  }
-  .ft3-tile:active { transform: scale(0.98); }
-  .ft3-tile .ft3-tile-icon-wrap {
-    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), filter 250ms ease;
-  }
-  .ft3-tile:hover .ft3-tile-icon-wrap {
-    transform: scale(1.12) rotate(-4deg);
-  }
-  .ft3-tile .ft3-tile-ring {
-    transition: opacity 300ms ease;
-    opacity: 0;
-  }
-  .ft3-tile:hover .ft3-tile-ring {
-    opacity: 1;
-  }
-  .ft3-tile .ft3-tile-label {
-    transition: color 200ms ease, text-shadow 200ms ease;
-  }
-  .ft3-tile .ft3-tile-value {
-    transition: color 200ms ease, text-shadow 200ms ease, transform 200ms ease;
-  }
-  .ft3-tile:hover .ft3-tile-value {
-    transform: translateX(2px);
-  }
-
-  /* ── Legal links ── */
-  .ft3-legal {
-    transition: color 200ms ease, text-shadow 200ms ease;
-  }
-  .ft3-legal:hover {
+  .ft-social:hover .ft-social-ico {
     color: #D4AF37 !important;
-    text-shadow: 0 0 10px rgba(212,175,55,0.25);
+    filter: drop-shadow(0 0 8px rgba(212,175,55,0.45));
+  }
+  .ft-social .ft-social-name {
+    transition: color 220ms ease;
+  }
+  .ft-social:hover .ft-social-name {
+    color: rgba(212,175,55,0.95) !important;
   }
 
-  /* ── Section heading gradient ── */
-  .ft3-heading {
-    background: linear-gradient(135deg, #D4AF37 0%, #E5C76B 60%, #EDD060 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 10px rgba(212,175,55,0.35));
+  /* Contact strip links */
+  .ft-contact {
+    transition: color 200ms ease, transform 160ms ease;
+  }
+  .ft-contact:hover {
+    color: #D4AF37 !important;
+  }
+  .ft-contact:hover .ft-contact-ico {
+    filter: drop-shadow(0 0 6px rgba(212,175,55,0.5));
+  }
+  .ft-contact .ft-contact-ico {
+    transition: filter 200ms ease;
+  }
+
+  /* Legal links */
+  .ft-legal {
+    transition: color 200ms ease;
+  }
+  .ft-legal:hover {
+    color: #D4AF37 !important;
   }
 `;
-
-/* ── Constellation star dots — positioned pseudo-randomly ── */
-const STARS = [
-  { top: "12%", left: "8%", size: 2, delay: 0 },
-  { top: "25%", left: "22%", size: 1.5, delay: 1.8 },
-  { top: "18%", left: "78%", size: 2, delay: 0.6 },
-  { top: "65%", left: "92%", size: 1.5, delay: 2.4 },
-  { top: "45%", left: "5%", size: 1, delay: 1.2 },
-  { top: "80%", left: "35%", size: 2, delay: 3.1 },
-  { top: "35%", left: "55%", size: 1, delay: 0.9 },
-  { top: "72%", left: "68%", size: 1.5, delay: 2.0 },
-  { top: "55%", left: "15%", size: 1, delay: 3.6 },
-  { top: "15%", left: "45%", size: 1.5, delay: 1.5 },
-  { top: "88%", left: "82%", size: 1, delay: 0.3 },
-  { top: "40%", left: "88%", size: 2, delay: 2.7 },
-];
-
-const SOCIALS = [
-  {
-    href: CONTACT.instagramUrl,
-    Icon: Instagram,
-    label: "Instagram",
-    gradient: "linear-gradient(135deg, #833AB4, #E1306C, #F77737)",
-  },
-  {
-    href: `https://tiktok.com/@${CONTACT.tiktok}`,
-    Icon: TikTokIcon,
-    label: "TikTok",
-    gradient: "linear-gradient(135deg, #00F2EA, #FF0050)",
-  },
-  {
-    href: CONTACT.facebookUrl,
-    Icon: Facebook,
-    label: "Facebook",
-    gradient: "linear-gradient(135deg, #1877F2, #42B0FF)",
-  },
-];
 
 const Footer = () => {
   return (
     <footer className="relative overflow-hidden" style={{ isolation: "isolate" }}>
-      <style>{FOOTER_STYLES}</style>
+      <style>{STYLES}</style>
 
-      {/* ═══ LAYER 1 — Rich purple brand background ═══ */}
+      {/* -- Background: deep purple gradient -- */}
       <div
         className="absolute inset-0"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(165deg, #1E0A3C 0%, #2E1065 18%, #4C1D95 38%, #3B0764 62%, #1E0A3C 82%, #0F0A1F 100%)",
+            "linear-gradient(175deg, #2E1065 0%, #3B0764 25%, #4C1D95 48%, #3B0764 72%, #1E0A3C 100%)",
         }}
       />
 
-      {/* ═══ LAYER 2 — Dual gold nebula orbs ═══ */}
+      {/* -- Single warm gold radial glow (not flying dots -- just warmth) -- */}
       <div
         className="absolute pointer-events-none"
         aria-hidden="true"
         style={{
-          top: "-20%",
-          left: "10%",
-          width: "45%",
-          height: "80%",
+          top: "5%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "80%",
+          height: "60%",
           borderRadius: "50%",
           background:
-            "radial-gradient(ellipse at center, rgba(212,175,55,0.09) 0%, rgba(212,175,55,0.03) 40%, transparent 70%)",
-          animation: "ft3-nebula-drift 12s ease-in-out infinite",
-          willChange: "transform",
-        }}
-      />
-      <div
-        className="absolute pointer-events-none"
-        aria-hidden="true"
-        style={{
-          bottom: "-15%",
-          right: "5%",
-          width: "40%",
-          height: "70%",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse at center, rgba(124,58,237,0.07) 0%, rgba(124,58,237,0.02) 45%, transparent 70%)",
-          animation: "ft3-nebula-drift 15s ease-in-out infinite reverse",
-          willChange: "transform",
+            "radial-gradient(ellipse at center, rgba(212,175,55,0.06) 0%, rgba(212,175,55,0.02) 40%, transparent 65%)",
         }}
       />
 
-      {/* ═══ LAYER 3 — Constellation star-field ═══ */}
-      {STARS.map((star, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            top: star.top,
-            left: star.left,
-            width: star.size,
-            height: star.size,
-            background: "rgba(212,175,55,0.6)",
-            boxShadow: `0 0 ${star.size * 3}px rgba(212,175,55,0.3)`,
-            animation: `ft3-star-twinkle ${3.5 + star.delay}s ease-in-out infinite`,
-            animationDelay: `${star.delay}s`,
-          }}
-        />
-      ))}
-
-      {/* ═══ Top prismatic neon trim ═══ */}
+      {/* -- Top prismatic trim -- */}
       <div
         className="absolute inset-x-0 top-0 h-[2px]"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, transparent 1%, rgba(124,58,237,0.25) 12%, rgba(212,175,55,0.7) 30%, rgba(237,208,96,0.5) 50%, rgba(212,175,55,0.7) 70%, rgba(124,58,237,0.25) 88%, transparent 99%)",
+            "linear-gradient(90deg, transparent 3%, rgba(124,58,237,0.2) 15%, rgba(212,175,55,0.65) 35%, rgba(237,208,96,0.5) 50%, rgba(212,175,55,0.65) 65%, rgba(124,58,237,0.2) 85%, transparent 97%)",
         }}
       />
 
-      {/* ═══ CONTENT ═══ */}
-      <div className="relative container mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-14" style={{ zIndex: 2 }}>
+      {/* ====== CONTENT ====== */}
+      <div className="relative z-10 container mx-auto px-5 sm:px-8">
 
-        {/* ══════ MAIN GRID — 3 columns on desktop ══════ */}
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 lg:gap-10 items-start">
-
-          {/* ── COL 1 — Contact (left on desktop, below brand on mobile) ── */}
-          <div className="order-2 md:order-1 flex flex-col items-center gap-4">
-            <span className="ft3-heading text-[11px] font-extrabold uppercase tracking-[0.25em]">
-              Contact
-            </span>
-
-            {/* Contact tiles — each with unique themed identity */}
-            <div className="flex flex-col gap-3 w-full max-w-[220px]">
-              {/* ── Phone tile — gold theme ── */}
-              <a
-                href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
-                style={{
-                  background: "rgba(212,175,55,0.04)",
-                  border: "1px solid rgba(212,175,55,0.1)",
-                  padding: "12px 14px",
+        {/* === ACT I -- Brand Signature === */}
+        <div className="pt-12 sm:pt-16 pb-8 sm:pb-10 flex flex-col items-center">
+          {/* Logo -- small, precious, centered */}
+          <div className="relative mb-6">
+            <div
+              className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl overflow-hidden"
+              style={{
+                boxShadow:
+                  "0 0 0 1.5px rgba(212,175,55,0.25), 0 0 30px rgba(212,175,55,0.1), 0 8px 32px rgba(0,0,0,0.3)",
+              }}
+            >
+              <img
+                src={BRAND.logo}
+                alt={BRAND.name}
+                width={64}
+                height={64}
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  const el = e.target as HTMLImageElement;
+                  el.src = "/logo.png";
+                  el.onerror = () => {
+                    el.style.display = "none";
+                  };
                 }}
-              >
-                {/* Hover rotating ring */}
-                <span
-                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
-                  aria-hidden="true"
-                  style={{ inset: -1.5, borderRadius: 13 }}
-                >
-                  <span style={{
-                    position: "absolute", inset: "-200%",
-                    background: "conic-gradient(from 0deg, transparent 30%, #D4AF37 50%, transparent 70%)",
-                    animation: "ft3-spin 2.5s linear infinite", willChange: "transform",
-                  }} />
-                </span>
-                <div className="relative flex items-center gap-3">
-                  <span
-                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.06))",
-                      border: "1px solid rgba(212,175,55,0.2)",
-                      boxShadow: "0 0 12px rgba(212,175,55,0.1)",
-                    }}
-                  >
-                    <Phone className="h-4 w-4" style={{ color: "#D4AF37" }} />
-                  </span>
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(212,175,55,0.6)" }}>
-                      Appelez-nous
-                    </span>
-                    <span className="ft3-tile-value text-[13px] font-semibold tabular-nums" style={{ color: "rgba(255,255,255,0.92)" }}>
-                      {CONTACT.phone}
-                    </span>
-                  </div>
-                </div>
-              </a>
-
-              {/* ── WhatsApp tile — green theme ── */}
-              <a
-                href={`https://wa.me/${CONTACT.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
-                style={{
-                  background: "rgba(37,211,102,0.04)",
-                  border: "1px solid rgba(37,211,102,0.1)",
-                  padding: "12px 14px",
-                }}
-              >
-                <span
-                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
-                  aria-hidden="true"
-                  style={{ inset: -1.5, borderRadius: 13 }}
-                >
-                  <span style={{
-                    position: "absolute", inset: "-200%",
-                    background: "conic-gradient(from 0deg, transparent 30%, #25D366 50%, transparent 70%)",
-                    animation: "ft3-spin 2.5s linear infinite", willChange: "transform",
-                  }} />
-                </span>
-                <div className="relative flex items-center gap-3">
-                  <span
-                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(37,211,102,0.15), rgba(37,211,102,0.05))",
-                      border: "1px solid rgba(37,211,102,0.2)",
-                      boxShadow: "0 0 12px rgba(37,211,102,0.08)",
-                    }}
-                  >
-                    <MessageCircle className="h-4 w-4" style={{ color: "#25D366" }} />
-                  </span>
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(37,211,102,0.6)" }}>
-                      WhatsApp
-                    </span>
-                    <span className="ft3-tile-value text-[13px] font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>
-                      Écrivez-nous
-                    </span>
-                  </div>
-                </div>
-              </a>
-
-              {/* ── Location tile — violet theme ── */}
-              <div
-                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
-                style={{
-                  background: "rgba(124,58,237,0.04)",
-                  border: "1px solid rgba(124,58,237,0.1)",
-                  padding: "12px 14px",
-                }}
-              >
-                <span
-                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
-                  aria-hidden="true"
-                  style={{ inset: -1.5, borderRadius: 13 }}
-                >
-                  <span style={{
-                    position: "absolute", inset: "-200%",
-                    background: "conic-gradient(from 0deg, transparent 30%, #7C3AED 50%, transparent 70%)",
-                    animation: "ft3-spin 3s linear infinite", willChange: "transform",
-                  }} />
-                </span>
-                <div className="relative flex items-center gap-3">
-                  <span
-                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05))",
-                      border: "1px solid rgba(124,58,237,0.2)",
-                      boxShadow: "0 0 12px rgba(124,58,237,0.08)",
-                    }}
-                  >
-                    <MapPin className="h-4 w-4" style={{ color: "#7C3AED" }} />
-                  </span>
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(124,58,237,0.6)" }}>
-                      Adresse
-                    </span>
-                    <span className="ft3-tile-value text-[13px] font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>
-                      {CONTACT.address}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              />
             </div>
           </div>
 
-          {/* ── COL 2 — Brand Pillar (center) ── */}
-          <div className="order-1 md:order-2 flex flex-col items-center gap-5">
-            {/* Logo with rotating neon halo */}
-            <div className="relative group/logo cursor-default">
-              {/* Outer glow halo */}
-              <div
-                className="absolute rounded-2xl pointer-events-none"
-                aria-hidden="true"
+          {/* -- Brand Wordmark flanked by extending gold rules -- */}
+          <div className="flex items-center gap-4 sm:gap-6 w-full max-w-lg">
+            {/* Left rule */}
+            <span
+              aria-hidden="true"
+              className="flex-1 h-px"
+              style={{
+                background:
+                  "linear-gradient(to left, rgba(212,175,55,0.5), rgba(212,175,55,0.05))",
+              }}
+            />
+
+            {/* Wordmark with shimmer */}
+            <div className="relative overflow-hidden shrink-0">
+              <h2
+                className="font-heading font-black text-center"
                 style={{
-                  inset: -8,
+                  fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.1,
                   background:
-                    "radial-gradient(ellipse at center, rgba(212,175,55,0.12) 0%, transparent 70%)",
-                  animation: "ft3-orb-pulse 4s ease-in-out infinite",
-                  willChange: "transform",
-                }}
-              />
-              {/* Rotating conic-gradient border */}
-              <div
-                className="absolute overflow-hidden"
-                aria-hidden="true"
-                style={{ inset: -3.5, borderRadius: 18 }}
+                    "linear-gradient(135deg, #E5C76B 0%, #D4AF37 18%, #FFFFFF 46%, #E5C76B 74%, #C9A227 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  filter: "drop-shadow(0 2px 24px rgba(212,175,55,0.4))",
+                } as React.CSSProperties}
               >
-                <span
-                  style={{
-                    position: "absolute",
-                    inset: "-200%",
-                    background:
-                      "conic-gradient(from 0deg, #D4AF37, transparent 12%, #7C3AED 28%, transparent 48%, #EDD060 68%, transparent 85%, #D4AF37)",
-                    animation: "ft3-spin 3.5s linear infinite",
-                    willChange: "transform",
-                  }}
-                />
-              </div>
-              {/* Glass interior */}
-              <div
-                className="relative h-16 w-16 sm:h-[72px] sm:w-[72px] rounded-2xl overflow-hidden"
-                style={{
-                  background: "linear-gradient(135deg, rgba(30,10,60,0.95), rgba(15,10,31,0.98))",
-                  boxShadow:
-                    "inset 0 1px 2px rgba(212,175,55,0.15), 0 0 28px rgba(212,175,55,0.12), 0 0 60px rgba(124,58,237,0.06)",
-                }}
-              >
-                <img
-                  src={BRAND.logo}
-                  alt={BRAND.name}
-                  width={72}
-                  height={72}
-                  className="h-full w-full object-cover object-center"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const el = e.target as HTMLImageElement;
-                    el.src = "/logo.png";
-                    el.onerror = () => {
-                      el.style.display = "none";
-                      el.parentElement?.querySelector(".logo-fallback")?.classList.remove("hidden");
-                    };
-                  }}
-                />
-                <div className="logo-fallback hidden absolute inset-0 rounded-2xl bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-base">
-                  CT
-                </div>
-              </div>
-            </div>
-
-            {/* Brand text */}
-            <div className="group flex flex-col items-center gap-2.5 cursor-default">
-              {/* Name with shimmer sweep */}
-              <div className="relative overflow-hidden leading-tight">
-                <span
-                  className="font-heading font-black block text-center"
-                  style={{
-                    fontSize: "clamp(1.6rem, 3vw, 2.3rem)",
-                    letterSpacing: "-0.03em",
-                    background:
-                      "linear-gradient(135deg, #E5C76B 0%, #D4AF37 20%, #FFFFFF 48%, #E5C76B 76%, #C9A227 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    filter: "drop-shadow(0 2px 20px rgba(212,175,55,0.5))",
-                  }}
-                >
-                  {BRAND.name}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 pointer-events-none"
-                  style={{
-                    width: "50%",
-                    background:
-                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-                    animation: "ft3-shimmer 4.5s ease-in-out infinite",
-                  }}
-                />
-              </div>
-
-              {/* Decorative gold hairline */}
+                {BRAND.name}
+              </h2>
               <span
                 aria-hidden="true"
-                className="block h-px scale-x-50 opacity-50 group-hover:scale-x-100 group-hover:opacity-90 transition-all duration-500"
+                className="absolute inset-y-0 pointer-events-none"
                 style={{
-                  width: "120%",
+                  width: "45%",
                   background:
-                    "linear-gradient(to right, transparent, rgba(212,175,55,0.8), transparent)",
-                  transformOrigin: "center",
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent)",
+                  animation: "ft-shimmer 5s ease-in-out infinite",
                 }}
               />
+            </div>
 
-              {/* Tagline */}
-              <span className="flex items-center gap-2.5 opacity-75 group-hover:opacity-100 transition-opacity duration-300">
-                <span
-                  aria-hidden="true"
-                  className="text-[9px] inline-block group-hover:rotate-[72deg] group-hover:scale-125 transition-transform duration-500"
-                  style={{ color: "#D4AF37" }}
-                >
-                  ✦
-                </span>
-                <span
-                  className="text-[10px] sm:text-[11px] font-bold tracking-[0.3em] uppercase"
-                  style={{
-                    color: "rgba(212,175,55,0.95)",
-                    textShadow: "0 0 16px rgba(212,175,55,0.2)",
-                  }}
-                >
-                  {BRAND.tagline}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="text-[9px] inline-block group-hover:-rotate-[72deg] group-hover:scale-125 transition-transform duration-500"
-                  style={{ color: "#D4AF37" }}
-                >
-                  ✦
-                </span>
+            {/* Right rule */}
+            <span
+              aria-hidden="true"
+              className="flex-1 h-px"
+              style={{
+                background:
+                  "linear-gradient(to right, rgba(212,175,55,0.5), rgba(212,175,55,0.05))",
+              }}
+            />
+          </div>
+
+          {/* Tagline */}
+          <span
+            className="mt-3 flex items-center gap-2 sm:gap-3"
+            style={{ color: "rgba(212,175,55,0.7)" }}
+          >
+            <span className="text-[7px] sm:text-[8px]" aria-hidden="true">&#10022;</span>
+            <span
+              className="text-[10px] sm:text-[11px] font-bold tracking-[0.35em] uppercase"
+              style={{ textShadow: "0 0 20px rgba(212,175,55,0.15)" }}
+            >
+              {BRAND.tagline}
+            </span>
+            <span className="text-[7px] sm:text-[8px]" aria-hidden="true">&#10022;</span>
+          </span>
+        </div>
+
+        {/* === ACT II -- Contact Strip === */}
+        {/* One flowing line with gold diamond separators -- like a luxury restaurant card */}
+        <div
+          className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-5 py-5 sm:py-6 border-t border-b"
+          style={{ borderColor: "rgba(212,175,55,0.1)" }}
+        >
+          <a
+            href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+            className="ft-contact flex items-center gap-2 text-[13px] sm:text-sm font-medium min-h-[44px]"
+            style={{ color: "rgba(255,255,255,0.8)" }}
+          >
+            <Phone className="ft-contact-ico h-3.5 w-3.5" style={{ color: "#D4AF37" }} />
+            <span>{CONTACT.phone}</span>
+          </a>
+
+          <span aria-hidden="true" style={{ color: "rgba(212,175,55,0.25)" }} className="text-[8px] hidden sm:inline">&#9670;</span>
+
+          <a
+            href={`https://wa.me/${CONTACT.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ft-contact flex items-center gap-2 text-[13px] sm:text-sm font-medium min-h-[44px]"
+            style={{ color: "rgba(255,255,255,0.8)" }}
+          >
+            <MessageCircle className="ft-contact-ico h-3.5 w-3.5" style={{ color: "#25D366" }} />
+            <span>WhatsApp</span>
+            <ExternalLink className="h-2.5 w-2.5 opacity-40" />
+          </a>
+
+          <span aria-hidden="true" style={{ color: "rgba(212,175,55,0.25)" }} className="text-[8px] hidden sm:inline">&#9670;</span>
+
+          <span
+            className="flex items-center gap-2 text-[13px] sm:text-sm font-medium min-h-[44px]"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            <MapPin className="h-3.5 w-3.5" style={{ color: "rgba(124,58,237,0.6)" }} />
+            <span>{CONTACT.address}</span>
+          </span>
+        </div>
+
+        {/* === ACT III -- Social Presence === */}
+        {/* Bare icons with sliding gold underline -- not in boxes */}
+        <div className="py-6 sm:py-8 flex items-center justify-center gap-8 sm:gap-12">
+          {[
+            { href: CONTACT.instagramUrl, Icon: Instagram, label: "Instagram" },
+            { href: `https://tiktok.com/@${CONTACT.tiktok}`, Icon: TikTokIcon, label: "TikTok" },
+            { href: CONTACT.facebookUrl, Icon: Facebook, label: "Facebook" },
+          ].map((social) => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ft-social flex flex-col items-center gap-1.5 pb-1"
+              title={social.label}
+            >
+              <social.Icon
+                className="ft-social-ico h-5 w-5 sm:h-[22px] sm:w-[22px]"
+                style={{ color: "rgba(255,255,255,0.6)" }}
+              />
+              <span
+                className="ft-social-name text-[9px] sm:text-[10px] font-semibold tracking-[0.15em] uppercase"
+                style={{ color: "rgba(255,255,255,0.35)" }}
+              >
+                {social.label}
               </span>
-            </div>
-          </div>
-
-          {/* ── COL 3 — Social (right on desktop) ── */}
-          <div className="order-3 flex flex-col items-center gap-4">
-            <span className="ft3-heading text-[11px] font-extrabold uppercase tracking-[0.25em]">
-              Suivez-nous
-            </span>
-
-            {/* Social orbs row */}
-            <div className="flex items-center gap-3 sm:gap-4">
-              {SOCIALS.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ft3-orb group/orb relative flex flex-col items-center gap-2"
-                  title={social.label}
-                >
-                  {/* Orb container */}
-                  <div
-                    className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                  >
-                    {/* Hover: rotating colored ring */}
-                    <span
-                      className="ft3-orb-ring absolute overflow-hidden pointer-events-none"
-                      aria-hidden="true"
-                      style={{ inset: -2, borderRadius: 14 }}
-                    >
-                      <span
-                        style={{
-                          position: "absolute",
-                          inset: "-200%",
-                          background: `conic-gradient(from 0deg, transparent 30%, ${social.gradient.includes("#833AB4") ? "#E1306C" : social.gradient.includes("#00F2EA") ? "#00F2EA" : "#1877F2"} 50%, transparent 70%)`,
-                          animation: "ft3-spin 2.5s linear infinite",
-                          willChange: "transform",
-                        }}
-                      />
-                    </span>
-                    {/* Icon */}
-                    <social.Icon
-                      className="ft3-orb-icon h-5 w-5 sm:h-6 sm:w-6 relative z-10"
-                      style={{ color: "rgba(255,255,255,0.75)" }}
-                    />
-                  </div>
-                  {/* Label below orb */}
-                  <span
-                    className="ft3-orb-label text-[10px] sm:text-[11px] font-semibold tracking-wide"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
-                  >
-                    {social.label}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
+            </a>
+          ))}
         </div>
 
-        {/* ═══ Circuit-trace separator with dual dots ═══ */}
-        <div className="relative mt-8 sm:mt-10 mb-5 sm:mb-6" aria-hidden="true">
-          {/* Gradient line */}
-          <div
-            className="h-px w-full"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 1%, rgba(124,58,237,0.2) 15%, rgba(212,175,55,0.5) 35%, rgba(237,208,96,0.35) 50%, rgba(212,175,55,0.5) 65%, rgba(124,58,237,0.2) 85%, transparent 99%)",
-            }}
-          />
-          {/* Center diamond node */}
-          <span
-            className="absolute top-[-3px] left-1/2 -translate-x-1/2 w-[7px] h-[7px] rotate-45"
-            style={{
-              background: "#D4AF37",
-              boxShadow: "0 0 10px rgba(212,175,55,0.7), 0 0 20px rgba(212,175,55,0.2)",
-            }}
-          />
-          {/* Flowing gold dot — left to right */}
-          <span
-            className="absolute top-[-2px] left-0 h-[5px] w-[5px] rounded-full"
-            style={{
-              background: "#D4AF37",
-              boxShadow: "0 0 8px rgba(212,175,55,0.8)",
-              animation: "ft3-dot-flow 7s ease-in-out infinite",
-            }}
-          />
-          {/* Flowing violet dot — right to left */}
-          <span
-            className="absolute top-[-2px] right-0 h-[4px] w-[4px] rounded-full"
-            style={{
-              background: "#7C3AED",
-              boxShadow: "0 0 6px rgba(124,58,237,0.6)",
-              animation: "ft3-dot-flow-reverse 9s ease-in-out infinite",
-              animationDelay: "2s",
-            }}
-          />
-        </div>
-
-        {/* ═══ Bottom bar — legal + credits ═══ */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          {/* Legal links */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs">
-            <span className="ft3-legal cursor-pointer" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Politique de confidentialité
+        {/* === ACT IV -- Legal & Credits === */}
+        <div
+          className="py-5 sm:py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left border-t"
+          style={{ borderColor: "rgba(212,175,55,0.07)" }}
+        >
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px]">
+            <span className="ft-legal cursor-pointer" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Politique de confidentialit&eacute;
             </span>
-            <span style={{ color: "rgba(212,175,55,0.2)" }} className="hidden sm:inline">◆</span>
-            <span className="ft3-legal cursor-pointer" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <span style={{ color: "rgba(212,175,55,0.15)" }} className="hidden sm:inline text-[6px]" aria-hidden="true">&#9670;</span>
+            <span className="ft-legal cursor-pointer" style={{ color: "rgba(255,255,255,0.35)" }}>
               Conditions d&apos;utilisation
             </span>
           </div>
 
-          {/* Credits */}
-          <div className="flex flex-col sm:items-end gap-1.5 text-xs">
-            <span style={{ color: "rgba(255,255,255,0.6)" }}>
-              © 2021{" "}
+          <div className="flex flex-col sm:items-end gap-1 text-[11px]">
+            <span style={{ color: "rgba(255,255,255,0.45)" }}>
+              &copy; 2021{" "}
               <span
                 className="font-bold"
                 style={{
-                  background: "linear-gradient(90deg, #D4AF37, #E5C76B, #D4AF37)",
+                  background: "linear-gradient(90deg, #D4AF37, #E5C76B)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                }}
+                } as React.CSSProperties}
               >
-                Crêpe Time
+                Cr&ecirc;pe Time
               </span>
-              . Tous droits réservés.
+              . Tous droits r&eacute;serv&eacute;s.
             </span>
             <div
               className="flex flex-wrap items-center justify-center sm:justify-end gap-1.5"
-              style={{ color: "rgba(255,255,255,0.45)" }}
+              style={{ color: "rgba(255,255,255,0.3)" }}
             >
               <a
                 href="https://marwen-rabai.netlify.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-semibold transition-all duration-200"
+                className="inline-flex items-center gap-1 font-semibold"
                 title="Digital Architect & Event Designer"
                 style={{
                   color: "#D4AF37",
-                  animation: "ft3-glow-breathe 3s ease-in-out infinite",
+                  animation: "ft-glow-breathe 3.5s ease-in-out infinite",
                 }}
               >
-                <Heart className="h-3 w-3 fill-current" />
+                <Heart className="h-2.5 w-2.5 fill-current" />
                 Digital Team
               </a>
-              <span style={{ color: "rgba(212,175,55,0.15)" }}>◆</span>
-              <Code2 className="h-3.5 w-3.5" style={{ color: "rgba(212,175,55,0.5)" }} />
-              <span>Built with passion & precision</span>
+              <span style={{ color: "rgba(212,175,55,0.1)" }} className="text-[6px]" aria-hidden="true">&#9670;</span>
+              <Code2 className="h-3 w-3" style={{ color: "rgba(212,175,55,0.35)" }} />
+              <span>Built with passion &amp; precision</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ═══ Bottom prismatic neon trim ═══ */}
+      {/* -- Bottom prismatic trim -- */}
       <div
         className="absolute inset-x-0 bottom-0 h-[1.5px]"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, transparent 2%, rgba(212,175,55,0.15) 18%, rgba(124,58,237,0.35) 40%, rgba(212,175,55,0.45) 55%, rgba(124,58,237,0.25) 75%, transparent 98%)",
+            "linear-gradient(90deg, transparent 3%, rgba(212,175,55,0.15) 20%, rgba(124,58,237,0.3) 42%, rgba(212,175,55,0.4) 58%, rgba(124,58,237,0.2) 78%, transparent 97%)",
         }}
       />
     </footer>
