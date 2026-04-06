@@ -77,6 +77,71 @@
 
     <!-- ─── Inline critical CSS — prevents layout shift before JS hydrates ── -->
     <style>
+      /* ── Preloader ─────────────────────────────────────────────────────────── */
+      #ct-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: #0F0A1F;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
+      }
+      #ct-preloader.ct-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .ct-preloader-ring {
+        position: relative;
+        width: 72px;
+        height: 72px;
+      }
+      .ct-preloader-ring::before,
+      .ct-preloader-ring::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 3px solid transparent;
+      }
+      .ct-preloader-ring::before {
+        border-top-color: #D4AF37;
+        animation: ct-spin 900ms linear infinite;
+      }
+      .ct-preloader-ring::after {
+        inset: 8px;
+        border-top-color: rgba(109,40,217,0.6);
+        animation: ct-spin 1400ms linear infinite reverse;
+      }
+      .ct-preloader-emoji {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        animation: ct-pulse 2s ease-in-out infinite;
+      }
+      .ct-preloader-text {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(212,175,55,0.5);
+        animation: ct-pulse 2s ease-in-out infinite;
+      }
+      @keyframes ct-spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes ct-pulse {
+        0%, 100% { opacity: 0.5; }
+        50%       { opacity: 1; }
+      }
       /* Hero section: tall enough on every breakpoint to contain overlay content */
       #root { min-height: 100vh; display: flex; flex-direction: column; }
       .hero-critical {
@@ -159,7 +224,36 @@
     </script>
   </head>
   <body>
+    <!-- ─── HTML Preloader (visible before React mounts) ─── -->
+    <div id="ct-preloader" aria-hidden="true">
+      <div class="ct-preloader-ring">
+        <div class="ct-preloader-emoji">🥞</div>
+      </div>
+      <p class="ct-preloader-text">Crêpe Time</p>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- ─── Remove preloader once React fires first paint ─── -->
+    <script>
+      (function () {
+        function hidePreloader() {
+          var el = document.getElementById('ct-preloader');
+          if (el) {
+            el.classList.add('ct-hidden');
+            setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+          }
+        }
+        // React typically mounts on DOMContentLoaded. We use requestAnimationFrame
+        // inside a load event so it fires right after the first React paint.
+        window.addEventListener('load', function () {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(hidePreloader);
+          });
+        });
+        // Safety net – hide after 4s regardless
+        setTimeout(hidePreloader, 4000);
+      })();
+    </script>
   </body>
 </html>

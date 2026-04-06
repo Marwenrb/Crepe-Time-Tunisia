@@ -5,8 +5,13 @@
 export function toApiFormat<T extends Record<string, unknown>>(row: T | null): (T & { _id: string }) | null {
   if (!row) return null;
   const r = row as Record<string, unknown>;
-  const { id, address_line1, ...rest } = r;
-  return { ...rest, _id: (id as string) || "", addressLine1: address_line1 } as unknown as T & { _id: string };
+  const { id, address_line1, image, ...rest } = r;
+  return {
+    ...rest,
+    _id: (id as string) || "",
+    addressLine1: address_line1,
+    imageUrl: image || undefined,
+  } as unknown as T & { _id: string };
 }
 
 export function toApiFormatArray<T extends Record<string, unknown>>(rows: T[] | null): (T & { _id: string })[] {

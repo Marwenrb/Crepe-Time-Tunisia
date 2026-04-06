@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { supabase } from "../lib/supabase";
+import cloudinary from "cloudinary";
 import { toApiFormat } from "../lib/transform";
 
 const getCurrentUser = async (req: Request, res: Response) => {
@@ -111,8 +112,53 @@ const updateCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
+const uploadUserPhoto = async (req: Request, res: Response) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ message: "No image file provided" });
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return res.status(400).json({ message: "Invalid file type. Use JPEG, PNG or WebP." });
+    }
+
+    const buffer = Buffer.isBuffer(file.buffer)
+      ? file.buffer
+      : Buffer.from(file.buffer as ArrayBuffer);
+    const base64Image = buffer.toString("base64");
+    const dataURI = `data:${file.mimetype};base64,${base64Image}`;
+
+    const uploadResponse = await cloudinary.v2.uploader.upload(dataURI, {
+      folder: "crepetime-profiles",
+      transformation: [{ width: 256, height: 256, crop: "fill", gravity: "face" }],
+    });
+
+    const imageUrl = uploadResponse.secure_url;
+
+    const { data: user, error } = await supabase
+      .from("profiles")
+      .update({ image: imageUrl })
+      .eq("id", req.userId)
+      .select()
+      .single();
+
+    if (error || !user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ imageUrl });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error uploading photo" });
+  }
+};
+
 export default {
   getCurrentUser,
   createCurrentUser,
   updateCurrentUser,
+  uploadUserPhoto,
 };

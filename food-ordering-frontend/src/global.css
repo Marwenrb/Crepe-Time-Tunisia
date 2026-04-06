@@ -131,3 +131,9 @@
   white-space: nowrap;
   border-width: 0;
 }
+
+/* ── ct-pulse: used by auth-page floating particles ─── */
+@keyframes ct-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}

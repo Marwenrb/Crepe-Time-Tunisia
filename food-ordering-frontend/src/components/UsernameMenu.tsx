@@ -11,13 +11,33 @@ import { useState } from "react";
 import * as authApi from "@/api/authApi";
 import { useAppContext } from "@/contexts/AppContext";
 
-const getAvatarUrl = () => {
-  const image = localStorage.getItem("user_image");
-  const email = localStorage.getItem("user_email");
-  const name = localStorage.getItem("user_name");
-  const id = email || name || "user";
-  if (image) return image;
-  return `https://robohash.org/${id}.png?set=set1&size=80x80`;
+/** Returns initials (max 2 chars) from a display name or email */
+function getInitials(name?: string | null, email?: string | null): string {
+  const src = name || email || "?";
+  const words = src.trim().split(/\s+/);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return src.slice(0, 2).toUpperCase();
+}
+
+/** Deterministic pastel-ish hue from a string */
+function hashHue(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  return Math.abs(hash) % 360;
+}
+
+const AvatarInitials = ({ name, email }: { name?: string | null; email?: string | null }) => {
+  const initials = getInitials(name, email);
+  const hue = hashHue(name || email || "ct");
+  return (
+    <span
+      className="h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold text-white select-none"
+      style={{ background: `hsl(${hue},55%,38%)` }}
+      aria-hidden="true"
+    >
+      {initials}
+    </span>
+  );
 };
 
 const UsernameMenu = () => {
@@ -27,10 +47,10 @@ const UsernameMenu = () => {
 
   const email = localStorage.getItem("user_email");
   const name = localStorage.getItem("user_name");
+  const storedImage = localStorage.getItem("user_image");
 
-  const avatarUrl = imgError
-    ? `https://robohash.org/${email || "user"}.png?set=set1&size=80x80`
-    : getAvatarUrl();
+  // Use a real photo if stored and not broken; otherwise show initials avatar
+  const usePhoto = !!storedImage && !imgError;
 
   const handleMenuClick = () => setIsOpen(false);
 
@@ -40,27 +60,48 @@ const UsernameMenu = () => {
     });
     await authApi.signOut();
     setIsOpen(false);
-    // Navigate immediately to avoid flicker – no invalidateQueries before reload
     window.location.href = "/";
   };
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 rounded-full border-2 border-crepe-gold/80 p-0.5 focus:outline-none focus:ring-2 focus:ring-crepe-purple hover:border-crepe-gold hover:shadow-[0_0_16px_rgba(212,175,55,0.25)] transition-all duration-300">
-          <img
-            src={avatarUrl}
-            alt={name || email || "User"}
-            className="h-9 w-9 rounded-full object-cover"
-            onError={() => setImgError(true)}
-            referrerPolicy="no-referrer"
-          />
+        <button
+          className="flex items-center gap-2 rounded-full border-2 border-crepe-gold/80 p-0.5 focus:outline-none focus:ring-2 focus:ring-crepe-purple hover:border-crepe-gold hover:shadow-[0_0_16px_rgba(212,175,55,0.25)] transition-all duration-300"
+          aria-label="Menu utilisateur"
+        >
+          {usePhoto ? (
+            <img
+              src={storedImage!}
+              alt={name || email || "User"}
+              className="h-9 w-9 rounded-full object-cover"
+              onError={() => setImgError(true)}
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <AvatarInitials name={name} email={email} />
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 p-2">
-        <div className="px-2 py-1">
-          <p className="font-medium">{name || "User"}</p>
-          <p className="text-xs text-muted-foreground">{email}</p>
+        <div className="px-2 py-1 flex items-center gap-3">
+          <div className="shrink-0">
+            {usePhoto ? (
+              <img
+                src={storedImage!}
+                alt={name || email || "User"}
+                className="h-8 w-8 rounded-full object-cover"
+                onError={() => setImgError(true)}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <AvatarInitials name={name} email={email} />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="font-medium truncate">{name || "User"}</p>
+            <p className="text-xs text-muted-foreground truncate">{email}</p>
+          </div>
         </div>
         <Separator className="my-2" />
         {isAdmin && (
