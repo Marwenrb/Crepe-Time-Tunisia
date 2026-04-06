@@ -1,5 +1,5 @@
 import { memo, lazy, Suspense, useEffect, useRef, useState } from "react";
-const CinematicVideoSection = lazy(() => import("@/components/home/CinematicVideoSection"));
+const VideoHeroSection = lazy(() => import("@/components/home/CinematicVideoSection"));
 const BrandMarquee = lazy(() => import("@/components/home/BrandMarquee"));
 
 // ── Below-the-fold sections: lazy-loaded to cut initial JS ──────────────────
@@ -57,9 +57,9 @@ const DeferredSection = ({
 const HomePage = () => {
   return (
     <div className="flex flex-col">
-      {/* Cinematic hero video */}
-      <DeferredSection minHeight="min-h-[80vh]">
-        <CinematicVideoSection />
+      {/* Video hero */}
+      <DeferredSection minHeight="min-h-[60vh]">
+        <VideoHeroSection />
       </DeferredSection>
 
       {/* Premium brand marquee */}

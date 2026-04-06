@@ -2,34 +2,66 @@ import { memo, useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import heroVideo from "@/assets/hero/Golden_Crêpe_Video_Generation.mp4";
 
+/* ── UIVerse-grade keyframes ─────────────────────────────────────────────── */
 const KEYFRAMES = `
-  @keyframes cvs-fade-up {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+  @keyframes vhs-neon-breathe {
+    0%, 100% {
+      box-shadow:
+        0 0 0.6em 0.15em var(--glow-color),
+        0 0 2.5em 0.6em var(--glow-spread),
+        inset 0 0 0.5em 0.1em var(--glow-color);
+    }
+    50% {
+      box-shadow:
+        0 0 1em 0.25em var(--glow-color),
+        0 0 3.5em 0.9em var(--glow-spread),
+        inset 0 0 0.75em 0.15em var(--glow-color);
+    }
   }
-  @keyframes cvs-glow-pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.3), 0 0 60px rgba(212,175,55,0.1); }
-    50%      { box-shadow: 0 0 30px rgba(212,175,55,0.5), 0 0 80px rgba(212,175,55,0.15); }
+  @keyframes vhs-halo-breathe {
+    0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 0.55; transform: translate(-50%, -50%) scale(1.08); }
+  }
+  @keyframes vhs-border-sweep {
+    from { background-position: 0% 50%; }
+    to   { background-position: 200% 50%; }
+  }
+  @keyframes vhs-grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-2%, -2%); }
+    20% { transform: translate(1%, 3%); }
+    30% { transform: translate(-3%, 1%); }
+    40% { transform: translate(3%, -1%); }
+    50% { transform: translate(-1%, 2%); }
+    60% { transform: translate(2%, -3%); }
+    70% { transform: translate(-2%, 1%); }
+    80% { transform: translate(1%, -2%); }
+    90% { transform: translate(3%, 2%); }
   }
 `;
 
-const CinematicVideoSection = () => {
+/* ── Section ─────────────────────────────────────────────────────────────── */
+const VideoHeroSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     const handleLoaded = () => setIsLoaded(true);
     video.addEventListener("loadeddata", handleLoaded);
     if (video.readyState >= 2) setIsLoaded(true);
-
     return () => video.removeEventListener("loadeddata", handleLoaded);
   }, []);
 
+  const show = (delay: number) => ({
+    opacity: isLoaded ? 1 : 0,
+    transform: isLoaded ? "translateY(0)" : "translateY(18px)",
+    transition: `opacity 0.7s cubic-bezier(.22,1,.36,1) ${delay}s, transform 0.7s cubic-bezier(.22,1,.36,1) ${delay}s`,
+  });
+
   return (
-    <section className="relative min-h-[80vh] md:h-screen w-full overflow-hidden">
+    <section className="relative min-h-[60vh] sm:min-h-[65vh] md:min-h-[75vh] w-full overflow-hidden">
       <style>{KEYFRAMES}</style>
 
       {/* ── Background video ── */}
@@ -45,48 +77,77 @@ const CinematicVideoSection = () => {
         <source src={heroVideo} type="video/mp4" />
       </video>
 
-      {/* ── Cinematic overlay — dark gradient + glassmorphism ── */}
+      {/* ── Film-grain texture overlay ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-[0.035]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          animation: "vhs-grain 0.5s steps(4) infinite",
+          willChange: "transform",
+        }}
+      />
+
+      {/* ── Premium overlay — deep gradient + soft glass ── */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(15,10,31,0.55) 0%, rgba(15,10,31,0.35) 30%, rgba(15,10,31,0.5) 60%, rgba(15,10,31,0.85) 100%)",
-          backdropFilter: "blur(1.5px)",
-          WebkitBackdropFilter: "blur(1.5px)",
+            "linear-gradient(180deg, rgba(15,10,31,0.6) 0%, rgba(15,10,31,0.3) 35%, rgba(15,10,31,0.45) 65%, rgba(15,10,31,0.88) 100%)",
+          backdropFilter: "blur(1px)",
+          WebkitBackdropFilter: "blur(1px)",
+        }}
+      />
+
+      {/* ── Ambient radial glow — centred warmth ── */}
+      <div
+        aria-hidden="true"
+        className="absolute top-1/2 left-1/2 w-[120%] aspect-square pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(76,29,149,0.06) 40%, transparent 70%)",
+          animation: "vhs-halo-breathe 4s ease-in-out infinite",
+          willChange: "opacity, transform",
         }}
       />
 
       {/* ── Content layer ── */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[80vh] md:min-h-screen px-5 text-center">
-        {/* Tagline chip */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full min-h-[60vh] sm:min-h-[65vh] md:min-h-[75vh] px-5 py-12 sm:py-16 text-center">
+
+        {/* Brand chip — glassmorphic pill */}
         <span
-          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-6"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold tracking-[0.22em] uppercase mb-5 sm:mb-6"
           style={{
-            background: "rgba(212,175,55,0.12)",
-            border: "1px solid rgba(212,175,55,0.25)",
+            background: "rgba(212,175,55,0.08)",
+            border: "1px solid rgba(212,175,55,0.2)",
             color: "#E5C76B",
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            ...show(0),
           }}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-crepe-gold animate-pulse" />
-          Crêpe Time Cinema
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{
+              background: "#D4AF37",
+              boxShadow: "0 0 6px rgba(212,175,55,0.6)",
+            }}
+          />
+          Crêpe Time
         </span>
 
-        {/* Title */}
+        {/* Title — gradient gold type */}
         <h2
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight max-w-4xl"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight max-w-3xl"
           style={{
             background:
-              "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 35%, #E5C76B 65%, #D4AF37 100%)",
+              "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 25%, #E5C76B 55%, #D4AF37 75%, #C9A227 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            filter: "drop-shadow(0 2px 12px rgba(212,175,55,0.25))",
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? "translateY(0)" : "translateY(24px)",
-            transition: "opacity 0.8s ease-out 0.15s, transform 0.8s ease-out 0.15s",
+            filter: "drop-shadow(0 2px 16px rgba(212,175,55,0.2))",
+            ...show(0.12),
           }}
         >
           The Sweetest Escape
@@ -94,34 +155,29 @@ const CinematicVideoSection = () => {
 
         {/* Subtitle */}
         <p
-          className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-white/80 max-w-lg leading-relaxed font-light"
-          style={{
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease-out 0.35s, transform 0.8s ease-out 0.35s",
-          }}
+          className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-white/75 max-w-md leading-relaxed font-light"
+          style={show(0.28)}
         >
-          Savourez l&apos;art de la crêpe artisanale — des saveurs dorées,
-          livrées à votre porte avec élégance.
+          L&apos;art de la crêpe artisanale — saveurs dorées,
+          livrées chez vous avec élégance.
         </p>
 
-        {/* CTA Button */}
-        <div
-          style={{
-            opacity: isLoaded ? 1 : 0,
-            transform: isLoaded ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease-out 0.55s, transform 0.8s ease-out 0.55s",
-          }}
-        >
+        {/* UIVerse neon-glow CTA */}
+        <div className="relative mt-6 sm:mt-8" style={show(0.45)}>
           <Link
             to="/search/Nabeul"
-            className="group mt-8 sm:mt-10 inline-flex items-center gap-2 px-7 py-3 sm:px-9 sm:py-3.5 rounded-full text-sm sm:text-base font-bold tracking-wide text-crepe-dark transition-all duration-300 hover:scale-[1.04] active:scale-[0.97]"
+            className="group relative inline-flex items-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 rounded-full text-sm sm:text-base font-bold tracking-wide overflow-visible transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]"
             style={{
-              background: "linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%)",
-              boxShadow:
-                "0 0 20px rgba(212,175,55,0.3), 0 0 60px rgba(212,175,55,0.1), 0 4px 16px rgba(0,0,0,0.3)",
-              animation: "cvs-glow-pulse 3s ease-in-out infinite",
-            }}
+              "--glow-color": "rgb(212, 175, 55)",
+              "--glow-spread": "rgba(212, 175, 55, 0.4)",
+              border: "0.1em solid var(--glow-color)",
+              color: "var(--glow-color)",
+              backgroundColor: "rgba(15, 10, 31, 0.7)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              textShadow: "0 0 0.5em var(--glow-color)",
+              animation: "vhs-neon-breathe 3s ease-in-out infinite",
+            } as React.CSSProperties}
           >
             Commander Maintenant
             <svg
@@ -133,25 +189,50 @@ const CinematicVideoSection = () => {
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
+
+            {/* UIVerse floor reflection */}
+            <span
+              aria-hidden="true"
+              className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+              style={{
+                top: "110%",
+                width: "80%",
+                height: "60%",
+                background: "var(--glow-spread)",
+                filter: "blur(1.2em)",
+                opacity: 0.35,
+                transform: "translateX(-50%) perspective(1em) rotateX(35deg) scale(1, 0.45)",
+                borderRadius: "50%",
+              }}
+            />
           </Link>
         </div>
 
-        {/* Scroll indicator */}
+        {/* ── Animated border sweep at bottom ── */}
         <div
-          className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          aria-hidden="true"
+          className="absolute bottom-0 inset-x-0 h-px"
           style={{
-            opacity: isLoaded ? 0.6 : 0,
-            transition: "opacity 1s ease-out 1s",
+            backgroundImage:
+              "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.1) 15%, rgba(212,175,55,0.5) 50%, rgba(212,175,55,0.1) 85%, transparent 100%)",
+            backgroundSize: "200% 100%",
+            animation: "vhs-border-sweep 5s linear infinite",
+          }}
+        />
+
+        {/* Scroll indicator — compact */}
+        <div
+          className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
+          style={{
+            opacity: isLoaded ? 0.5 : 0,
+            transition: "opacity 0.8s ease-out 0.8s",
           }}
         >
-          <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-medium">
-            Scroll
-          </span>
-          <div className="h-8 w-[1.5px] bg-gradient-to-b from-crepe-gold/60 to-transparent animate-pulse" />
+          <div className="h-6 w-[1px] bg-gradient-to-b from-crepe-gold/50 to-transparent animate-pulse" />
         </div>
       </div>
     </section>
   );
 };
 
-export default memo(CinematicVideoSection);
+export default memo(VideoHeroSection);
