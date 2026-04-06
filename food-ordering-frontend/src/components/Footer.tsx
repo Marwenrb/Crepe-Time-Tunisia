@@ -23,6 +23,22 @@ const SOCIAL_LINKS = [
   { href: CONTACT.facebookUrl, icon: Facebook, label: "Facebook" },
 ] as const;
 
+const FOOTER_KEYFRAMES = `
+  @keyframes ft-rotate-border {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes ft-glow-breathe {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.25)) drop-shadow(0 0 20px rgba(212,175,55,0.08)); }
+    50%      { filter: drop-shadow(0 0 14px rgba(212,175,55,0.4)) drop-shadow(0 0 28px rgba(212,175,55,0.12)); }
+  }
+  .ft-logo-ring { animation: ft-glow-breathe 3.5s ease-in-out infinite; }
+  @keyframes ft-line-shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+`;
+
 const Footer = () => {
   return (
     <footer
@@ -31,6 +47,8 @@ const Footer = () => {
         background: "linear-gradient(180deg, #3B0764 0%, #2D064E 50%, #1A0A2E 100%)",
       }}
     >
+      <style>{FOOTER_KEYFRAMES}</style>
+
       {/* Top gold accent line */}
       <div
         aria-hidden="true"
@@ -42,60 +60,62 @@ const Footer = () => {
 
       <div className="container mx-auto px-5 sm:px-6 pt-8 sm:pt-10 pb-6">
         {/* ═══ Top: Brand + Contact + Social grid ═══ */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 text-center sm:text-left">
 
-          {/* ── Brand column — UIVerse neon glow ── */}
+          {/* ── Brand column — matching Header logo ring ── */}
           <div className="flex flex-col items-center sm:items-start gap-3">
             <div className="flex items-center gap-3">
-              <div
-                className="relative h-12 w-12 rounded-xl overflow-hidden bg-white/5"
-                style={{
-                  boxShadow: "0 0 12px rgba(212,175,55,0.5), 0 0 28px rgba(212,175,55,0.18), inset 0 0 6px rgba(212,175,55,0.12)",
-                  border: "1.5px solid rgba(212,175,55,0.55)",
-                }}
-              >
-                <img
-                  src={BRAND.logo}
-                  alt={BRAND.name}
-                  width={44}
-                  height={44}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const el = e.target as HTMLImageElement;
-                    el.src = "/logo.png";
-                    el.onerror = () => {
-                      el.style.display = "none";
-                      el.parentElement?.querySelector(".ft-logo-fb")?.classList.remove("hidden");
-                    };
-                  }}
-                />
-                <div className="ft-logo-fb hidden absolute inset-0 bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-xs">
-                  CT
+              {/* Rotating conic-gradient ring — same as Header */}
+              <div className="relative flex-shrink-0">
+                <div
+                  className="ft-logo-ring relative rounded-2xl overflow-hidden"
+                  style={{ padding: 2 }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      inset: "-120%",
+                      background:
+                        "conic-gradient(from 0deg, #D4AF37, transparent 18%, #7C3AED 38%, transparent 58%, #EDD060 78%, #D4AF37)",
+                      animation: "ft-rotate-border 4s linear infinite",
+                      willChange: "transform",
+                    }}
+                  />
+                  <div className="relative h-11 w-11 rounded-xl overflow-hidden bg-white">
+                    <img
+                      src={BRAND.logo}
+                      alt={BRAND.name}
+                      width={44}
+                      height={44}
+                      className="h-full w-full object-cover object-center"
+                      loading="lazy"
+                      decoding="async"
+                      onError={(e) => {
+                        const el = e.target as HTMLImageElement;
+                        el.src = "/logo.png";
+                        el.onerror = () => {
+                          el.style.display = "none";
+                          el.parentElement?.querySelector(".ft-logo-fb")?.classList.remove("hidden");
+                        };
+                      }}
+                    />
+                    <div className="ft-logo-fb hidden absolute inset-0 bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-xs">
+                      CT
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
-                <span
-                  className="font-heading font-black block text-xl leading-tight"
-                  style={{
-                    background: "linear-gradient(135deg, #E5C76B 0%, #D4AF37 22%, #FFFFFF 50%, #E5C76B 78%, #C9A227 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    filter: "drop-shadow(0 0 10px rgba(212,175,55,0.6))",
-                  }}
-                >
+              {/* Brand text — matching Header style */}
+              <div className="flex flex-col min-w-0">
+                <span className="text-base sm:text-lg font-bold tracking-tight text-white leading-tight">
                   {BRAND.name}
                 </span>
                 <span
-                  className="text-[10px] font-bold tracking-[0.25em] uppercase block mt-0.5"
-                  style={{
-                    color: "rgba(212,175,55,0.85)",
-                    textShadow: "0 0 14px rgba(212,175,55,0.4)",
-                  }}
+                  className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] uppercase leading-tight"
+                  style={{ color: "rgba(212,175,55,0.9)" }}
                 >
-                  ✦ {BRAND.tagline} ✦
+                  {BRAND.tagline}
                 </span>
               </div>
             </div>
@@ -106,7 +126,7 @@ const Footer = () => {
           </div>
 
           {/* ── Contact column ── */}
-          <div className="flex flex-col items-center sm:items-start gap-2">
+          <div className="flex flex-col items-center sm:items-center gap-2">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
               Contact
             </span>
@@ -133,7 +153,7 @@ const Footer = () => {
           </div>
 
           {/* ── Social column ── */}
-          <div className="flex flex-col items-center sm:items-start gap-2">
+          <div className="flex flex-col items-center sm:items-end gap-2">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
               Suivez-nous
             </span>
@@ -144,26 +164,27 @@ const Footer = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${label} — @${CONTACT.instagram}`}
-                  className="group/s flex items-center justify-center h-10 w-10 rounded-full border border-white/15 hover:border-crepe-gold/60 bg-white/[0.04] hover:bg-crepe-gold/10 transition-all duration-250"
+                  aria-label={`${label} — Crêpe Time`}
+                  className="group/s flex items-center justify-center h-10 w-10 rounded-full border border-white/15 hover:border-crepe-gold/60 bg-white/[0.04] hover:bg-crepe-gold/10 transition-all duration-200"
                 >
-                  <Icon className="h-4.5 w-4.5 text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
+                  <Icon className="h-[18px] w-[18px] text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
                 </a>
               ))}
             </div>
-            <p className="text-white/40 text-xs mt-1">
-              @{CONTACT.instagram}
-            </p>
           </div>
         </div>
 
-        {/* ═══ Divider — gold neon glow ═══ */}
+        {/* ═══ Divider — animated gold shimmer line ═══ */}
         <div
           aria-hidden="true"
-          className="my-6 h-px"
+          className="my-6"
           style={{
-            background: "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.35) 20%, rgba(212,175,55,0.7) 50%, rgba(212,175,55,0.35) 80%, transparent 95%)",
-            boxShadow: "0 0 8px rgba(212,175,55,0.3), 0 0 24px rgba(212,175,55,0.1)",
+            height: "1.5px",
+            borderRadius: "1px",
+            backgroundImage: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.15) 10%, rgba(212,175,55,0.55) 35%, rgba(255,255,255,0.9) 50%, rgba(212,175,55,0.55) 65%, rgba(212,175,55,0.15) 90%, transparent 100%)",
+            backgroundSize: "200% 100%",
+            animation: "ft-line-shimmer 4s ease-in-out infinite",
+            boxShadow: "0 0 10px rgba(212,175,55,0.35), 0 0 30px rgba(212,175,55,0.12)",
           }}
         />
 

@@ -15,10 +15,13 @@ const triggerHaptic = (): void => {
 };
 
 // ─── Component ────────────────────────────────────────────
+const FOOTER_CLEARANCE = 24; // px above footer
+const DEFAULT_BOTTOM = 24;    // px from viewport bottom
+
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [bottomOffset, setBottomOffset] = useState(16);
+  const [bottomPx, setBottomPx] = useState(DEFAULT_BOTTOM);
   const reducedMotion = useReducedMotion();
 
   // Track scroll position, progress, and show/hide button
@@ -35,16 +38,13 @@ const BackToTop = () => {
         setScrollProgress(progress);
         setIsVisible(scrollY > SCROLL_THRESHOLD);
 
-        // Keep button above footer copyright section
+        // Keep button above footer
         const footer = document.querySelector('footer');
         if (footer) {
-          const footerRect = footer.getBoundingClientRect();
-          const vh = window.innerHeight;
-          if (footerRect.top < vh) {
-            setBottomOffset(vh - footerRect.top + 20);
-          } else {
-            setBottomOffset(16);
-          }
+          const footerTop = footer.getBoundingClientRect().top;
+          const viewportH = window.innerHeight;
+          const overlap = viewportH - footerTop;
+          setBottomPx(overlap > 0 ? overlap + FOOTER_CLEARANCE : DEFAULT_BOTTOM);
         }
 
         ticking = false;
@@ -79,7 +79,7 @@ const BackToTop = () => {
           exit={{ opacity: 0, scale: 0.7, y: 20 }}
           transition={{ duration: 0.28, ease: EASE }}
           className="fixed right-4 sm:right-6 z-50"
-          style={{ bottom: bottomOffset, transition: "bottom 0.3s ease" }}
+          style={{ bottom: `${bottomPx}px`, transition: "bottom 0.25s ease-out" }}
         >
           {/* Ultra-Compact Premium Button */}
           <motion.div

@@ -39,25 +39,48 @@ const CheckoutButton = ({
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <button
-            disabled={disabled}
-            type="button"
-            className="relative flex items-center justify-center flex-1 px-4 py-2 rounded-full overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/70 focus-visible:ring-offset-1 focus-visible:ring-offset-crepe-purple transition-shadow text-sm font-bold tracking-wide whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none"
-            style={{
-              background: "linear-gradient(135deg, rgb(247, 224, 124) 0%, rgb(229, 199, 107) 20%, rgb(212, 175, 55) 50%, rgb(194, 148, 14) 80%, rgb(184, 144, 31) 100%)",
-              color: "rgb(15, 10, 31)",
-              boxShadow: "rgba(212, 175, 55, 0.3) 0px 0px 0px 1px, rgba(212, 175, 55, 0.35) 0px 3px 12px, rgba(212, 175, 55, 0.12) 0px 6px 24px, rgba(255, 255, 255, 0.38) 0px 1px 0px inset, rgba(0, 0, 0, 0.24) 0px -1px 0px inset",
-            }}
-          >
-            <span
-              aria-hidden="true"
-              className="absolute top-0 left-0 right-0 h-[40%] rounded-full pointer-events-none"
-              style={{ background: "linear-gradient(rgba(255, 255, 255, 0.28) 0%, transparent 100%)" }}
-            />
-            <span className="relative z-10 flex items-center gap-1">
-              <span className="font-bold">Commander en tant qu&apos;invité</span>
-            </span>
-          </button>
+          <div className="mt-3 flex justify-center w-full">
+            <button
+              disabled={disabled}
+              type="button"
+              className="guest-cta-btn group relative inline-flex items-center justify-center px-6 py-2.5 rounded-full overflow-visible focus:outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-crepe-purple text-sm font-bold tracking-wide whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none transition-all duration-300"
+              style={{
+                "--glow-color": "rgb(212, 175, 55)",
+                "--glow-spread": "rgba(212, 175, 55, 0.45)",
+                "--btn-bg": "rgb(26, 18, 51)",
+                border: "0.12em solid var(--glow-color)",
+                color: "var(--glow-color)",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                letterSpacing: "0.03em",
+                backgroundColor: "var(--btn-bg)",
+                boxShadow: [
+                  "0 0 0.6em 0.15em var(--glow-color)",
+                  "0 0 2.5em 0.6em var(--glow-spread)",
+                  "inset 0 0 0.5em 0.1em var(--glow-color)",
+                ].join(","),
+                textShadow: "0 0 0.5em var(--glow-color)",
+              } as React.CSSProperties}
+            >
+              {/* Floor reflection */}
+              <span
+                aria-hidden="true"
+                className="absolute pointer-events-none left-0 w-full"
+                style={{
+                  top: "110%",
+                  height: "70%",
+                  background: "var(--glow-spread)",
+                  filter: "blur(1.2em)",
+                  opacity: 0.45,
+                  transform: "perspective(1em) rotateX(35deg) scale(1,0.45)",
+                  borderRadius: "50%",
+                }}
+              />
+              <span className="relative z-10 flex items-center gap-1.5">
+                <span className="font-bold">Commander en tant qu&apos;invité</span>
+              </span>
+            </button>
+          </div>
         </DialogTrigger>
         <DialogContent className="max-w-[425px] md:min-w-[700px] bg-gray-50">
           <GuestCheckoutForm
