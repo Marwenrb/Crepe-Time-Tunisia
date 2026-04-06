@@ -155,7 +155,7 @@ export const CategoryNav = ({
       {/* ── Scroll track ── */}
       <div
         ref={scrollRef}
-        className="cn5-track relative flex items-center gap-1.5 sm:gap-2 overflow-x-auto px-3 sm:px-5 lg:px-8"
+        className="cn5-track relative flex items-center gap-1.5 sm:gap-2 overflow-x-auto px-3 sm:px-5 lg:px-8 lg:justify-center"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
