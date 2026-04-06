@@ -57,7 +57,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col">
       {/* Premium brand marquee */}
-      <div className="mt-8 sm:mt-10">
+      <div className="mt-4 sm:mt-10">
         <DeferredSection minHeight="min-h-[56px]">
           <BrandMarquee />
         </DeferredSection>
@@ -65,7 +65,7 @@ const HomePage = () => {
 
       <DeferredSection><AppExperienceSection /></DeferredSection>
 
-      <div className="mt-6 sm:mt-10">
+      <div className="mt-3 sm:mt-10">
         <DeferredSection><CrepeHighlightsSection /></DeferredSection>
       </div>
 

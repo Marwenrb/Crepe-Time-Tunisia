@@ -869,7 +869,7 @@ const AppExperienceSection = () => {
     `}</style>
     <div
       ref={sectionRef}
-      className="relative mt-8 sm:mt-10 lg:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden"
+      className="relative mt-4 sm:mt-10 lg:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden"
       style={{
         background:
           "linear-gradient(160deg, #4C1D95 0%, #3B0764 42%, #2D064E 72%, #3B0764 100%)",
@@ -1125,10 +1125,10 @@ const AppExperienceSection = () => {
                 "--glow-color": "rgb(212,175,55)",
                 "--glow-spread": "rgba(212,175,55,0.45)",
                 "--btn-bg": "rgb(26,18,51)",
-                border: "0.14em solid var(--glow-color)",
-                padding: "clamp(11px,1.8vw,15px) clamp(24px,4.5vw,42px)",
+                border: "0.12em solid var(--glow-color)",
+                padding: "clamp(8px,1.4vw,11px) clamp(16px,3vw,28px)",
                 color: "var(--glow-color)",
-                fontSize: "clamp(0.82rem,1.8vw,0.95rem)",
+                fontSize: "clamp(0.75rem,1.5vw,0.88rem)",
                 fontWeight: 800,
                 letterSpacing: "0.06em",
                 backgroundColor: "var(--btn-bg)",

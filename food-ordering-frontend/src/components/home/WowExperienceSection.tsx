@@ -476,7 +476,7 @@ const WowExperienceSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden mt-8 sm:mt-10"
+      className="relative overflow-hidden mt-4 sm:mt-10"
       aria-labelledby="wow-heading"
       style={{
         background:
