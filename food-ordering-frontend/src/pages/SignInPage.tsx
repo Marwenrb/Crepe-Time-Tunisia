@@ -152,7 +152,7 @@ const SignInPage = () => {
       </div>
 
       {/* â”€â”€ Content â”€â”€ */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 animate-scale-in animate-fade-in">
+      <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 ">
         <AuthBrandPanel />
 
         {/* â”€â”€ Card (outer gradient ring) â€” PRESERVED â”€â”€ */}

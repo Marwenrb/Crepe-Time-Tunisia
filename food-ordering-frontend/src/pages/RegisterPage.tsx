@@ -135,7 +135,7 @@ const RegisterPage = () => {
 
         {/* â”€â”€ Card (outer gradient ring) â€” PRESERVED â”€â”€ */}
         <div
-          className="w-full rounded-[22px] p-[2px] transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(212,175,55,0.3)]"
+          className="w-full rounded-[22px] p-[2px] transition-all duration-300 hover:shadow-[0_0_40px_4px_rgba(212,175,55,0.35)]"
           style={{ background: "linear-gradient(163deg, #D4AF37 0%, #4C1D95 100%)" }}
         >
           <div className="rounded-none transition-all duration-200 hover:rounded-[20px] hover:scale-[0.98]">

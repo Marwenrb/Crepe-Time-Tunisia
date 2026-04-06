@@ -137,3 +137,42 @@
   0%, 100% { opacity: 0.3; transform: scale(1); }
   50%       { opacity: 1;   transform: scale(1.4); }
 }
+
+/* ── ct-float: upward-drifting ambient particles ─── */
+@keyframes ct-float {
+  0%   { opacity: 0;   transform: translateY(0)     scale(0.8); }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.4; }
+  100% { opacity: 0;   transform: translateY(-90px) scale(1.2); }
+}
+
+/* ── ct-shimmer: light-sweep on gold buttons ─── */
+@keyframes ct-shimmer {
+  0%   { transform: translateX(-200%) skewX(-20deg); }
+  100% { transform: translateX(400%)  skewX(-20deg); }
+}
+.ct-btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.ct-btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: ct-shimmer 2.6s ease-in-out infinite;
+}
+
+/* ── ct-slide-in-up: staggered form-field entrance ─── */
+@keyframes ct-slide-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.ct-field-1 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.08s; }
+.ct-field-2 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.16s; }
+.ct-field-3 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.24s; }
+.ct-field-4 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.32s; }
+.ct-field-5 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.40s; }
+.ct-field-6 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.48s; }
+.ct-field-7 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.56s; }

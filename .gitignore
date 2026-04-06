@@ -31,6 +31,9 @@ CREDENTIALS_CONSOLIDATED_BACKUP.env
 supabase.credentials.backup.txt
 food-ordering-backend/render.env
 food-ordering-backend/render.env.no-whatsapp
+# Owner/proprietaire guides containing credentials
+PROPRIETAIRE-SECRET.md
+GUIDE_PROPRIETAIRE_COMPLET*.md
 
 # Logs
 logs/

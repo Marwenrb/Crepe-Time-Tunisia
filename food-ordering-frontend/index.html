@@ -237,11 +237,19 @@
     <!-- ─── Remove preloader once React fires first paint ─── -->
     <script>
       (function () {
+        var startTime = Date.now();
+        var MIN_MS = 1800; // minimum display time before hiding preloader
         function hidePreloader() {
+          var elapsed = Date.now() - startTime;
+          var remaining = MIN_MS - elapsed;
+          if (remaining > 0) {
+            setTimeout(hidePreloader, remaining);
+            return;
+          }
           var el = document.getElementById('ct-preloader');
           if (el) {
             el.classList.add('ct-hidden');
-            setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+            setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 400);
           }
         }
         // React typically mounts on DOMContentLoaded. We use requestAnimationFrame
@@ -251,8 +259,8 @@
             requestAnimationFrame(hidePreloader);
           });
         });
-        // Safety net – hide after 4s regardless
-        setTimeout(hidePreloader, 4000);
+        // Safety net – hide after 7s regardless
+        setTimeout(hidePreloader, 7000);
       })();
     </script>
   </body>
