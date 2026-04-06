@@ -137,35 +137,41 @@ const Footer = () => {
           </div>
 
           {/* ── Contact column ── */}
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-0.5">
               Contact
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-2.5">
+              {/* Phone */}
               <a
                 href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                aria-label="Téléphone"
-                className="group/s flex items-center justify-center h-10 w-10 rounded-full border border-white/15 hover:border-crepe-gold/60 bg-white/[0.04] hover:bg-crepe-gold/10 transition-all duration-200"
+                className="group/c flex items-center gap-2.5 transition-colors"
               >
-                <Phone className="h-[18px] w-[18px] text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
+                <span className="flex items-center justify-center h-8 w-8 rounded-full border border-white/15 group-hover/c:border-crepe-gold/50 bg-white/[0.04] group-hover/c:bg-crepe-gold/10 transition-all duration-200 shrink-0">
+                  <Phone className="h-3.5 w-3.5 text-white/60 group-hover/c:text-crepe-gold transition-colors duration-200" />
+                </span>
+                <span className="text-[13px] text-white/70 group-hover/c:text-crepe-gold transition-colors duration-200 font-medium">{CONTACT.phone}</span>
               </a>
+              {/* WhatsApp */}
               <a
                 href={`https://wa.me/${CONTACT.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="WhatsApp"
-                className="group/s flex items-center justify-center h-10 w-10 rounded-full border border-white/15 hover:border-crepe-gold/60 bg-white/[0.04] hover:bg-crepe-gold/10 transition-all duration-200"
+                className="group/c flex items-center gap-2.5 transition-colors"
               >
-                <MessageCircle className="h-[18px] w-[18px] text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
+                <span className="flex items-center justify-center h-8 w-8 rounded-full border border-white/15 group-hover/c:border-crepe-gold/50 bg-white/[0.04] group-hover/c:bg-crepe-gold/10 transition-all duration-200 shrink-0">
+                  <MessageCircle className="h-3.5 w-3.5 text-white/60 group-hover/c:text-crepe-gold transition-colors duration-200" />
+                </span>
+                <span className="text-[13px] text-white/70 group-hover/c:text-crepe-gold transition-colors duration-200 font-medium">WhatsApp</span>
               </a>
-              <span
-                className="flex items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-white/[0.04]"
-              >
-                <MapPin className="h-[18px] w-[18px] text-white/70" />
-              </span>
+              {/* Address */}
+              <div className="flex items-center gap-2.5">
+                <span className="flex items-center justify-center h-8 w-8 rounded-full border border-white/15 bg-white/[0.04] shrink-0">
+                  <MapPin className="h-3.5 w-3.5 text-white/60" />
+                </span>
+                <span className="text-[13px] text-white/50 font-medium">{CONTACT.address}</span>
+              </div>
             </div>
-            <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="text-white/60 text-xs mt-1 hover:text-crepe-gold transition-colors">{CONTACT.phone}</a>
-            <span className="text-white/45 text-xs">{CONTACT.address}</span>
           </div>
 
           {/* ── Social column ── */}
