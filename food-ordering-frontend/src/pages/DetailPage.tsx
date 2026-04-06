@@ -391,7 +391,7 @@ const DetailPage = () => {
         </div>
 
         {/* 2. Category navigation */}
-        <div className="container">
+        <div className="container mt-3">
           <CategoryNav
             categories={MENU_CATEGORIES}
             activeCategory={activeCategory}

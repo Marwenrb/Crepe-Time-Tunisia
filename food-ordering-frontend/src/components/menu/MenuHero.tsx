@@ -42,16 +42,16 @@ const KEYFRAMES = `
     to   { transform: rotate(360deg); }
   }
   @keyframes mh-trace-flow {
-    0%, 100% { top: -8%; opacity: 0; }
+    0%, 100% { transform: translateY(-120%); opacity: 0; }
     10%      { opacity: 1; }
     88%      { opacity: 0.7; }
-    100%     { top: 108%; opacity: 0; }
+    100%     { transform: translateY(800%); opacity: 0; }
   }
   @keyframes mh-shimmer {
-    0%   { left: -40%; opacity: 0; }
+    0%   { transform: translateX(-140%); opacity: 0; }
     12%  { opacity: 0.6; }
     88%  { opacity: 0.3; }
-    100% { left: 140%; opacity: 0; }
+    100% { transform: translateX(140%); opacity: 0; }
   }
   .mh-info-strip { animation: mh-glow-pulse 4s ease-in-out infinite; }
   @keyframes mh-glow-pulse {
@@ -75,8 +75,9 @@ export const MenuHero = ({ restaurant }: Props) => {
           alt={restaurant.restaurantName}
           width={1200}
           height={520}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
           className="w-full h-full object-cover object-center scale-105"
-          style={{ filter: "brightness(0.5) saturate(1.2)" }}
+          style={{ filter: "brightness(0.45) saturate(1.3) contrast(1.05)" }}
           loading="eager"
           fetchPriority="high"
           decoding="async"

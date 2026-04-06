@@ -96,16 +96,20 @@ const BrandMarquee = () => (
       }}
     />
 
-    {/* Animated gold light streak — sweeps left to right */}
+    {/* Animated gold light streak — sweeps left to right (GPU: translateX) */}
     <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        background:
-          "linear-gradient(90deg, transparent 0%, transparent 35%, rgba(212,175,55,0.07) 46%, rgba(255,248,225,0.10) 50%, rgba(212,175,55,0.07) 54%, transparent 65%, transparent 100%)",
-        backgroundSize: "250% 100%",
-        animation: "mq-sweep 7s ease-in-out infinite",
-      }}
-    />
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+    >
+      <div
+        className="absolute inset-y-0"
+        style={{
+          width: "30%",
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.07) 30%, rgba(255,248,225,0.10) 50%, rgba(212,175,55,0.07) 70%, transparent 100%)",
+          animation: "mq-sweep 7s ease-in-out infinite",
+        }}
+      />
+    </div>
 
     {/* Top ornamental border — triple hairline */}
     <div className="absolute top-0 inset-x-0 z-10">
@@ -179,15 +183,15 @@ const BrandMarquee = () => (
       style={{ background: "linear-gradient(to left, #1E0A3C, transparent)" }}
     />
 
-    {/* Keyframes — GPU-composited (transform / opacity only) */}
+    {/* Keyframes — GPU-composited where possible */}
     <style>{`
       @keyframes mq-txt-shimmer {
         0%, 100% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
       }
       @keyframes mq-sweep {
-        0%, 100% { background-position: -100% 0; }
-        50% { background-position: 250% 0; }
+        0%, 100% { transform: translateX(-120%); }
+        50% { transform: translateX(420%); }
       }
       @keyframes sep-rotate {
         to { transform: rotate(360deg); }

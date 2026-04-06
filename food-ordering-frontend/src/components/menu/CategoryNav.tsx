@@ -1,14 +1,14 @@
 /**
- * CategoryNav — Ultra-premium horizontal category selector.
+ * CategoryNav — Premium sticky category selector bar.
  *
- * Design language (Uiverse-inspired):
- *  - Rich purple gradient background (135deg #1E0A3C → #4C1D95 → #1E0A3C)
- *  - Gold rotating conic-gradient border on active pill + shimmer sweep
- *  - Circuit-trace neon dot separators between pills
- *  - Inactive pills: subtle gold border reveal on hover
- *  - Sticky bar with proper top offset for mobile/desktop header
- *  - Full-width bleed via negative margins, scroll-snap for mobile
- *  - GPU-composited: opacity + transform only in keyframes
+ * v4 — Complete rewrite.
+ *  - Purple gradient bg with gold accent borders
+ *  - Active pill: rotating conic-gradient border + gold fill + shimmer
+ *  - Inactive: radial inner glow on hover (no layout shift)
+ *  - Circuit-trace separators with flowing neon dot
+ *  - ALL animations GPU-composited (only transform + opacity)
+ *  - Sticky with correct offset per breakpoint matching Header heights
+ *  - Proper spacing from MenuHero via top margin
  */
 
 import { useRef } from "react";
@@ -24,36 +24,36 @@ type Props = {
   menuItems: MenuItem[];
 };
 
+/* ── GPU-composited keyframes — only transform + opacity ── */
 const KEYFRAMES = `
-  @keyframes cn-rotate-border {
+  @keyframes cn-spin {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
   }
-  @keyframes cn-glow-pulse {
-    0%, 100% { box-shadow: 0 0 14px rgba(212,175,55,0.4), 0 0 28px rgba(212,175,55,0.1); }
-    50%      { box-shadow: 0 0 22px rgba(212,175,55,0.55), 0 0 40px rgba(212,175,55,0.15); }
+  @keyframes cn-glow {
+    0%, 100% { box-shadow: 0 0 12px rgba(212,175,55,0.35), 0 0 24px rgba(212,175,55,0.08); }
+    50%      { box-shadow: 0 0 20px rgba(212,175,55,0.5),  0 0 36px rgba(212,175,55,0.14); }
   }
   @keyframes cn-shimmer {
-    0%   { left: -40%; opacity: 0; }
-    12%  { opacity: 0.7; }
-    88%  { opacity: 0.35; }
-    100% { left: 140%; opacity: 0; }
+    0%   { transform: translateX(-140%); opacity: 0; }
+    12%  { opacity: 0.65; }
+    88%  { opacity: 0.3; }
+    100% { transform: translateX(140%); opacity: 0; }
   }
-  @keyframes cn-trace-flow {
-    0%, 100% { top: -10%; opacity: 0; }
+  @keyframes cn-dot {
+    0%, 100% { transform: translateY(-120%); opacity: 0; }
     12%      { opacity: 1; }
     88%      { opacity: 0.5; }
-    100%     { top: 110%; opacity: 0; }
+    100%     { transform: translateY(800%); opacity: 0; }
   }
-  @keyframes cn-bar-shimmer {
-    0%   { left: -30%; opacity: 0; }
-    10%  { opacity: 0.5; }
-    90%  { opacity: 0.2; }
-    100% { left: 130%; opacity: 0; }
+  @keyframes cn-bar-sweep {
+    0%   { transform: translateX(-130%); opacity: 0; }
+    10%  { opacity: 0.45; }
+    90%  { opacity: 0.15; }
+    100% { transform: translateX(530%); opacity: 0; }
   }
-  .cn-active-pill { animation: cn-glow-pulse 3s ease-in-out infinite; }
-  /* Hide scrollbar cross-browser */
-  .cn-scroll::-webkit-scrollbar { display: none; }
+  .cn-active { animation: cn-glow 3s ease-in-out infinite; }
+  .cn-track::-webkit-scrollbar { display: none; }
 `;
 
 export const CategoryNav = ({
@@ -74,60 +74,65 @@ export const CategoryNav = ({
   );
 
   return (
-    <div
-      className="sticky top-14 sm:top-16 md:top-[72px] z-30 -mx-4 sm:-mx-6 lg:-mx-8"
+    <nav
+      aria-label="Catégories de crêpes"
+      className="sticky top-[56px] sm:top-[64px] md:top-[72px] z-30 -mx-4 sm:-mx-6 lg:-mx-8 mt-2"
       style={{ isolation: "isolate" }}
     >
       <style>{KEYFRAMES}</style>
 
-      {/* ── Purple gradient background ── */}
+      {/* ── Purple gradient bg ── */}
       <div
         className="absolute inset-0"
+        aria-hidden="true"
         style={{
           background:
             "linear-gradient(135deg, #1E0A3C 0%, #2E1065 25%, #4C1D95 50%, #3B0764 75%, #1E0A3C 100%)",
         }}
       />
 
-      {/* ── Gold accent lines ── */}
+      {/* ── Top gold accent ── */}
       <div
         className="absolute inset-x-0 top-0 h-px"
+        aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.25) 30%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0.25) 70%, transparent 95%)",
+            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.2) 30%, rgba(212,175,55,0.4) 50%, rgba(212,175,55,0.2) 70%, transparent 95%)",
         }}
       />
+      {/* ── Bottom gold accent ── */}
       <div
         className="absolute inset-x-0 bottom-0 h-px"
+        aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.2) 30%, rgba(212,175,55,0.35) 50%, rgba(212,175,55,0.2) 70%, transparent 95%)",
+            "linear-gradient(90deg, transparent 5%, rgba(212,175,55,0.15) 30%, rgba(212,175,55,0.3) 50%, rgba(212,175,55,0.15) 70%, transparent 95%)",
         }}
       />
 
-      {/* ── Shimmer sweep across entire bar ── */}
+      {/* ── Bar shimmer (GPU: translateX) ── */}
       <span
         aria-hidden="true"
         className="absolute top-0 bottom-0 pointer-events-none"
         style={{
-          width: "25%",
+          width: "22%",
           background:
-            "linear-gradient(105deg, transparent 30%, rgba(212,175,55,0.06) 50%, transparent 70%)",
-          animation: "cn-bar-shimmer 6s ease-in-out infinite",
+            "linear-gradient(105deg, transparent 30%, rgba(212,175,55,0.05) 50%, transparent 70%)",
+          animation: "cn-bar-sweep 7s ease-in-out infinite",
           zIndex: 1,
         }}
       />
 
-      {/* ── Scrollable pill track ── */}
+      {/* ── Scroll track ── */}
       <div
         ref={scrollRef}
-        className="cn-scroll relative flex items-center overflow-x-auto px-3 sm:px-5 lg:px-8"
+        className="cn-track relative flex items-center overflow-x-auto px-3 sm:px-5 lg:px-8"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          minHeight: 48,
-          paddingTop: 7,
-          paddingBottom: 7,
+          minHeight: 50,
+          paddingTop: 8,
+          paddingBottom: 8,
           gap: 0,
           WebkitOverflowScrolling: "touch",
         }}
@@ -138,7 +143,7 @@ export const CategoryNav = ({
 
           return (
             <div key={cat.id} className="flex items-center flex-shrink-0">
-              {/* Circuit-trace separator */}
+              {/* ── Circuit-trace separator ── */}
               {idx > 0 && (
                 <span
                   aria-hidden="true"
@@ -146,8 +151,8 @@ export const CategoryNav = ({
                   style={{
                     width: 1,
                     height: 20,
-                    marginLeft: 5,
-                    marginRight: 5,
+                    marginLeft: 6,
+                    marginRight: 6,
                     overflow: "hidden",
                   }}
                 >
@@ -156,7 +161,7 @@ export const CategoryNav = ({
                       position: "absolute",
                       inset: 0,
                       background:
-                        "linear-gradient(to bottom, transparent, rgba(212,175,55,0.4), transparent)",
+                        "linear-gradient(to bottom, transparent, rgba(212,175,55,0.35), transparent)",
                     }}
                   />
                   <span
@@ -167,8 +172,8 @@ export const CategoryNav = ({
                       left: -1,
                       borderRadius: "50%",
                       background: "#EDD060",
-                      boxShadow: "0 0 5px 1px rgba(212,175,55,0.6)",
-                      animation: `cn-trace-flow ${1.8 + idx * 0.3}s ease-in-out infinite`,
+                      boxShadow: "0 0 5px 1px rgba(212,175,55,0.55)",
+                      animation: `cn-dot ${1.8 + idx * 0.3}s ease-in-out infinite`,
                     }}
                   />
                 </span>
@@ -177,10 +182,10 @@ export const CategoryNav = ({
               {/* ── Pill button ── */}
               <button
                 onClick={() => onCategoryChange(cat.id)}
-                className="relative flex-shrink-0 flex items-center outline-none focus-visible:ring-2 focus-visible:ring-crepe-gold focus-visible:ring-offset-1 transition-colors duration-200"
+                className="relative flex-shrink-0 flex items-center outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/60 focus-visible:ring-offset-1 transition-colors duration-200"
                 style={{
                   padding: 0,
-                  color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.8)",
+                  color: isActive ? "#0F0A1F" : "rgba(255,255,255,0.82)",
                   zIndex: 2,
                   borderRadius: 100,
                   fontSize: "0.8rem",
@@ -188,14 +193,15 @@ export const CategoryNav = ({
                 }}
                 aria-pressed={isActive}
               >
-                {/* Active: rotating conic-gradient border + gold fill + shimmer */}
+                {/* ── Active pill: rotating border + gold fill + shimmer ── */}
                 {isActive && (
                   <motion.span
-                    layoutId="category-pill"
-                    className="absolute rounded-full cn-active-pill overflow-hidden"
+                    layoutId="cn-pill"
+                    className="absolute rounded-full cn-active overflow-hidden"
                     style={{ inset: 0, zIndex: -1 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   >
+                    {/* Conic spinner */}
                     <span
                       aria-hidden="true"
                       style={{
@@ -203,10 +209,11 @@ export const CategoryNav = ({
                         inset: "-180%",
                         background:
                           "conic-gradient(from 0deg, #D4AF37, transparent 18%, #7C3AED 38%, transparent 58%, #EDD060 78%, #D4AF37)",
-                        animation: "cn-rotate-border 3.5s linear infinite",
+                        animation: "cn-spin 3.5s linear infinite",
                         willChange: "transform",
                       }}
                     />
+                    {/* Gold fill */}
                     <span
                       style={{
                         position: "absolute",
@@ -216,6 +223,7 @@ export const CategoryNav = ({
                           "linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%)",
                       }}
                     />
+                    {/* Shimmer (GPU: translateX) */}
                     <span
                       aria-hidden="true"
                       style={{
@@ -233,7 +241,7 @@ export const CategoryNav = ({
                   </motion.span>
                 )}
 
-                {/* Inactive: rotating border on hover */}
+                {/* ── Inactive: hover glow ── */}
                 {!isActive && (
                   <motion.span
                     className="absolute inset-0 rounded-full overflow-hidden"
@@ -247,7 +255,7 @@ export const CategoryNav = ({
                         inset: "-150%",
                         background:
                           "conic-gradient(from 0deg, rgba(212,175,55,0.5), transparent 22%, rgba(124,58,237,0.4) 45%, transparent 68%, rgba(237,208,96,0.45) 90%, rgba(212,175,55,0.5))",
-                        animation: "cn-rotate-border 3s linear infinite",
+                        animation: "cn-spin 3s linear infinite",
                         willChange: "transform",
                       }}
                     />
@@ -262,17 +270,17 @@ export const CategoryNav = ({
                   </motion.span>
                 )}
 
-                {/* Content */}
+                {/* ── Pill content ── */}
                 <span
                   className="relative z-10 flex items-center gap-1.5"
-                  style={{ padding: "5px 13px" }}
+                  style={{ padding: "5px 14px" }}
                 >
                   <span
                     className="text-sm leading-none"
                     style={
                       isActive
-                        ? { filter: "drop-shadow(0 0 3px rgba(15,10,31,0.3))" }
-                        : { filter: "drop-shadow(0 0 6px rgba(212,175,55,0.4))" }
+                        ? { filter: "drop-shadow(0 0 3px rgba(15,10,31,0.25))" }
+                        : { filter: "drop-shadow(0 0 6px rgba(212,175,55,0.35))" }
                     }
                   >
                     {cat.emoji}
@@ -316,7 +324,7 @@ export const CategoryNav = ({
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 };
 

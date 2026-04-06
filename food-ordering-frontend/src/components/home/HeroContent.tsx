@@ -640,10 +640,10 @@ const KEYFRAMES = `
 
   /* ── Circuit trace flow ── */
   @keyframes hc-trace-flow {
-    0%, 100% { top: -5%; opacity: 0; }
+    0%, 100% { transform: translateY(-120%); opacity: 0; }
     10%      { opacity: 1; }
     90%      { opacity: 0.8; }
-    100%     { top: 105%; opacity: 0; }
+    100%     { transform: translateY(800%); opacity: 0; }
   }
 
   /* ── CTA glow button — hover / active / focus states ── */
