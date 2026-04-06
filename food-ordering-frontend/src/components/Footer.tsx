@@ -111,26 +111,38 @@ const FOOTER_STYLES = `
     text-shadow: 0 0 12px rgba(212,175,55,0.35);
   }
 
-  /* ── Contact items ── */
-  .ft3-contact-item {
-    transition: transform 180ms ease, background 200ms ease;
+  /* ── Contact tiles ── */
+  .ft3-tile {
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+               border-color 220ms ease, background 220ms ease,
+               box-shadow 280ms ease;
   }
-  .ft3-contact-item:hover {
-    transform: translateX(4px);
-    background: rgba(212,175,55,0.05);
+  .ft3-tile:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 1px rgba(212,175,55,0.15);
   }
-  .ft3-contact-item .ft3-c-icon {
-    transition: filter 200ms ease, transform 200ms ease;
+  .ft3-tile:active { transform: scale(0.98); }
+  .ft3-tile .ft3-tile-icon-wrap {
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), filter 250ms ease;
   }
-  .ft3-contact-item:hover .ft3-c-icon {
-    filter: drop-shadow(0 0 8px rgba(212,175,55,0.65));
-    transform: scale(1.15);
+  .ft3-tile:hover .ft3-tile-icon-wrap {
+    transform: scale(1.12) rotate(-4deg);
   }
-  .ft3-contact-item .ft3-c-text {
-    transition: color 200ms ease;
+  .ft3-tile .ft3-tile-ring {
+    transition: opacity 300ms ease;
+    opacity: 0;
   }
-  .ft3-contact-item:hover .ft3-c-text {
-    color: #E5C76B !important;
+  .ft3-tile:hover .ft3-tile-ring {
+    opacity: 1;
+  }
+  .ft3-tile .ft3-tile-label {
+    transition: color 200ms ease, text-shadow 200ms ease;
+  }
+  .ft3-tile .ft3-tile-value {
+    transition: color 200ms ease, text-shadow 200ms ease, transform 200ms ease;
+  }
+  .ft3-tile:hover .ft3-tile-value {
+    transform: translateX(2px);
   }
 
   /* ── Legal links ── */
@@ -272,82 +284,143 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 lg:gap-10 items-start">
 
           {/* ── COL 1 — Contact (left on desktop, below brand on mobile) ── */}
-          <div className="order-2 md:order-1 flex flex-col items-center md:items-start gap-4">
+          <div className="order-2 md:order-1 flex flex-col items-center gap-4">
             <span className="ft3-heading text-[11px] font-extrabold uppercase tracking-[0.25em]">
               Contact
             </span>
 
-            {/* Contact items with gold accent bar */}
-            <div
-              className="flex flex-col gap-1 rounded-2xl overflow-hidden"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(212,175,55,0.08)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-              }}
-            >
-              {/* Gold left accent bar (visible on md+) */}
-              {[
-                {
-                  href: `tel:${CONTACT.phone.replace(/\s/g, "")}`,
-                  icon: <Phone className="ft3-c-icon h-4 w-4" style={{ color: "#D4AF37" }} />,
-                  text: CONTACT.phone,
-                  isLink: true,
-                },
-                {
-                  href: `https://wa.me/${CONTACT.whatsapp}`,
-                  icon: <MessageCircle className="ft3-c-icon h-4 w-4" style={{ color: "#D4AF37" }} />,
-                  text: "WhatsApp",
-                  isLink: true,
-                  external: true,
-                },
-                {
-                  href: "#",
-                  icon: <MapPin className="ft3-c-icon h-4 w-4" style={{ color: "rgba(212,175,55,0.6)" }} />,
-                  text: CONTACT.address,
-                  isLink: false,
-                },
-              ].map((item, idx) => {
-                const inner = (
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0"
-                      style={{
-                        background: "rgba(212,175,55,0.08)",
-                        border: "1px solid rgba(212,175,55,0.12)",
-                      }}
-                    >
-                      {item.icon}
-                    </span>
-                    <span className="ft3-c-text text-sm font-medium" style={{ color: "rgba(255,255,255,0.85)" }}>
-                      {item.text}
-                    </span>
-                  </div>
-                );
-
-                const cls = `ft3-contact-item flex items-center px-4 py-3 ${idx > 0 ? "" : ""} min-h-[48px]`;
-                const borderStyle = idx > 0
-                  ? { borderTop: "1px solid rgba(212,175,55,0.06)" }
-                  : {};
-
-                return item.isLink ? (
-                  <a
-                    key={idx}
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener noreferrer" : undefined}
-                    className={cls}
-                    style={borderStyle}
+            {/* Contact tiles — each with unique themed identity */}
+            <div className="flex flex-col gap-3 w-full max-w-[220px]">
+              {/* ── Phone tile — gold theme ── */}
+              <a
+                href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
+                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
+                style={{
+                  background: "rgba(212,175,55,0.04)",
+                  border: "1px solid rgba(212,175,55,0.1)",
+                  padding: "12px 14px",
+                }}
+              >
+                {/* Hover rotating ring */}
+                <span
+                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
+                  aria-hidden="true"
+                  style={{ inset: -1.5, borderRadius: 13 }}
+                >
+                  <span style={{
+                    position: "absolute", inset: "-200%",
+                    background: "conic-gradient(from 0deg, transparent 30%, #D4AF37 50%, transparent 70%)",
+                    animation: "ft3-spin 2.5s linear infinite", willChange: "transform",
+                  }} />
+                </span>
+                <div className="relative flex items-center gap-3">
+                  <span
+                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.06))",
+                      border: "1px solid rgba(212,175,55,0.2)",
+                      boxShadow: "0 0 12px rgba(212,175,55,0.1)",
+                    }}
                   >
-                    {inner}
-                  </a>
-                ) : (
-                  <div key={idx} className={cls} style={borderStyle}>
-                    {inner}
+                    <Phone className="h-4 w-4" style={{ color: "#D4AF37" }} />
+                  </span>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(212,175,55,0.6)" }}>
+                      Appelez-nous
+                    </span>
+                    <span className="ft3-tile-value text-[13px] font-semibold tabular-nums" style={{ color: "rgba(255,255,255,0.92)" }}>
+                      {CONTACT.phone}
+                    </span>
                   </div>
-                );
-              })}
+                </div>
+              </a>
+
+              {/* ── WhatsApp tile — green theme ── */}
+              <a
+                href={`https://wa.me/${CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
+                style={{
+                  background: "rgba(37,211,102,0.04)",
+                  border: "1px solid rgba(37,211,102,0.1)",
+                  padding: "12px 14px",
+                }}
+              >
+                <span
+                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
+                  aria-hidden="true"
+                  style={{ inset: -1.5, borderRadius: 13 }}
+                >
+                  <span style={{
+                    position: "absolute", inset: "-200%",
+                    background: "conic-gradient(from 0deg, transparent 30%, #25D366 50%, transparent 70%)",
+                    animation: "ft3-spin 2.5s linear infinite", willChange: "transform",
+                  }} />
+                </span>
+                <div className="relative flex items-center gap-3">
+                  <span
+                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(37,211,102,0.15), rgba(37,211,102,0.05))",
+                      border: "1px solid rgba(37,211,102,0.2)",
+                      boxShadow: "0 0 12px rgba(37,211,102,0.08)",
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4" style={{ color: "#25D366" }} />
+                  </span>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(37,211,102,0.6)" }}>
+                      WhatsApp
+                    </span>
+                    <span className="ft3-tile-value text-[13px] font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>
+                      Écrivez-nous
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+              {/* ── Location tile — violet theme ── */}
+              <div
+                className="ft3-tile group/tile relative rounded-xl overflow-hidden"
+                style={{
+                  background: "rgba(124,58,237,0.04)",
+                  border: "1px solid rgba(124,58,237,0.1)",
+                  padding: "12px 14px",
+                }}
+              >
+                <span
+                  className="ft3-tile-ring absolute overflow-hidden pointer-events-none"
+                  aria-hidden="true"
+                  style={{ inset: -1.5, borderRadius: 13 }}
+                >
+                  <span style={{
+                    position: "absolute", inset: "-200%",
+                    background: "conic-gradient(from 0deg, transparent 30%, #7C3AED 50%, transparent 70%)",
+                    animation: "ft3-spin 3s linear infinite", willChange: "transform",
+                  }} />
+                </span>
+                <div className="relative flex items-center gap-3">
+                  <span
+                    className="ft3-tile-icon-wrap flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05))",
+                      border: "1px solid rgba(124,58,237,0.2)",
+                      boxShadow: "0 0 12px rgba(124,58,237,0.08)",
+                    }}
+                  >
+                    <MapPin className="h-4 w-4" style={{ color: "#7C3AED" }} />
+                  </span>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="ft3-tile-label text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "rgba(124,58,237,0.6)" }}>
+                      Adresse
+                    </span>
+                    <span className="ft3-tile-value text-[13px] font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>
+                      {CONTACT.address}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -489,7 +562,7 @@ const Footer = () => {
           </div>
 
           {/* ── COL 3 — Social (right on desktop) ── */}
-          <div className="order-3 flex flex-col items-center md:items-end gap-4">
+          <div className="order-3 flex flex-col items-center gap-4">
             <span className="ft3-heading text-[11px] font-extrabold uppercase tracking-[0.25em]">
               Suivez-nous
             </span>
