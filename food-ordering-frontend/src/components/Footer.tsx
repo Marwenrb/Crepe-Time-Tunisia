@@ -159,13 +159,13 @@ const Footer = () => {
                 <MessageCircle className="h-[18px] w-[18px] text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
               </a>
               <span
-                aria-label="Adresse"
                 className="flex items-center justify-center h-10 w-10 rounded-full border border-white/15 bg-white/[0.04]"
               >
                 <MapPin className="h-[18px] w-[18px] text-white/70" />
               </span>
             </div>
-            <span className="text-white/45 text-xs mt-1">{CONTACT.address}</span>
+            <a href={`tel:${CONTACT.phone.replace(/\s/g, "")}`} className="text-white/60 text-xs mt-1 hover:text-crepe-gold transition-colors">{CONTACT.phone}</a>
+            <span className="text-white/45 text-xs">{CONTACT.address}</span>
           </div>
 
           {/* ── Social column ── */}
