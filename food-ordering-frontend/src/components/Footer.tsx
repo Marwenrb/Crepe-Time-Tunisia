@@ -135,33 +135,75 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* ── Contact column ── */}
+          {/* ── Contact column — premium neon-glass cards ── */}
           <div className="flex flex-col items-center gap-3">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80">
               Contact
             </span>
-            {/* Compact horizontal chip row */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
+            <div className="flex flex-col items-center gap-2 w-full max-w-[260px]">
+              {/* Phone */}
               <a
                 href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/80 hover:text-crepe-gold bg-white/[0.06] hover:bg-crepe-gold/10 border border-white/10 hover:border-crepe-gold/30 transition-all duration-200"
+                className="group/c flex items-center gap-3 w-full px-4 py-2.5 rounded-xl transition-all duration-250"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(212,175,55,0.12)",
+                  backdropFilter: "blur(6px)",
+                }}
               >
-                <Phone className="h-3.5 w-3.5 shrink-0 opacity-70" />
-                <span>{CONTACT.phone}</span>
+                <span
+                  className="flex items-center justify-center h-8 w-8 rounded-lg shrink-0"
+                  style={{ background: "rgba(212,175,55,0.1)" }}
+                >
+                  <Phone className="h-3.5 w-3.5 text-crepe-gold" />
+                </span>
+                <div className="flex flex-col items-start min-w-0">
+                  <span className="text-[10px] uppercase tracking-[0.15em] text-white/40 font-semibold leading-none">Téléphone</span>
+                  <span className="text-sm text-white/85 group-hover/c:text-crepe-gold transition-colors font-medium mt-0.5">{CONTACT.phone}</span>
+                </div>
               </a>
+              {/* WhatsApp */}
               <a
                 href={`https://wa.me/${CONTACT.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/80 hover:text-crepe-gold bg-white/[0.06] hover:bg-crepe-gold/10 border border-white/10 hover:border-crepe-gold/30 transition-all duration-200"
+                className="group/c flex items-center gap-3 w-full px-4 py-2.5 rounded-xl transition-all duration-250"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(212,175,55,0.12)",
+                  backdropFilter: "blur(6px)",
+                }}
               >
-                <MessageCircle className="h-3.5 w-3.5 shrink-0 opacity-70" />
-                <span>WhatsApp</span>
+                <span
+                  className="flex items-center justify-center h-8 w-8 rounded-lg shrink-0"
+                  style={{ background: "rgba(37,211,102,0.1)" }}
+                >
+                  <MessageCircle className="h-3.5 w-3.5 text-emerald-400" />
+                </span>
+                <div className="flex flex-col items-start min-w-0">
+                  <span className="text-[10px] uppercase tracking-[0.15em] text-white/40 font-semibold leading-none">WhatsApp</span>
+                  <span className="text-sm text-white/85 group-hover/c:text-crepe-gold transition-colors font-medium mt-0.5">Envoyez un message</span>
+                </div>
               </a>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-sm text-white/50 bg-white/[0.04] border border-white/8">
-                <MapPin className="h-3.5 w-3.5 shrink-0 opacity-60" />
-                <span>{CONTACT.address}</span>
-              </span>
+              {/* Address */}
+              <div
+                className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                <span
+                  className="flex items-center justify-center h-8 w-8 rounded-lg shrink-0"
+                  style={{ background: "rgba(139,92,246,0.1)" }}
+                >
+                  <MapPin className="h-3.5 w-3.5 text-violet-400" />
+                </span>
+                <div className="flex flex-col items-start min-w-0">
+                  <span className="text-[10px] uppercase tracking-[0.15em] text-white/40 font-semibold leading-none">Adresse</span>
+                  <span className="text-sm text-white/60 font-medium mt-0.5">{CONTACT.address}</span>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -15,8 +15,8 @@ const triggerHaptic = (): void => {
 };
 
 // ─── Component ────────────────────────────────────────────
-const FOOTER_CLEARANCE = 24; // px above footer
-const DEFAULT_BOTTOM = 24;    // px from viewport bottom
+const FOOTER_CLEARANCE = 20; // px above footer
+const DEFAULT_BOTTOM = 24;   // px from viewport bottom
 
 const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -24,7 +24,6 @@ const BackToTop = () => {
   const [bottomPx, setBottomPx] = useState(DEFAULT_BOTTOM);
   const reducedMotion = useReducedMotion();
 
-  // Track scroll position, progress, and show/hide button
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -38,13 +37,20 @@ const BackToTop = () => {
         setScrollProgress(progress);
         setIsVisible(scrollY > SCROLL_THRESHOLD);
 
-        // Keep button above footer
+        // Push button up when footer enters viewport
         const footer = document.querySelector('footer');
         if (footer) {
-          const footerTop = footer.getBoundingClientRect().top;
+          const footerRect = footer.getBoundingClientRect();
           const viewportH = window.innerHeight;
-          const overlap = viewportH - footerTop;
-          setBottomPx(overlap > 0 ? overlap + FOOTER_CLEARANCE : DEFAULT_BOTTOM);
+          if (footerRect.top < viewportH) {
+            // Footer is visible — position button above it
+            const overlap = viewportH - footerRect.top;
+            setBottomPx(overlap + FOOTER_CLEARANCE);
+          } else {
+            setBottomPx(DEFAULT_BOTTOM);
+          }
+        } else {
+          setBottomPx(DEFAULT_BOTTOM);
         }
 
         ticking = false;
@@ -52,9 +58,13 @@ const BackToTop = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Check initial position
+    window.addEventListener("resize", handleScroll, { passive: true });
+    handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   const scrollToTop = useCallback(() => {

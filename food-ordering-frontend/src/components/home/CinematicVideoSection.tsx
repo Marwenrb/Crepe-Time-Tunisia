@@ -1,4 +1,4 @@
-import { memo, useRef, useState, useEffect } from "react";
+import { memo, useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import heroVideo from "@/assets/hero/Golden_Crêpe_Video_Generation.mp4";
 
@@ -38,7 +38,40 @@ const KEYFRAMES = `
     80% { transform: translate(1%, -2%); }
     90% { transform: translate(3%, 2%); }
   }
+  @keyframes vhs-typewriter-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
 `;
+
+/* ── Typewriter hook ──────────────────────────────────────────────────────── */
+const TITLE_TEXT = "The Sweetest Escape";
+const TYPE_SPEED = 70; // ms per character
+const START_DELAY = 400; // ms after video loads
+
+function useTypewriter(text: string, enabled: boolean) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let i = 0;
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i >= text.length) {
+          clearInterval(interval);
+          setDone(true);
+        }
+      }, TYPE_SPEED);
+      return () => clearInterval(interval);
+    }, START_DELAY);
+    return () => clearTimeout(timer);
+  }, [text, enabled]);
+
+  return { displayed, done };
+}
 
 /* ── Section ─────────────────────────────────────────────────────────────── */
 const VideoHeroSection = () => {
@@ -53,6 +86,8 @@ const VideoHeroSection = () => {
     if (video.readyState >= 2) setIsLoaded(true);
     return () => video.removeEventListener("loadeddata", handleLoaded);
   }, []);
+
+  const { displayed, done } = useTypewriter(TITLE_TEXT, isLoaded);
 
   const show = (delay: number) => ({
     opacity: isLoaded ? 1 : 0,
@@ -137,7 +172,7 @@ const VideoHeroSection = () => {
           Crêpe Time
         </span>
 
-        {/* Title — gradient gold type */}
+        {/* Title — typewriter gold gradient */}
         <h2
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight max-w-3xl"
           style={{
@@ -147,10 +182,27 @@ const VideoHeroSection = () => {
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             filter: "drop-shadow(0 2px 16px rgba(212,175,55,0.2))",
-            ...show(0.12),
+            minHeight: "1.15em",
+            ...show(0),
           }}
         >
-          The Sweetest Escape
+          {displayed}
+          {!done && (
+            <span
+              aria-hidden="true"
+              style={{
+                display: "inline-block",
+                width: "3px",
+                height: "0.85em",
+                marginLeft: "2px",
+                verticalAlign: "text-bottom",
+                background: "linear-gradient(180deg, #E5C76B, #D4AF37)",
+                borderRadius: "2px",
+                boxShadow: "0 0 8px rgba(212,175,55,0.5)",
+                animation: "vhs-typewriter-cursor 0.6s steps(1) infinite",
+              }}
+            />
+          )}
         </h2>
 
         {/* Subtitle */}
@@ -166,7 +218,7 @@ const VideoHeroSection = () => {
         <div className="relative mt-6 sm:mt-8" style={show(0.45)}>
           <Link
             to="/search/Nabeul"
-            className="group relative inline-flex items-center gap-2 px-6 py-2.5 sm:px-8 sm:py-3 rounded-full text-sm sm:text-base font-bold tracking-wide overflow-visible transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]"
+            className="group relative inline-flex items-center gap-1.5 px-4 py-2 sm:px-7 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-wide overflow-visible transition-transform duration-200 hover:scale-[1.04] active:scale-[0.97]"
             style={{
               "--glow-color": "rgb(212, 175, 55)",
               "--glow-spread": "rgba(212, 175, 55, 0.4)",
