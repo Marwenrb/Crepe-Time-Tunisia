@@ -1,4 +1,4 @@
-﻿// SignInPage.tsx
+// SignInPage.tsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,15 +20,15 @@ const GoogleIcon = () => (
   </svg>
 );
 
-/* â”€â”€â”€ Validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Validation ──────────────────────────────────────────── */
 const signInSchema = z.object({
   email: z.string().email("Adresse email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractÃ¨res"),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
 });
 
 type SignInFormValues = z.infer<typeof signInSchema>;
 
-/* â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Page ────────────────────────────────────────────────── */
 const SignInPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,7 +46,7 @@ const SignInPage = () => {
       });
       if (error) throw error;
     } catch {
-      toast.error("Connexion Google Ã©chouÃ©e. RÃ©essayez.");
+      toast.error("Connexion Google échouée. Réessayez.");
     } finally {
       setIsGoogleLoading(false);
     }
@@ -66,7 +66,7 @@ const SignInPage = () => {
     try {
       await authApi.signIn(data);
       await queryClient.invalidateQueries("validateToken");
-      toast.success("Connexion rÃ©ussie !");
+      toast.success("Connexion réussie !");
       navigate(
         (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
       );
@@ -81,13 +81,13 @@ const SignInPage = () => {
 
   return (
     <div
-      className="relative min-h-screen flex items-center justify-center overflow-x-hidden py-6"
+      className="fixed inset-0 flex items-center justify-center overflow-y-auto"
       style={{
         background:
           "linear-gradient(160deg, #1E0A3C 0%, #2E1065 28%, #4C1D95 50%, #3B0764 72%, #1E0A3C 100%)",
       }}
     >
-      {/* â”€â”€ Gold accent line â€” top â”€â”€ */}
+      {/* ── Gold accent line — top ── */}
       <div className="absolute top-0 inset-x-0 z-10" aria-hidden="true">
         <div
           className="h-px"
@@ -98,7 +98,7 @@ const SignInPage = () => {
         />
       </div>
 
-      {/* â”€â”€ Ambient orbs â”€â”€ */}
+      {/* ── Ambient orbs ── */}
       <div
         aria-hidden="true"
         className="absolute top-[-8%] left-[-6%] w-[340px] h-[340px] rounded-full opacity-25 blur-[90px]"
@@ -115,7 +115,7 @@ const SignInPage = () => {
         style={{ background: "radial-gradient(circle, rgba(212,175,55,0.5) 0%, transparent 65%)" }}
       />
 
-      {/* â”€â”€ Noise texture overlay â”€â”€ */}
+      {/* ── Noise texture overlay ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -125,14 +125,17 @@ const SignInPage = () => {
         }}
       />
 
-      {/* â”€â”€ Floating gold particles â”€â”€ */}
+      {/* ── Floating gold particles ── */}
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
         {[
-          { top: "18%", left: "12%", delay: "0s", size: "3px" },
-          { top: "72%", left: "8%", delay: "1.2s", size: "2px" },
-          { top: "35%", right: "10%", delay: "0.6s", size: "4px" },
-          { top: "85%", right: "18%", delay: "1.8s", size: "2px" },
-          { top: "55%", left: "55%", delay: "2.4s", size: "3px" },
+          { top: "18%", left: "12%",  delay: "0s",   size: "3px", anim: "ct-pulse 3s ease-in-out infinite" },
+          { top: "72%", left: "8%",   delay: "1.2s", size: "2px", anim: "ct-float 4.5s ease-in-out infinite" },
+          { top: "35%", right: "10%", delay: "0.6s", size: "4px", anim: "ct-pulse 2.8s ease-in-out infinite" },
+          { top: "85%", right: "18%", delay: "1.8s", size: "2px", anim: "ct-float 5.2s ease-in-out infinite" },
+          { top: "55%", left: "55%",  delay: "2.4s", size: "3px", anim: "ct-pulse 3.2s ease-in-out infinite" },
+          { top: "25%", left: "40%",  delay: "0.9s", size: "2px", anim: "ct-float 4.8s ease-in-out infinite" },
+          { top: "65%", right: "35%", delay: "1.6s", size: "2px", anim: "ct-pulse 3.8s ease-in-out infinite" },
+          { top: "42%", left: "75%",  delay: "3s",   size: "3px", anim: "ct-float 6s ease-in-out infinite" },
         ].map((p, i) => (
           <div
             key={i}
@@ -144,164 +147,162 @@ const SignInPage = () => {
               width: p.size,
               height: p.size,
               background: "rgba(212,175,55,0.6)",
-              animation: `ct-pulse 3s ease-in-out infinite`,
+              animation: p.anim,
               animationDelay: p.delay,
             }}
           />
         ))}
       </div>
 
-      {/* â”€â”€ Content â”€â”€ */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 ">
+      {/* ── Content ── */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-sm px-4 py-6 my-auto">
         <AuthBrandPanel />
 
-        {/* â”€â”€ Card (outer gradient ring) â€” PRESERVED â”€â”€ */}
+        {/* ── Card (outer gradient ring) ── */}
         <div
-          className="w-full rounded-[22px] p-[2px] transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(212,175,55,0.3)]"
+          className="w-full rounded-[22px] p-[2px] transition-shadow duration-300 hover:shadow-[0_0_40px_4px_rgba(212,175,55,0.35)]"
           style={{ background: "linear-gradient(163deg, #D4AF37 0%, #4C1D95 100%)" }}
         >
-          <div className="rounded-none transition-all duration-200 hover:rounded-[20px] hover:scale-[0.98]">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete="off"
-              className="flex flex-col gap-[10px] px-8 pb-[0.4em] bg-[#0F0A1F] rounded-[25px] transition-all duration-[400ms]"
-            >
-              {/* Heading */}
-              <div className="text-center pt-6 pb-1">
-                <h2 className="text-white/80 text-sm font-light tracking-[0.2em] uppercase">
-                  Bon retour
-                </h2>
-                <p className="text-white/25 text-[10px] mt-1 tracking-widest">
-                  Connectez-vous Ã  votre compte
-                </p>
-              </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="flex flex-col gap-2.5 px-6 py-6 bg-[#0F0A1F] rounded-[20px]"
+          >
+            {/* Heading */}
+            <div className="text-center pb-1">
+              <h2 className="text-white/80 text-sm font-light tracking-[0.2em] uppercase">
+                Bon retour
+              </h2>
+              <p className="text-white/25 text-[10px] mt-1 tracking-widest">
+                Connectez-vous à votre compte
+              </p>
+            </div>
 
-              {/* Email field */}
-              <div>
-                <div className="flex items-center gap-[0.5em] rounded-[25px] p-[0.6em] bg-[#0F0A1F] shadow-[inset_2px_5px_10px_rgb(5,5,5)] focus-within:shadow-[inset_2px_5px_10px_rgb(5,5,5),0_0_0_1px_rgba(212,175,55,0.3)] transition-shadow duration-200">
-                  <Mail className="h-[1.3em] w-[1.3em] text-[#D4AF37] shrink-0" />
-                  <input
-                    type="email"
-                    placeholder="Adresse email"
-                    aria-label="Adresse email"
-                    autoComplete="off"
-                    className="bg-transparent border-none outline-none w-full text-[#d3d3d3] placeholder:text-gray-600 text-sm"
-                    {...register("email")}
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-red-400 text-xs mt-1 ml-3">{errors.email.message}</p>
-                )}
+            {/* Email field */}
+            <div>
+              <div className="flex items-center gap-[0.5em] rounded-[25px] p-[0.6em] bg-[#0F0A1F] shadow-[inset_2px_5px_10px_rgb(5,5,5)] focus-within:shadow-[inset_2px_5px_10px_rgb(5,5,5),0_0_0_1px_rgba(212,175,55,0.3)] transition-shadow duration-200">
+                <Mail className="h-[1.3em] w-[1.3em] text-[#D4AF37] shrink-0" />
+                <input
+                  type="email"
+                  placeholder="Adresse email"
+                  aria-label="Adresse email"
+                  autoComplete="off"
+                  className="bg-transparent border-none outline-none w-full text-[#d3d3d3] placeholder:text-gray-600 text-sm"
+                  {...register("email")}
+                />
               </div>
+              {errors.email && (
+                <p className="text-red-400 text-xs mt-1 ml-3">{errors.email.message}</p>
+              )}
+            </div>
 
-              {/* Password field */}
-              <div>
-                <div className="flex items-center gap-[0.5em] rounded-[25px] p-[0.6em] bg-[#0F0A1F] shadow-[inset_2px_5px_10px_rgb(5,5,5)] focus-within:shadow-[inset_2px_5px_10px_rgb(5,5,5),0_0_0_1px_rgba(212,175,55,0.3)] transition-shadow duration-200">
-                  <Lock className="h-[1.3em] w-[1.3em] text-[#D4AF37] shrink-0" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Mot de passe"
-                    aria-label="Mot de passe"
-                    autoComplete="current-password"
-                    className="bg-transparent border-none outline-none w-full text-[#d3d3d3] placeholder:text-gray-600 text-sm"
-                    {...register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="shrink-0 text-gray-600 hover:text-[#D4AF37] transition-colors"
-                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-red-400 text-xs mt-1 ml-3">{errors.password.message}</p>
-                )}
-              </div>
-
-              {/* Forgot password */}
-              <div className="text-right -mt-1">
-                <Link
-                  to="/sign-in"
-                  className="text-[10px] text-[#D4AF37]/50 hover:text-[#D4AF37] transition-colors tracking-wider"
-                >
-                  Mot de passe oubliÃ© ?
-                </Link>
-              </div>
-
-              {/* Button row */}
-              <div className="flex justify-center flex-row mt-6 gap-2">
+            {/* Password field */}
+            <div>
+              <div className="flex items-center gap-[0.5em] rounded-[25px] p-[0.6em] bg-[#0F0A1F] shadow-[inset_2px_5px_10px_rgb(5,5,5)] focus-within:shadow-[inset_2px_5px_10px_rgb(5,5,5),0_0_0_1px_rgba(212,175,55,0.3)] transition-shadow duration-200">
+                <Lock className="h-[1.3em] w-[1.3em] text-[#D4AF37] shrink-0" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Mot de passe"
+                  aria-label="Mot de passe"
+                  autoComplete="current-password"
+                  className="bg-transparent border-none outline-none w-full text-[#d3d3d3] placeholder:text-gray-600 text-sm"
+                  {...register("password")}
+                />
                 <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="py-2.5 px-6 rounded-lg border-none outline-none transition-all duration-300 text-sm font-bold tracking-wide disabled:opacity-70 disabled:cursor-not-allowed hover:brightness-110 active:scale-[0.97]"
-                  style={{
-                    background: "linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%)",
-                    color: "#0F0A1F",
-                    boxShadow: "0 4px 16px rgba(212,175,55,0.35), 0 0 0 1px rgba(212,175,55,0.2)",
-                  }}
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="shrink-0 text-gray-600 hover:text-[#D4AF37] transition-colors"
+                  aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                 >
-                  {isLoading ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Connexionâ€¦
-                    </span>
-                  ) : (
-                    "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Connexion\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
-                <Link
-                  to="/register"
-                  className="py-2.5 px-8 rounded-lg border outline-none transition-all duration-300 text-sm font-semibold tracking-wide text-center hover:bg-[rgba(212,175,55,0.15)] hover:border-[rgba(212,175,55,0.5)]"
-                  style={{
-                    background: "rgba(212,175,55,0.08)",
-                    borderColor: "rgba(212,175,55,0.3)",
-                    color: "#D4AF37",
-                  }}
-                >
-                  S'inscrire
-                </Link>
               </div>
+              {errors.password && (
+                <p className="text-red-400 text-xs mt-1 ml-3">{errors.password.message}</p>
+              )}
+            </div>
 
-              {/* â”€â”€ Google divider + button â”€â”€ */}
-              <div className="flex items-center gap-3 my-1">
-                <div className="flex-1 h-px bg-white/10" />
-                <span className="text-[10px] text-white/30 tracking-widest uppercase">ou</span>
-                <div className="flex-1 h-px bg-white/10" />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={isGoogleLoading}
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[5px] bg-[#252525] hover:bg-[#1a1a1a] border border-white/10 hover:border-[#D4AF37]/30 text-white text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            {/* Forgot password */}
+            <div className="text-right -mt-1">
+              <Link
+                to="/sign-in"
+                className="text-[10px] text-[#D4AF37]/50 hover:text-[#D4AF37] transition-colors tracking-wider"
               >
-                {isGoogleLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <GoogleIcon />
-                )}
-                Continuer avec Google
-              </button>
+                Mot de passe oublié ?
+              </Link>
+            </div>
 
-              {/* Trust badge */}
-              <div className="flex items-center justify-center gap-1.5 mb-8 mt-2">
-                <Sparkles className="w-3 h-3 text-[#D4AF37]/40" />
-                <span className="text-[9px] text-white/20 tracking-widest uppercase">
-                  Connexion sÃ©curisÃ©e SSL
-                </span>
-                <Sparkles className="w-3 h-3 text-[#D4AF37]/40" />
-              </div>
-            </form>
-          </div>
+            {/* Button row — stacked on small screens, side-by-side otherwise */}
+            <div className="flex flex-col sm:flex-row justify-center items-stretch gap-2 mt-3">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="ct-btn-shimmer py-2.5 px-6 rounded-lg border-none outline-none transition-all duration-300 text-sm font-bold tracking-wide disabled:opacity-70 disabled:cursor-not-allowed hover:brightness-110 active:scale-[0.97]"
+                style={{
+                  background: "linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%)",
+                  color: "#0F0A1F",
+                  boxShadow: "0 4px 16px rgba(212,175,55,0.35), 0 0 0 1px rgba(212,175,55,0.2)",
+                }}
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Connexion…
+                  </span>
+                ) : (
+                  "Connexion"
+                )}
+              </button>
+              <Link
+                to="/register"
+                className="py-2.5 px-6 rounded-lg border outline-none transition-all duration-300 text-sm font-semibold tracking-wide text-center hover:bg-[rgba(212,175,55,0.15)] hover:border-[rgba(212,175,55,0.5)]"
+                style={{
+                  background: "rgba(212,175,55,0.08)",
+                  borderColor: "rgba(212,175,55,0.3)",
+                  color: "#D4AF37",
+                }}
+              >
+                S'inscrire
+              </Link>
+            </div>
+
+            {/* ── Google divider + button ── */}
+            <div className="flex items-center gap-3 my-1">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-[10px] text-white/30 tracking-widest uppercase">ou</span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={isGoogleLoading}
+              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-[5px] bg-[#252525] hover:bg-[#1a1a1a] border border-white/10 hover:border-[#D4AF37]/30 text-white text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            >
+              {isGoogleLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <GoogleIcon />
+              )}
+              Continuer avec Google
+            </button>
+
+            {/* Trust badge */}
+            <div className="flex items-center justify-center gap-1.5 mt-1">
+              <Sparkles className="w-3 h-3 text-[#D4AF37]/40" />
+              <span className="text-[9px] text-white/20 tracking-widest uppercase">
+                Connexion sécurisée SSL
+              </span>
+              <Sparkles className="w-3 h-3 text-[#D4AF37]/40" />
+            </div>
+          </form>
         </div>
 
         {/* Bottom CTA */}
         <p className="text-white/20 text-xs text-center mt-5">
-          Nouveau sur CrÃªpe Time ?{" "}
+          Nouveau sur Crêpe Time ?{" "}
           <Link to="/register" className="text-[#D4AF37]/70 hover:text-[#D4AF37] transition-colors font-semibold">
-            CrÃ©er un compte
+            Créer un compte
           </Link>
         </p>
       </div>
