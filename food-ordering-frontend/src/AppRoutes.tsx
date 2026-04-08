@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import Layout from "./layouts/Layout";
+import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import AdminRoute from "./auth/AdminRoute";
+import PageLoader from "./components/shared/PageLoader";
 
 // ── Every page lazy-loaded — smaller initial bundle ─────────────────────────
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -19,19 +21,6 @@ const ApiDocsPage = lazy(() => import("./pages/ApiDocsPage"));
 const ApiStatusPage = lazy(() => import("./pages/ApiStatusPage"));
 const AnalyticsDashboardPage = lazy(() => import("./pages/AnalyticsDashboardPage"));
 const PerformancePage = lazy(() => import("./pages/PerformancePage"));
-
-// ── Premium loading fallback ───────────────────────────────────────────────
-const PageLoader = () => (
-  <div className="flex flex-col items-center justify-center min-h-[70vh] gap-5 select-none">
-    <div className="relative w-20 h-20">
-      <div className="absolute inset-0 rounded-full border-[3px] border-crepe-purple/10" />
-      <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-crepe-gold animate-spin" style={{ animationDuration: "900ms" }} />
-      <div className="absolute inset-[6px] rounded-full border-[2px] border-crepe-purple/10" />
-      <div className="absolute inset-0 flex items-center justify-center text-2xl">🥞</div>
-    </div>
-    <p className="text-xs font-semibold tracking-[0.25em] uppercase text-crepe-purple/50">Crêpe Time…</p>
-  </div>
-);
 
 const Lazy = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageLoader />}>{children}</Suspense>
@@ -57,6 +46,16 @@ const AppRoutes = () => {
   return (
     <OAuthRedirectHandler>
       <Routes>
+        {/* ── Auth routes — NO Header / NO Footer (AuthLayout) ── */}
+        <Route element={<AuthLayout />}>
+          <Route path="/sign-in"  element={<Lazy><SignInPage /></Lazy>} />
+          <Route path="/register" element={<Lazy><RegisterPage /></Lazy>} />
+        </Route>
+
+        {/* ── OAuth callback — no layout wrapper ── */}
+        <Route path="/auth/callback" element={<Lazy><AuthCallbackPage /></Lazy>} />
+
+        {/* ── Public app routes — WITH Header/Footer ── */}
         <Route
           path="/"
           element={
@@ -65,23 +64,6 @@ const AppRoutes = () => {
             </Layout>
           }
         />
-        <Route
-          path="/sign-in"
-          element={
-            <Layout showHero={false}>
-              <Lazy><SignInPage /></Lazy>
-            </Layout>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <Layout showHero={false}>
-              <Lazy><RegisterPage /></Lazy>
-            </Layout>
-          }
-        />
-        <Route path="/auth/callback" element={<Lazy><AuthCallbackPage /></Lazy>} />
         <Route
           path="/menu"
           element={
@@ -114,6 +96,8 @@ const AppRoutes = () => {
             </Layout>
           }
         />
+
+        {/* ── Protected routes ── */}
         <Route element={<ProtectedRoute />}>
           <Route
             path="/user-profile"
@@ -124,6 +108,8 @@ const AppRoutes = () => {
             }
           />
         </Route>
+
+        {/* ── Admin routes ── */}
         <Route element={<AdminRoute />}>
           <Route
             path="/manage-restaurant"

@@ -1,0 +1,63 @@
+/* ─── AuthBackground.module.css ─────────────────────────────── */
+
+.bgRoot {
+  position: fixed;
+  inset: 0;
+  background-color: #0C0C1E;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Nebula glow pocket — top-right */
+.bgRoot::before {
+  content: '';
+  position: absolute;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  top: -20%;
+  right: -15%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(91, 33, 182, 0.22) 0%,
+    rgba(91, 33, 182, 0.08) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+/* Nebula glow pocket — bottom-left, gold */
+.bgRoot::after {
+  content: '';
+  position: absolute;
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+  bottom: -10%;
+  left: -10%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(245, 158, 11, 0.10) 0%,
+    rgba(212, 175, 55, 0.04) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+/* Micro-dot grid */
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.12) 1px,
+    transparent 1px
+  );
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  pointer-events: none;
+}

@@ -1,0 +1,72 @@
+/* ─── GlowCard.module.css ────────────────────────────────────── */
+/* Animated conic-gradient rotating border via @property trick.  */
+/* Falls back to a static gold border if @property is unsupported */
+
+@property --rotation {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.cardOuter {
+  position: relative;
+  border-radius: 22px;
+  padding: 2px;
+  background: transparent;
+  width: 100%;
+}
+
+/* The spinning conic-gradient border */
+.cardOuter::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 24px;
+  background: conic-gradient(
+    from var(--rotation, 0deg),
+    #7C3AED 0deg,
+    #5B21B6 60deg,
+    #1A1A38 120deg,
+    #1A1A38 180deg,
+    #F59E0B 240deg,
+    #D97706 280deg,
+    #7C3AED 360deg
+  );
+  animation: borderRotate 6s linear infinite;
+  z-index: 0;
+}
+
+/* Frosted glass card interior */
+.cardInner {
+  position: relative;
+  z-index: 1;
+  border-radius: 20px;
+  background: rgba(18, 18, 42, 0.80);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 40px 36px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes borderRotate {
+  to { --rotation: 360deg; }
+}
+
+/* Slower on mobile — save battery */
+@media (max-width: 640px) {
+  .cardOuter::before { animation-duration: 10s; }
+  .cardInner { padding: 28px 20px; }
+}
+
+/* Static gold border when motion is reduced */
+@media (prefers-reduced-motion: reduce) {
+  .cardOuter::before {
+    animation: none;
+    background: rgba(245, 158, 11, 0.3);
+    inset: 0;
+  }
+}

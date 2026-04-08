@@ -176,3 +176,53 @@
 .ct-field-5 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.40s; }
 .ct-field-6 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.48s; }
 .ct-field-7 { animation: ct-slide-in-up 0.4s ease both; animation-delay: 0.56s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BRAND DESIGN TOKENS v2 — Liquid Dark Premium
+═══════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Backgrounds ─────────────────────────────────────────── */
+  --void:          #060612;
+  --depth-1:       #0C0C1E;
+  --depth-2:       #12122A;
+  --depth-3:       #1A1A38;
+  --depth-glass:   rgba(18, 18, 42, 0.75);
+
+  /* ── Brand ───────────────────────────────────────────────── */
+  --violet-950:    #1E0A4A;
+  --violet-800:    #3B1278;
+  --violet-600:    #5B21B6;
+  --violet-500:    #7C3AED;
+  --violet-400:    #8B5CF6;
+  --gold-600:      #B45309;
+  --gold-500:      #D97706;
+  --gold-400:      #F59E0B;
+  --gold-300:      #FCD34D;
+  --gold-glow:     rgba(245, 158, 11, 0.15);
+
+  /* ── Text ────────────────────────────────────────────────── */
+  --text-100:      #FAFAFA;
+  --text-300:      #C4C4D4;
+  --text-500:      #6B6B8A;
+  --text-700:      #3A3A55;
+
+  /* ── Borders ─────────────────────────────────────────────── */
+  --border-dim:    rgba(139, 92, 246, 0.08);
+  --border-soft:   rgba(139, 92, 246, 0.18);
+  --border-active: rgba(139, 92, 246, 0.55);
+  --border-gold:   rgba(245, 158, 11, 0.3);
+
+  /* ── Glows ───────────────────────────────────────────────── */
+  --glow-violet:   0 0 40px rgba(124, 58, 237, 0.25), 0 0 80px rgba(124, 58, 237, 0.10);
+  --glow-gold:     0 0 30px rgba(245, 158, 11, 0.2),  0 0 60px rgba(245, 158, 11, 0.08);
+  --glow-deep:     0 24px 64px rgba(0, 0, 0, 0.6),    0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* ── Semantic ────────────────────────────────────────────── */
+  --ok:            #10B981;
+  --fail:          #F43F5E;
+  --warn:          #F59E0B;
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --font-display:  'Syne', sans-serif;
+  --font-body:     'DM Sans', sans-serif;
+}
