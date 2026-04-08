@@ -1,12 +1,14 @@
-import { Flame } from "lucide-react";
+import { BRAND } from "@/config/brand";
 import styles from "./PageLoader.module.css";
 
 /**
- * PageLoader v3.1 — triple-arc spinner with embedded Flame logo.
+ * PageLoader v3.2 — triple-arc spinner with official logo center.
+ *
+ * Uses BRAND.logo (/crepe-time-logo.webp) — NOT the Lucide Flame icon.
+ * White medallion matches the Header / Footer / AuthLogo treatment.
  *
  * Outer: violet CW 1.4 s  |  Mid: gold CCW 1.0 s  |  Inner: white-dim CW 0.75 s
- * Center: Flame medallion with gentle pulse + inner gloss reflection
- * Glow halo behind arcs breathes slowly (opacity + scale)
+ * Center: logo pulse + inner glow halo
  * All animations GPU-composited (transform + opacity only)
  */
 const PageLoader = () => (
@@ -16,14 +18,17 @@ const PageLoader = () => (
       <div className={styles.arcMid}   />
       <div className={styles.arcInner} />
 
-      {/* Logo centered inside the concentric arcs */}
+      {/* Official logo centered inside the concentric arcs */}
       <div className={styles.logoCenter}>
         <div className={styles.logoMedallion}>
-          <Flame
-            size={22}
-            color="#FCD34D"
-            aria-hidden="true"
-            style={{ filter: "drop-shadow(0 0 6px rgba(252,211,77,0.65))" }}
+          <img
+            src={BRAND.logo}
+            alt={BRAND.name}
+            width={34}
+            height={34}
+            style={{ objectFit: "contain", objectPosition: "center" }}
+            loading="eager"
+            decoding="async"
           />
         </div>
       </div>

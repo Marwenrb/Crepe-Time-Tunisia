@@ -1,15 +1,18 @@
-import { Flame } from "lucide-react";
+import { BRAND } from "@/config/brand";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 /**
- * AuthLogo v3.1 — next-gen animated medallion.
+ * AuthLogo v3.2 — official logo + next-gen animated rings.
+ *
+ * Uses BRAND.logo (the official /crepe-time-logo.webp) — NOT a Lucide icon.
+ * Medallion: white background + object-contain image (same treatment as Header/Footer).
  *
  * Layers (bottom → top):
  *   1. Sonar pulse ring (violet) — expands + fades on repeat
  *   2. Sonar pulse ring (gold)   — offset timing
- *   3. Slow-rotating dashed ring (violet, 25 s/rev)
- *   4. Medallion with layered gradient + inner gloss reflection
- *   5. Flame icon with gentle float animation
+ *   3. Slow-rotating dashed ring (25 s/rev)
+ *   4. White medallion with official logo + gold glow box-shadow
+ *   5. Gentle float animation on the medallion (y ± 4 px)
  *   6. Syne gradient brand name + line-separator tagline
  */
 const AuthLogo = () => {
@@ -36,10 +39,10 @@ const AuthLogo = () => {
       {/* ── Medallion wrapper ── */}
       <div
         style={{
-          position: "relative",
-          width:    80,
-          height:   80,
-          display:  "flex",
+          position:       "relative",
+          width:          80,
+          height:         80,
+          display:        "flex",
           alignItems:     "center",
           justifyContent: "center",
         }}
@@ -55,12 +58,7 @@ const AuthLogo = () => {
               willChange:   "transform, opacity",
             }}
             animate={{ scale: [1, 1.7], opacity: [0.5, 0] }}
-            transition={{
-              duration:    2.2,
-              repeat:      Infinity,
-              ease:        "easeOut",
-              repeatDelay: 0.6,
-            }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut", repeatDelay: 0.6 }}
           />
         )}
 
@@ -75,13 +73,7 @@ const AuthLogo = () => {
               willChange:   "transform, opacity",
             }}
             animate={{ scale: [1, 1.5], opacity: [0.4, 0] }}
-            transition={{
-              duration:    2.2,
-              repeat:      Infinity,
-              ease:        "easeOut",
-              delay:       1.1,
-              repeatDelay: 0.6,
-            }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut", delay: 1.1, repeatDelay: 0.6 }}
           />
         )}
 
@@ -100,44 +92,36 @@ const AuthLogo = () => {
           />
         )}
 
-        {/* ── Medallion ── */}
+        {/* ── Official logo medallion ── */}
         <motion.div
           style={{
             width:          70,
             height:         70,
             borderRadius:   20,
-            background:     "linear-gradient(145deg, #3B0764 0%, #4C1D95 45%, #6D28D9 100%)",
+            background:     "#FFFFFF",
             display:        "flex",
             alignItems:     "center",
             justifyContent: "center",
+            overflow:       "hidden",
             boxShadow: [
-              "0 0 0 1px rgba(139,92,246,0.45)",
-              "0 0 48px rgba(124,58,237,0.35)",
-              "0 12px 32px rgba(0,0,0,0.55)",
-              "inset 0 1px 0 rgba(255,255,255,0.1)",
+              "0 0 0 2px rgba(139,92,246,0.45)",
+              "0 0 40px rgba(124,58,237,0.30)",
+              "0 8px 24px rgba(0,0,0,0.45)",
             ].join(", "),
             position:   "relative",
             flexShrink: 0,
-            overflow:   "hidden",
           }}
           animate={!reduced ? { y: [0, -4, 0] } : {}}
           transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          {/* Inner gloss reflection */}
-          <div
-            style={{
-              position:   "absolute",
-              inset:      0,
-              borderRadius: 20,
-              background: "radial-gradient(ellipse at 38% 30%, rgba(255,255,255,0.18) 0%, transparent 55%)",
-              pointerEvents: "none",
-            }}
-          />
-          <Flame
-            size={30}
-            color="#FCD34D"
-            aria-hidden="true"
-            style={{ filter: "drop-shadow(0 0 8px rgba(252,211,77,0.7))" }}
+          <img
+            src={BRAND.logo}
+            alt={BRAND.name}
+            width={62}
+            height={62}
+            style={{ objectFit: "contain", objectPosition: "center" }}
+            loading="eager"
+            decoding="async"
           />
         </motion.div>
       </div>
@@ -160,14 +144,7 @@ const AuthLogo = () => {
           Cr&#234;pe Time
         </span>
 
-        {/* Line-separator tagline */}
-        <div
-          style={{
-            display:     "flex",
-            alignItems:  "center",
-            gap:         8,
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span
             style={{
               width:      20,
