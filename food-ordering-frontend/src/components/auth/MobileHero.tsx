@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import AuthLogo from "./AuthLogo";
 
 /* ── Typing-effect hook ──────────────────────────────────────── */
 
@@ -138,11 +137,6 @@ const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
 
   return (
     <div className="w-full max-w-sm">
-      {/* Official logo with animated rings */}
-      <div className="flex justify-center mb-8">
-        <AuthLogo />
-      </div>
-
       {/* Typed headline — stable height prevents layout shift */}
       <div
         style={{ marginBottom: 8, minHeight: headlineMinHeight }}

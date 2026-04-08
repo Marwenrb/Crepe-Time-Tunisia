@@ -59,7 +59,7 @@
 /* Slower on mobile — save battery */
 @media (max-width: 640px) {
   .cardOuter::before { animation-duration: 10s; }
-  .cardInner { padding: 28px 20px; }
+  .cardInner { padding: 22px 16px; }
 }
 
 /* Static gold border when motion is reduced */

@@ -92,10 +92,10 @@ const RegisterPage = () => {
       <LeftPanel variant="register" />
 
       {/* Form panel — start-aligned on mobile so 4-field form scrolls naturally */}
-      <div className="flex flex-col items-center justify-start md:justify-center w-full md:w-1/2 min-h-[100dvh] px-5 pt-12 pb-10">
+      <div className="flex flex-col items-center justify-start md:justify-center w-full md:w-1/2 min-h-[100dvh] px-5 pt-7 pb-6">
 
         {/* Mobile hero (typing effect) — hidden on desktop */}
-        <div className="md:hidden w-full max-w-sm mb-10">
+        <div className="md:hidden w-full max-w-sm mb-5">
           <MobileHero
             lines={["Ta première", "crêpe t'attend."]}
             subtitle="Rejoins la famille Crêpe Time en quelques secondes."
@@ -109,7 +109,7 @@ const RegisterPage = () => {
               onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
               aria-busy={isLoading}
-              className="flex flex-col gap-5"
+              className="flex flex-col gap-4 sm:gap-5"
             >
 
               {/* Heading — shown on desktop only (MobileHero covers mobile) */}
