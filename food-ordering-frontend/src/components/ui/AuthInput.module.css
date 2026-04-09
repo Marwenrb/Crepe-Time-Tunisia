@@ -123,6 +123,34 @@
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
 }
 
+/* ── UIverse gold bar: sweeps from center on focus ───────────── */
+.fieldInner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.85) 35%,
+    rgba(229, 199, 107, 0.70) 65%,
+    transparent 100%
+  );
+  border-radius: 0 0 10px 10px;
+  transition:
+    left  300ms cubic-bezier(0.4, 0, 0.2, 1),
+    right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.fieldInner:focus-within::after {
+  left:  1%;
+  right: 1%;
+}
+
 /* ── Suffix slot (password toggle) ──────────────────────────────── */
 .fieldSuffix {
   position: absolute;

@@ -25,8 +25,10 @@ const AuthLayout = () => (
         <Outlet />
       </div>
 
-      {/* Brand signature footer — auth-only, no heavy layout */}
-      <AuthFooter />
+      {/* Brand signature footer — mobile only (LeftPanel owns brand on desktop) */}
+      <div className="md:hidden">
+        <AuthFooter />
+      </div>
     </div>
   </div>
 );

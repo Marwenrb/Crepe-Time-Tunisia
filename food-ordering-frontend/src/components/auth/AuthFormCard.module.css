@@ -1,0 +1,72 @@
+/* ══════════════════════════════════════════════════════════════════════
+   AuthFormCard — UIverse ElSombrero2 / tricky-robin-67 inspired
+   Conic spinning gradient border + deep glass inner body
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* CSS Houdini: register the angle as an animatable property */
+@property --ct-card-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Outer shell: spinning conic gradient border ─────────────────────── */
+.card {
+  position: relative;
+  border-radius: 22px;
+  /* Border = padding of 1.5px revealing the gradient bg */
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--ct-card-angle),
+    rgba(212, 175, 55, 0.90)   0deg,
+    rgba(124, 58, 237, 0.60)  90deg,
+    rgba(212, 175, 55, 0.08) 180deg,
+    rgba(124, 58, 237, 0.60) 270deg,
+    rgba(212, 175, 55, 0.90) 360deg
+  );
+  animation: ct-border-spin 5s linear infinite;
+  isolation: isolate;
+  /* Outer ambient glow */
+  box-shadow:
+    0  0  48px rgba(212, 175, 55, 0.07),
+    0  0  96px rgba(124,  58, 237, 0.05),
+    0 28px 72px rgba(0,   0,   0,  0.48);
+}
+
+@keyframes ct-border-spin {
+  to { --ct-card-angle: 360deg; }
+}
+
+/* Slow animation on reduced-motion — gradient still visible */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation-duration: 30s;
+  }
+}
+
+/* ── Inner glass body ────────────────────────────────────────────────── */
+.inner {
+  position: relative;
+  border-radius: 20.5px;
+  background: rgba(8, 5, 18, 0.90);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  padding: 28px 24px;
+  /* Subtle inner highlights */
+  box-shadow:
+    inset 0  1px 0   rgba(255, 255, 255, 0.055),
+    inset 0  0   20px rgba(212, 175, 55,  0.025),
+    inset 0 -1px 0   rgba(0,   0,   0,    0.30);
+}
+
+@media (min-width: 480px) {
+  .inner {
+    padding: 32px 28px;
+  }
+}
+
+@media (min-width: 768px) {
+  .inner {
+    padding: 36px 32px;
+  }
+}

@@ -7,10 +7,11 @@ import * as authApi from "@/api/authApi";
 import { useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { User, Mail, Phone, Lock, Eye, EyeOff } from "lucide-react";
-import LeftPanel  from "@/components/auth/LeftPanel";
-import MobileHero from "@/components/auth/MobileHero";
-import AuthInput  from "@/components/ui/AuthInput";
-import AuthButton from "@/components/ui/AuthButton";
+import LeftPanel    from "@/components/auth/LeftPanel";
+import MobileHero   from "@/components/auth/MobileHero";
+import AuthInput    from "@/components/ui/AuthInput";
+import AuthButton   from "@/components/ui/AuthButton";
+import AuthFormCard from "@/components/auth/AuthFormCard";
 
 /* ── Validation ───────────────────────────────────────────────── */
 const registerSchema = z.object({
@@ -85,33 +86,29 @@ const RegisterPage = () => {
 
   /* ── Render ───────────────────────────────────────────────── */
   return (
-    /* AuthBackground is mounted in AuthLayout — not rendered here */
     <div className="w-full flex flex-col md:flex-row md:min-h-[100dvh]">
 
-      {/* ── Desktop branding panel (42%) ──────────────────────── */}
+      {/* Desktop branding panel (42%) */}
       <LeftPanel variant="register" />
 
-      {/* ── Mobile atmospheric strip ──────────────────────────── */}
+      {/* Mobile atmospheric strip */}
       <MobileHero />
 
-      {/* ── Form panel ────────────────────────────────────────── */}
+      {/* Form panel (58% on desktop, full on mobile) */}
       <div
-        className="flex-1 flex flex-col items-center justify-start md:justify-center px-6 pt-10 pb-10 md:py-0 md:min-h-[100dvh]"
+        className="flex-1 flex flex-col items-center justify-start md:justify-center px-5 xs:px-6 pt-8 pb-10 md:py-12 md:min-h-[100dvh]"
         style={{
-          background: "radial-gradient(ellipse 90% 50% at 50% 0%, rgba(76,29,149,0.11) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 80% 45% at 50% 0%, rgba(76,29,149,0.12) 0%, transparent 65%)",
         }}
       >
-        <div
-          className="w-full"
-          style={{ maxWidth: 380 }}
-          aria-label="Formulaire d'inscription"
-        >
-          {/* ── Page heading ────────────────────────────────── */}
-          <div className="ct-field-1" style={{ marginBottom: 28 }}>
+        <div className="w-full" style={{ maxWidth: 400 }}>
+
+          {/* Page heading — floats above the card */}
+          <div className="ct-field-1" style={{ marginBottom: 24 }}>
             <h1
               style={{
                 fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
-                fontSize:      "clamp(36px, 5vw, 48px)",
+                fontSize:      "clamp(34px, 5vw, 46px)",
                 fontWeight:    300,
                 letterSpacing: "0.02em",
                 color:         "#E5C76B",
@@ -127,7 +124,7 @@ const RegisterPage = () => {
                 fontSize:      13,
                 fontWeight:    400,
                 color:         "rgba(255,255,255,0.38)",
-                marginTop:     8,
+                marginTop:     7,
                 letterSpacing: "0.04em",
                 lineHeight:    1.5,
               }}
@@ -136,188 +133,192 @@ const RegisterPage = () => {
             </p>
           </div>
 
-          {/* ── Form ──────────────────────────────────────────── */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            autoComplete="off"
-            aria-busy={isLoading}
-            className="flex flex-col gap-4"
-          >
+          {/* ── UIverse spinning-border card ──────────────────── */}
+          <AuthFormCard>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              autoComplete="off"
+              aria-busy={isLoading}
+              aria-label="Formulaire d'inscription"
+              className="flex flex-col gap-4"
+            >
 
-            {/* Name */}
-            <div className="ct-field-2">
-              <AuthInput
-                id="name"
-                type="text"
-                label="Nom complet"
-                icon={<User size={16} />}
-                error={errors.name?.message}
-                autoComplete="name"
-                aria-describedby={errors.name ? "name-error" : undefined}
-                {...register("name")}
-              />
-            </div>
+              {/* Name */}
+              <div className="ct-field-2">
+                <AuthInput
+                  id="name"
+                  type="text"
+                  label="Nom complet"
+                  icon={<User size={16} />}
+                  error={errors.name?.message}
+                  autoComplete="name"
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                  {...register("name")}
+                />
+              </div>
 
-            {/* Email */}
-            <div className="ct-field-3">
-              <AuthInput
-                id="email"
-                type="email"
-                label="Adresse email"
-                icon={<Mail size={16} />}
-                error={errors.email?.message}
-                autoComplete="email"
-                aria-describedby={errors.email ? "email-error" : undefined}
-                {...register("email")}
-              />
-            </div>
+              {/* Email */}
+              <div className="ct-field-3">
+                <AuthInput
+                  id="email"
+                  type="email"
+                  label="Adresse email"
+                  icon={<Mail size={16} />}
+                  error={errors.email?.message}
+                  autoComplete="email"
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                  {...register("email")}
+                />
+              </div>
 
-            {/* Phone */}
-            <div className="ct-field-4">
-              <AuthInput
-                id="phone"
-                type="tel"
-                label="Téléphone / WhatsApp"
-                icon={<Phone size={16} />}
-                error={errors.phone?.message}
-                autoComplete="tel"
-                aria-describedby={errors.phone ? "phone-error" : undefined}
-                {...register("phone")}
-              />
-            </div>
+              {/* Phone */}
+              <div className="ct-field-4">
+                <AuthInput
+                  id="phone"
+                  type="tel"
+                  label="Téléphone / WhatsApp"
+                  icon={<Phone size={16} />}
+                  error={errors.phone?.message}
+                  autoComplete="tel"
+                  aria-describedby={errors.phone ? "phone-error" : undefined}
+                  {...register("phone")}
+                />
+              </div>
 
-            {/* Password + strength meter */}
-            <div className="ct-field-5">
-              <AuthInput
-                id="password"
-                type={showPassword ? "text" : "password"}
-                label="Mot de passe (min. 8 caractères)"
-                icon={<Lock size={16} />}
-                error={errors.password?.message}
-                autoComplete="new-password"
-                aria-describedby={errors.password ? "password-error" : undefined}
-                suffix={
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-                    style={{
-                      background:     "none",
-                      border:         "none",
-                      cursor:         "pointer",
-                      color:          "rgba(212,175,55,0.45)",
-                      padding:        "4px",
-                      display:        "flex",
-                      alignItems:     "center",
-                      minWidth:       44,
-                      minHeight:      44,
-                      justifyContent: "center",
-                      transition:     "color 160ms ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.85)";
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.45)";
-                    }}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                }
-                {...register("password")}
-              />
+              {/* Password + strength meter */}
+              <div className="ct-field-5">
+                <AuthInput
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  label="Mot de passe (min. 8 caractères)"
+                  icon={<Lock size={16} />}
+                  error={errors.password?.message}
+                  autoComplete="new-password"
+                  aria-describedby={errors.password ? "password-error" : undefined}
+                  suffix={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                      style={{
+                        background:     "none",
+                        border:         "none",
+                        cursor:         "pointer",
+                        color:          "rgba(212,175,55,0.45)",
+                        padding:        "4px",
+                        display:        "flex",
+                        alignItems:     "center",
+                        minWidth:       44,
+                        minHeight:      44,
+                        justifyContent: "center",
+                        transition:     "color 160ms ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.85)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.45)";
+                      }}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  }
+                  {...register("password")}
+                />
 
-              {/* 4-segment strength bar */}
-              {pwValue.length > 0 && (
-                <div className="mt-2 px-0.5" aria-live="polite">
-                  <div className="flex gap-1">
-                    {[25, 50, 75, 100].map((step) => (
-                      <div
-                        key={step}
-                        className="flex-1 h-0.5 rounded-full transition-all duration-300"
-                        style={{
-                          background: pwStrength >= step ? pwColor : "rgba(255,255,255,0.07)",
-                        }}
-                      />
-                    ))}
+                {/* 4-segment strength bar */}
+                {pwValue.length > 0 && (
+                  <div className="mt-2 px-0.5" aria-live="polite">
+                    <div className="flex gap-1">
+                      {[25, 50, 75, 100].map((step) => (
+                        <div
+                          key={step}
+                          className="flex-1 h-0.5 rounded-full transition-all duration-300"
+                          style={{
+                            background: pwStrength >= step ? pwColor : "rgba(255,255,255,0.07)",
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <p
+                      className="text-[11px] mt-1.5 font-medium"
+                      style={{
+                        color:         pwColor,
+                        fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      {pwLabel}
+                    </p>
                   </div>
-                  <p
-                    className="text-[11px] mt-1.5 font-medium"
-                    style={{
-                      color:         pwColor,
-                      fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
-                    {pwLabel}
-                  </p>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Submit */}
-            <div className="ct-field-6">
-              <AuthButton loading={isLoading}>
-                {isLoading ? "Création…" : "Créer mon compte"}
-              </AuthButton>
-            </div>
+              {/* Submit */}
+              <div className="ct-field-6">
+                <AuthButton loading={isLoading}>
+                  {isLoading ? "Création…" : "Créer mon compte"}
+                </AuthButton>
+              </div>
 
-            {/* Switch to sign-in */}
-            <p
-              className="text-center"
-              style={{
-                fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                fontSize:      13,
-                color:         "rgba(255,255,255,0.38)",
-                letterSpacing: "0.02em",
-              }}
-            >
-              Déjà un compte ?{" "}
-              <Link
-                to="/sign-in"
+              {/* Switch to sign-in */}
+              <p
+                className="text-center"
                 style={{
-                  color:          "#D4AF37",
-                  fontWeight:     500,
-                  textDecoration: "none",
-                  transition:     "color 160ms ease",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = "#E5C76B";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.color = "#D4AF37";
+                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                  fontSize:      13,
+                  color:         "rgba(255,255,255,0.38)",
+                  letterSpacing: "0.02em",
                 }}
               >
-                Se connecter
-              </Link>
-            </p>
+                Déjà un compte ?{" "}
+                <Link
+                  to="/sign-in"
+                  style={{
+                    color:          "#D4AF37",
+                    fontWeight:     500,
+                    textDecoration: "none",
+                    transition:     "color 160ms ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color = "#E5C76B";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color = "#D4AF37";
+                  }}
+                >
+                  Se connecter
+                </Link>
+              </p>
 
-            {/* Terms */}
-            <p
-              className="text-center"
-              style={{
-                fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                fontSize:      11,
-                color:         "rgba(255,255,255,0.22)",
-                lineHeight:    1.6,
-                letterSpacing: "0.02em",
-              }}
-            >
-              En créant un compte, vous acceptez nos{" "}
-              <span
-                style={{ color: "rgba(212,175,55,0.45)", cursor: "pointer" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLSpanElement).style.color = "rgba(212,175,55,0.75)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLSpanElement).style.color = "rgba(212,175,55,0.45)";
+              {/* Terms */}
+              <p
+                className="text-center"
+                style={{
+                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                  fontSize:      11,
+                  color:         "rgba(255,255,255,0.22)",
+                  lineHeight:    1.6,
+                  letterSpacing: "0.02em",
                 }}
               >
-                conditions d&apos;utilisation
-              </span>
-            </p>
+                En créant un compte, vous acceptez nos{" "}
+                <span
+                  style={{ color: "rgba(212,175,55,0.45)", cursor: "pointer" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLSpanElement).style.color = "rgba(212,175,55,0.75)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLSpanElement).style.color = "rgba(212,175,55,0.45)";
+                  }}
+                >
+                  conditions d&apos;utilisation
+                </span>
+              </p>
 
-          </form>
+            </form>
+          </AuthFormCard>
+
         </div>
       </div>
 
