@@ -225,4 +225,16 @@
   /* ── Typography ──────────────────────────────────────────── */
   --font-display:  'Syne', sans-serif;
   --font-body:     'DM Sans', sans-serif;
+
+  /* ── Luxury auth typography ──────────────────────────────── */
+  --font-luxury:   'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-ui:       'Jost', 'DM Sans', sans-serif;
+
+  /* ── Auth gold token shortcuts ───────────────────────────── */
+  --auth-gold:         #D4AF37;
+  --auth-gold-light:   #E5C76B;
+  --auth-gold-dim:     rgba(212, 175, 55, 0.18);
+  --auth-gold-focus:   rgba(212, 175, 55, 0.55);
+  --auth-gold-ring:    rgba(212, 175, 55, 0.10);
+  --auth-gold-glow:    0 0 0 3px rgba(212, 175, 55, 0.10), inset 0 1px 0 rgba(255,255,255,0.03);
 }

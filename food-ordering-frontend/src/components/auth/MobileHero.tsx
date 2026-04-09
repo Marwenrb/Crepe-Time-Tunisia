@@ -1,181 +1,149 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import BrandSignature from "@/components/shared/BrandSignature";
+import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { BRAND } from "@/config/brand";
 
-interface TypewriterState {
-  displayed: string[];
-  allDone: boolean;
-}
+/* ── Ambient orbs for mobile strip ───────────────────────────── */
+const MOBILE_ORBS = [
+  { w: 200, h: 200, x: "15%",  y: "50%", color: "rgba(91,33,182,0.30)",  dur: 18, delay: 0 },
+  { w: 160, h: 160, x: "82%", y: "45%",  color: "rgba(124,58,237,0.22)", dur: 22, delay: 4 },
+] as const;
 
-function useTypewriterLines(
-  lines: readonly string[],
-  charMs = 58,
-  lineGapMs = 260,
-  startDelayMs = 400,
-  reduced = false,
-): TypewriterState {
-  const [displayed, setDisplayed] = useState<string[]>(() =>
-    reduced ? [...lines] : lines.map(() => "")
-  );
-  const [allDone, setAllDone] = useState(reduced);
-
-  useEffect(() => {
-    if (reduced) return;
-
-    let alive = true;
-    let timerId: ReturnType<typeof setTimeout> | null = null;
-
-    const go = (lineIdx: number, charIdx: number) => {
-      if (!alive) return;
-
-      if (lineIdx >= lines.length) {
-        setAllDone(true);
-        return;
-      }
-
-      const line = lines[lineIdx];
-      const nextIdx = charIdx + 1;
-
-      setDisplayed((prev) => {
-        const next = [...prev];
-        next[lineIdx] = line.slice(0, nextIdx);
-        return next;
-      });
-
-      if (nextIdx >= line.length) {
-        const nextLine = lineIdx + 1;
-        if (nextLine < lines.length) {
-          timerId = setTimeout(() => go(nextLine, 0), lineGapMs);
-        } else {
-          timerId = setTimeout(() => {
-            if (alive) setAllDone(true);
-          }, 80);
-        }
-      } else {
-        timerId = setTimeout(() => go(lineIdx, nextIdx), charMs);
-      }
-    };
-
-    timerId = setTimeout(() => go(0, 0), startDelayMs);
-
-    return () => {
-      alive = false;
-      if (timerId !== null) clearTimeout(timerId);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return { displayed, allDone };
-}
-
-export interface MobileHeroProps {
-  lines: string[];
-  subtitle: string;
-}
-
-const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
-  const prefersReduced = useReducedMotion() ?? false;
-
-  const { displayed, allDone } = useTypewriterLines(
-    lines,
-    58,
-    260,
-    400,
-    prefersReduced,
-  );
-
-  const activeIdx = allDone
-    ? -1
-    : displayed.findIndex((displayedLine, index) => displayedLine.length < lines[index].length);
-
-  const headlineMinHeight = 2 * Math.ceil(32 * 1.2) + 4;
+/**
+ * MobileHero v5.0 — Compact atmospheric strip (mobile only).
+ *
+ * 120px tall, crepe-dark background, 2 drifting orbs, centered
+ * logo + brand name. No typewriter — the form panel owns the page title.
+ * Hidden on md+ (LeftPanel takes over on desktop).
+ */
+const MobileHero = () => {
+  const reduced = useReducedMotion() ?? false;
+  const [imgSrc, setImgSrc] = useState<string>(BRAND.logo);
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="flex justify-center mb-6">
-        <BrandSignature
-          size="sm"
-          align="center"
-          surface="glass"
-          loading="eager"
-        />
-      </div>
-
-      <div
-        style={{ marginBottom: 8, minHeight: headlineMinHeight }}
-        aria-live="polite"
-        aria-label={lines.join(" ")}
-      >
-        {lines.map((line, index) => (
-          <div
-            key={index}
+    <div
+      className="md:hidden"
+      style={{
+        position:       "relative",
+        height:         120,
+        background:     "#0F0A1F",
+        overflow:       "hidden",
+        display:        "flex",
+        alignItems:     "center",
+        justifyContent: "center",
+        flexShrink:     0,
+        contain:        "layout style paint",
+      }}
+      aria-hidden="true"
+    >
+      {/* Ambient orbs */}
+      {!reduced &&
+        MOBILE_ORBS.map((orb, i) => (
+          <motion.div
+            key={i}
             style={{
-              display: "flex",
-              alignItems: "baseline",
-              minHeight: Math.ceil(32 * 1.2),
+              position:      "absolute",
+              width:         orb.w,
+              height:        orb.h,
+              left:          orb.x,
+              top:           orb.y,
+              transform:     "translate(-50%, -50%)",
+              background:    `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
+              borderRadius:  "50%",
+              willChange:    "transform, opacity",
+              pointerEvents: "none",
             }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-display, 'Syne', sans-serif)",
-                fontSize: 32,
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.2,
-                display: "inline",
-                ...(index === 1
-                  ? {
-                      background: "linear-gradient(135deg, #FAFAFA 0%, #FCD34D 65%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                    }
-                  : { color: "#FAFAFA" }),
-              }}
-            >
-              {displayed[index]}
-            </span>
-
-            {!prefersReduced && activeIdx === index && (
-              <motion.span
-                aria-hidden="true"
-                style={{
-                  display: "inline-block",
-                  width: 2.5,
-                  height: "0.8em",
-                  background: "#8B5CF6",
-                  borderRadius: 1,
-                  marginLeft: 2,
-                  verticalAlign: "baseline",
-                  willChange: "opacity",
-                }}
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 0.72, repeat: Infinity, ease: "easeInOut" }}
-              />
-            )}
-          </div>
+            animate={{ scale: [1, 1.15, 1], opacity: [0.55, 1, 0.55] }}
+            transition={{
+              duration: orb.dur,
+              repeat:   Infinity,
+              ease:     "easeInOut",
+              delay:    orb.delay,
+            }}
+          />
         ))}
-      </div>
 
-      <AnimatePresence>
-        {allDone && (
-          <motion.p
-            key="subtitle"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: "easeOut", delay: 0.12 }}
+      {/* Gold micro-dot grid */}
+      <div
+        aria-hidden="true"
+        style={{
+          position:        "absolute",
+          inset:           0,
+          backgroundImage: "radial-gradient(rgba(212,175,55,0.30) 1px, transparent 1px)",
+          backgroundSize:  "22px 22px",
+          opacity:         0.05,
+          pointerEvents:   "none",
+        }}
+      />
+
+      {/* Logo + brand name + tagline — centered */}
+      <div
+        style={{
+          position:       "relative",
+          zIndex:         2,
+          display:        "flex",
+          alignItems:     "center",
+          gap:            12,
+        }}
+      >
+        <img
+          src={imgSrc}
+          alt={BRAND.name}
+          width={44}
+          height={44}
+          loading="eager"
+          decoding="async"
+          onError={() => setImgSrc("/logo.png")}
+          style={{
+            width:        44,
+            height:       44,
+            borderRadius: 11,
+            objectFit:    "cover",
+            flexShrink:   0,
+            filter:       "drop-shadow(0 4px 14px rgba(212,175,55,0.45))",
+          }}
+        />
+
+        <div>
+          <div
             style={{
-              fontFamily: "var(--font-body, 'DM Sans', sans-serif)",
-              fontSize: 14,
-              color: "#6B6B8A",
-              lineHeight: 1.65,
-              marginTop: 10,
+              fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
+              fontSize:      22,
+              fontWeight:    400,
+              letterSpacing: "0.07em",
+              color:         "#E5C76B",
+              lineHeight:    1.1,
             }}
           >
-            {subtitle}
-          </motion.p>
-        )}
-      </AnimatePresence>
+            {BRAND.name}
+          </div>
+          <div
+            style={{
+              fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+              fontSize:      10,
+              fontStyle:     "italic",
+              letterSpacing: "0.16em",
+              color:         "rgba(212,175,55,0.55)",
+              marginTop:     3,
+              lineHeight:    1,
+            }}
+          >
+            {BRAND.tagline}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom separator */}
+      <div
+        aria-hidden="true"
+        style={{
+          position:   "absolute",
+          bottom:     0,
+          left:       "15%",
+          right:      "15%",
+          height:     1,
+          background: "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 25%, rgba(212,175,55,0.55) 50%, rgba(212,175,55,0.35) 75%, transparent 100%)",
+        }}
+      />
     </div>
   );
 };

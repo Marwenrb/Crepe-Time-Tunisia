@@ -1,6 +1,6 @@
-/* ─── AuthInput.module.css ────────────────────────────────────── */
-/* Floating label input — UIverse "clever-swan" pattern adapted.  */
-/* REQUIRES placeholder=" " (single space) on the <input> element */
+/* ─── AuthInput.module.css ─── Gold luxury edition ───────────────── */
+/* Floating label input — gold accent, artisan dark surface.         */
+/* REQUIRES placeholder=" " (single space) on the <input> element.  */
 
 .fieldWrapper {
   position: relative;
@@ -15,81 +15,84 @@
 .fieldInput {
   width: 100%;
   padding: 22px 16px 10px 44px;
-  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-family: 'Jost', 'DM Sans', -apple-system, sans-serif;
   font-size: 15px;
+  font-weight: 400;
   color: #FAFAFA;
-  background: rgba(26, 26, 56, 0.5);
-  border: 1.5px solid rgba(139, 92, 246, 0.08);
-  border-radius: 12px;
+  background: rgba(26, 18, 51, 0.55);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-radius: 10px;
   outline: none;
   transition:
-    border-color 200ms ease,
-    box-shadow   200ms ease,
-    background   200ms ease;
-  caret-color: #8B5CF6;
+    border-color 220ms ease,
+    box-shadow   220ms ease,
+    background   220ms ease;
+  caret-color: #D4AF37;
   -webkit-text-fill-color: #FAFAFA;
   appearance: none;
   -webkit-appearance: none;
 }
 
-/* Chromium autofill white-flash override */
+/* Chromium autofill override — preserve dark bg */
 .fieldInput:-webkit-autofill,
 .fieldInput:-webkit-autofill:hover,
 .fieldInput:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #12122A inset;
+  -webkit-box-shadow: 0 0 0 1000px #12102A inset;
   -webkit-text-fill-color: #FAFAFA;
-  caret-color: #8B5CF6;
+  caret-color: #D4AF37;
   transition: background-color 5000s ease;
 }
 
-/* Floating label — resting position (inside the input) */
+/* ── Floating label — resting state ─────────────────────────────── */
 .fieldLabel {
   position: absolute;
   left: 44px;
   top: 50%;
   transform: translateY(-50%);
-  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-family: 'Jost', 'DM Sans', -apple-system, sans-serif;
   font-size: 14px;
-  color: #6B6B8A;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.38);
   pointer-events: none;
   transition:
-    top        180ms cubic-bezier(0.4, 0, 0.2, 1),
-    transform  180ms cubic-bezier(0.4, 0, 0.2, 1),
-    font-size  180ms cubic-bezier(0.4, 0, 0.2, 1),
-    color      180ms cubic-bezier(0.4, 0, 0.2, 1);
+    top        200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform  200ms cubic-bezier(0.4, 0, 0.2, 1),
+    font-size  200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color      200ms cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
   white-space: nowrap;
   background: transparent;
   transform-origin: left center;
   line-height: 1;
+  letter-spacing: 0.02em;
 }
 
-/* Label floats up when focused OR input has a value */
+/* ── Label floats up on focus or filled ──────────────────────────── */
 .fieldInput:focus ~ .fieldLabel,
 .fieldInput:not(:placeholder-shown) ~ .fieldLabel {
-  top: 12px;
-  transform: translateY(0) scale(0.78);
+  top: 11px;
+  transform: translateY(0) scale(0.76);
   font-size: 11px;
-  color: #8B5CF6;
-  letter-spacing: 0.04em;
+  color: rgba(212, 175, 55, 0.85);
+  letter-spacing: 0.08em;
 }
 
-/* Focus ring */
+/* ── Focus ring: gold glow ───────────────────────────────────────── */
 .fieldInput:focus {
-  border-color: rgba(139, 92, 246, 0.55);
-  background: rgba(91, 33, 182, 0.06);
+  border-color: rgba(212, 175, 55, 0.55);
+  background: rgba(30, 22, 58, 0.6);
   box-shadow:
-    0 0 0 3px rgba(124, 58, 237, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 0 0 3px rgba(212, 175, 55, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-/* Prefix icon */
+/* ── Prefix icon ─────────────────────────────────────────────────── */
 .fieldIcon {
   position: absolute;
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #6B6B8A;
+  color: rgba(212, 175, 55, 0.45);
   transition: color 200ms ease;
   pointer-events: none;
   z-index: 2;
@@ -98,31 +101,29 @@
 }
 
 .fieldInner:focus-within .fieldIcon {
-  color: #8B5CF6;
+  color: rgba(212, 175, 55, 0.85);
 }
 
-/* Error state */
+/* ── Error state ─────────────────────────────────────────────────── */
 .fieldInput[data-error='true'] {
   border-color: #F43F5E;
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.10);
 }
-
 .fieldInput[data-error='true']:focus {
   border-color: #F43F5E;
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.18);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.16);
 }
-
 .fieldInput[data-error='true'] ~ .fieldLabel {
   color: #F43F5E;
 }
 
-/* Valid state */
+/* ── Valid state ─────────────────────────────────────────────────── */
 .fieldInput[data-valid='true'] {
-  border-color: rgba(16, 185, 129, 0.5);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.10);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
 }
 
-/* Suffix slot (password toggle, check icon) */
+/* ── Suffix slot (password toggle) ──────────────────────────────── */
 .fieldSuffix {
   position: absolute;
   right: 12px;
@@ -134,20 +135,28 @@
   gap: 4px;
 }
 
-/* Input with suffix needs extra right padding */
 .fieldInput.hasSuffix {
   padding-right: 44px;
 }
 
-/* Error message line */
+/* ── Error message ───────────────────────────────────────────────── */
 .fieldError {
   margin-top: 6px;
   padding-left: 4px;
-  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-family: 'Jost', 'DM Sans', -apple-system, sans-serif;
   font-size: 12px;
   color: #F43F5E;
   display: flex;
   align-items: center;
   gap: 4px;
   line-height: 1.3;
+}
+
+/* ── prefers-reduced-motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .fieldInput,
+  .fieldLabel,
+  .fieldIcon {
+    transition-duration: 0.01ms !important;
+  }
 }
