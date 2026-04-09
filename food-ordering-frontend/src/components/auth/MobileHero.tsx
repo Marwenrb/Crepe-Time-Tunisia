@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { BRAND } from "@/config/brand";
 
 /* ── Typing-effect hook ──────────────────────────────────────── */
 
@@ -13,12 +14,6 @@ interface TypewriterState {
  *
  * Uses a recursive argument-passing pattern (not mutable closure vars)
  * to eliminate off-by-one bugs and React StrictMode double-invoke issues.
- *
- * @param lines        - Text lines to type in order
- * @param charMs       - Milliseconds per character (default 58)
- * @param lineGapMs    - Pause between completing one line and starting the next (default 260)
- * @param startDelayMs - Initial delay before first character appears (default 400)
- * @param reduced      - Prefers-reduced-motion: skip typing, show all text immediately
  */
 function useTypewriterLines(
   lines:        readonly string[],
@@ -35,30 +30,20 @@ function useTypewriterLines(
   useEffect(() => {
     if (reduced) return;
 
-    /*
-     * `alive` flag + stored timer ID ensure we can cancel everything on
-     * cleanup (e.g. React 18 StrictMode double-invoke or component unmount).
-     */
     let alive     = true;
     let timerId: ReturnType<typeof setTimeout> | null = null;
 
-    /**
-     * Recursive ticker — arguments are immutable per call, so there is
-     * zero shared mutable state that could cause off-by-one bugs.
-     */
     const go = (lineIdx: number, charIdx: number) => {
       if (!alive) return;
 
-      /* All lines finished */
       if (lineIdx >= lines.length) {
         setAllDone(true);
         return;
       }
 
       const line    = lines[lineIdx];
-      const nextIdx = charIdx + 1; // characters shown after this tick
+      const nextIdx = charIdx + 1;
 
-      /* Update displayed text for current line */
       setDisplayed((prev) => {
         const next = [...prev];
         next[lineIdx] = line.slice(0, nextIdx);
@@ -66,23 +51,19 @@ function useTypewriterLines(
       });
 
       if (nextIdx >= line.length) {
-        /* Current line complete — move to next or finish */
         const nextLine = lineIdx + 1;
         if (nextLine < lines.length) {
           timerId = setTimeout(() => go(nextLine, 0), lineGapMs);
         } else {
-          /* All lines done — set state after the final display update settles */
           timerId = setTimeout(() => {
             if (alive) setAllDone(true);
           }, 80);
         }
       } else {
-        /* More chars in current line */
         timerId = setTimeout(() => go(lineIdx, nextIdx), charMs);
       }
     };
 
-    /* Initial start delay */
     timerId = setTimeout(() => go(0, 0), startDelayMs);
 
     return () => {
@@ -90,7 +71,7 @@ function useTypewriterLines(
       if (timerId !== null) clearTimeout(timerId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally empty — runs once on mount, lines captured by ref semantics
+  }, []); // intentionally empty
 
   return { displayed, allDone };
 }
@@ -98,24 +79,10 @@ function useTypewriterLines(
 /* ── Component ───────────────────────────────────────────────── */
 
 export interface MobileHeroProps {
-  /** Lines to type sequentially — 2 lines recommended for mobile layout */
   lines:    string[];
-  /** Subtitle that fades in after all lines finish typing */
   subtitle: string;
 }
 
-/**
- * MobileHero — mobile-only welcome section with a typewriter effect.
- *
- * Always wrapped in `md:hidden` by the caller. Replaces LeftPanel which
- * is hidden on mobile. The subtitle fades in only AFTER typing completes —
- * guaranteeing zero visual overlap at any frame.
- *
- * Line 0: white (#FAFAFA)
- * Line 1: gold gradient (linear-gradient 135deg, #FAFAFA → #FCD34D)
- * Cursor: violet (#8B5CF6), opacity blink via Framer Motion (GPU only)
- * Subtitle: DM Sans 14 px, color text-500 (#6B6B8A), fade-up on appear
- */
 const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
   const prefersReduced = useReducedMotion() ?? false;
 
@@ -127,16 +94,42 @@ const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
     prefersReduced,
   );
 
-  /* Index of the currently-typing line (-1 when all done) */
   const activeIdx = allDone
     ? -1
     : displayed.findIndex((d, i) => d.length < lines[i].length);
 
-  /* Explicit pixel height = 2 lines × (32 px fontSize × 1.2 lineHeight) */
   const headlineMinHeight = 2 * Math.ceil(32 * 1.2) + 4; // ≈ 80 px
 
   return (
     <div className="w-full max-w-sm">
+
+      {/* Compact brand mark — logo only, no text (brand text lives in Footer) */}
+      <div className="flex justify-center mb-7">
+        <div
+          style={{
+            width:          44,
+            height:         44,
+            borderRadius:   13,
+            background:     "#FFFFFF",
+            display:        "flex",
+            alignItems:     "center",
+            justifyContent: "center",
+            overflow:       "hidden",
+            boxShadow:      "0 0 0 1.5px rgba(139,92,246,0.38), 0 0 20px rgba(124,58,237,0.22)",
+          }}
+        >
+          <img
+            src={BRAND.logo}
+            alt={BRAND.name}
+            width={38}
+            height={38}
+            style={{ objectFit: "contain", objectPosition: "center" }}
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </div>
+
       {/* Typed headline — stable height prevents layout shift */}
       <div
         style={{ marginBottom: 8, minHeight: headlineMinHeight }}
@@ -149,7 +142,7 @@ const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
             style={{
               display:    "flex",
               alignItems: "baseline",
-              minHeight:  Math.ceil(32 * 1.2), // per-line stable height
+              minHeight:  Math.ceil(32 * 1.2),
             }}
           >
             <span
@@ -160,7 +153,6 @@ const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
                 letterSpacing: "-0.03em",
                 lineHeight:    1.2,
                 display:       "inline",
-                /* Gold gradient on second line once it starts appearing */
                 ...(i === 1
                   ? {
                       background:           "linear-gradient(135deg, #FAFAFA 0%, #FCD34D 65%)",
@@ -174,7 +166,6 @@ const MobileHero = ({ lines, subtitle }: MobileHeroProps) => {
               {displayed[i]}
             </span>
 
-            {/* Blinking cursor — only on the active (currently-typing) line */}
             {!prefersReduced && activeIdx === i && (
               <motion.span
                 aria-hidden="true"

@@ -1,6 +1,7 @@
-/* ─── PageLoader.module.css v3.1 ─────────────────────────────── */
-/* Triple-arc spinner with Flame logo center + glow halo.         */
+/* ─── PageLoader.module.css v4.0 — Aurora Dial ───────────────────────────── */
+/* Next-level premium loader: scan beam · triple arcs · sonar ring · shimmer  */
 
+/* ── Root overlay ──────────────────────────────────────────────────────────── */
 .root {
   position:        fixed;
   inset:           0;
@@ -10,79 +11,143 @@
   flex-direction:  column;
   align-items:     center;
   justify-content: center;
-  gap:             36px;
-  animation:       loaderEnter 0.35s ease both;
+  gap:             28px;
+  animation:       loaderEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow:        hidden;
 }
 
-@keyframes loaderEnter {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-/* ── Arc container ──────────────────────────────────────────── */
-.arcContainer {
-  position: relative;
-  width:    104px;
-  height:   104px;
-}
-
-/* Breathing glow halo behind all arcs */
-.arcContainer::before {
+/* Background nebula — very subtle, static */
+.root::before {
   content:       '';
   position:      absolute;
-  inset:         -20px;
+  width:         480px;
+  height:        480px;
+  top:           50%;
+  left:          50%;
+  transform:     translate(-50%, -60%);
   border-radius: 50%;
-  background:    radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%);
-  animation:     haloBreath 3.2s ease-in-out infinite;
+  background:    radial-gradient(
+    circle,
+    rgba(91, 33, 182, 0.14) 0%,
+    rgba(91, 33, 182, 0.05) 40%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
-@keyframes haloBreath {
-  0%, 100% { opacity: 0.5; transform: scale(1);    }
+.root::after {
+  content:       '';
+  position:      absolute;
+  width:         320px;
+  height:        320px;
+  bottom:        30%;
+  right:         20%;
+  border-radius: 50%;
+  background:   radial-gradient(
+    circle,
+    rgba(245, 158, 11, 0.07) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+@keyframes loaderEnter {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* ── Arc container ─────────────────────────────────────────────────────────── */
+.arcContainer {
+  position: relative;
+  width:    148px;
+  height:   148px;
+  z-index:  1;
+}
+
+/* Breathing glow corona — behind all arcs */
+.arcContainer::before {
+  content:        '';
+  position:       absolute;
+  inset:          -32px;
+  border-radius:  50%;
+  background:     radial-gradient(
+    circle,
+    rgba(124, 58, 237, 0.16) 0%,
+    rgba(124, 58, 237, 0.06) 45%,
+    transparent 68%
+  );
+  animation:      coronaBreath 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes coronaBreath {
+  0%, 100% { opacity: 0.6; transform: scale(1);    }
   50%       { opacity: 1;   transform: scale(1.12); }
 }
 
-/* Outer arc — violet, clockwise */
-.arcOuter {
-  position:        absolute;
-  inset:           0;
-  border-radius:   50%;
-  border:          2.5px solid transparent;
-  border-top-color:   #7C3AED;
-  border-right-color: rgba(124,58,237,0.35);
-  animation:       arcSpin 1.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  will-change:     transform;
+/* ── Scan beam (radar sweep) ───────────────────────────────────────────────── */
+.scanBeam {
+  position:      absolute;
+  inset:         -6px;
+  border-radius: 50%;
+  background:    conic-gradient(
+    from 0deg,
+    transparent       0deg,
+    rgba(139,92,246,0.14) 25deg,
+    rgba(139,92,246,0.08) 55deg,
+    transparent       90deg
+  );
+  animation:     scanRotate 3.2s linear infinite;
+  will-change:   transform;
 }
 
-/* Middle arc — gold, counter-clockwise */
-.arcMid {
-  position:           absolute;
-  inset:              14px;
-  border-radius:      50%;
-  border:             2px solid transparent;
-  border-bottom-color: #F59E0B;
-  border-left-color:   rgba(245,158,11,0.3);
-  animation:          arcSpin 1.0s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
-  will-change:        transform;
-}
-
-/* Inner arc — white-dim, clockwise */
-.arcInner {
-  position:        absolute;
-  inset:           30px;
-  border-radius:   50%;
-  border:          1.5px solid transparent;
-  border-top-color: rgba(255,255,255,0.35);
-  animation:       arcSpin 0.75s linear infinite;
-  will-change:     transform;
-}
-
-@keyframes arcSpin {
-  from { transform: rotate(0deg); }
+@keyframes scanRotate {
+  from { transform: rotate(0deg);   }
   to   { transform: rotate(360deg); }
 }
 
-/* ── Logo centered inside arcs ──────────────────────────────── */
+/* ── Outer arc — violet, clockwise ────────────────────────────────────────── */
+.arcOuter {
+  position:           absolute;
+  inset:              0;
+  border-radius:      50%;
+  border:             3px solid transparent;
+  border-top-color:   #7C3AED;
+  border-right-color: rgba(124, 58, 237, 0.25);
+  animation:          arcSpin 1.6s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  will-change:        transform;
+}
+
+/* ── Mid arc — gold, counter-clockwise ───────────────────────────────────── */
+.arcMid {
+  position:            absolute;
+  inset:               18px;
+  border-radius:       50%;
+  border:              2.5px solid transparent;
+  border-bottom-color: #F59E0B;
+  border-left-color:   rgba(245, 158, 11, 0.22);
+  animation:           arcSpin 1.0s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
+  will-change:         transform;
+}
+
+/* ── Inner arc — white-dim, clockwise ─────────────────────────────────────── */
+.arcInner {
+  position:           absolute;
+  inset:              38px;
+  border-radius:      50%;
+  border:             2px solid transparent;
+  border-top-color:   rgba(255, 255, 255, 0.28);
+  border-right-color: rgba(255, 255, 255, 0.07);
+  animation:          arcSpin 0.68s linear infinite;
+  will-change:        transform;
+}
+
+@keyframes arcSpin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Logo + sonar center ───────────────────────────────────────────────────── */
 .logoCenter {
   position:        absolute;
   inset:           0;
@@ -92,60 +157,102 @@
   z-index:         2;
 }
 
+.logoWrap {
+  position:        relative;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+/* Sonar ring — expands outward from medallion */
+.sonarRing {
+  position:      absolute;
+  inset:         -6px;
+  border-radius: 20px;
+  border:        1.5px solid rgba(139, 92, 246, 0.55);
+  animation:     sonarPulse 2.6s ease-out infinite;
+  will-change:   transform, opacity;
+  pointer-events: none;
+}
+
+@keyframes sonarPulse {
+  0%   { transform: scale(1);   opacity: 0.75; }
+  100% { transform: scale(1.9); opacity: 0;    }
+}
+
+/* Offset second sonar ring */
+.sonarRing2 {
+  position:      absolute;
+  inset:         -6px;
+  border-radius: 20px;
+  border:        1px solid rgba(245, 158, 11, 0.35);
+  animation:     sonarPulse 2.6s ease-out 1.3s infinite;
+  will-change:   transform, opacity;
+  pointer-events: none;
+}
+
 .logoMedallion {
-  width:           44px;
-  height:          44px;
-  border-radius:   13px;
+  width:           52px;
+  height:          52px;
+  border-radius:   15px;
   background:      #FFFFFF;
   display:         flex;
   align-items:     center;
   justify-content: center;
-  box-shadow:
-    0 0 0 1.5px rgba(139,92,246,0.45),
-    0 0 28px rgba(124,58,237,0.40),
-    0 4px 16px rgba(0,0,0,0.50);
-  animation:       logoPulse 2.6s ease-in-out infinite;
-  will-change:     transform;
-  position:        relative;
   overflow:        hidden;
+  box-shadow:
+    0 0 0 1.5px rgba(139,92,246,0.5),
+    0 0 32px rgba(124,58,237,0.5),
+    0 6px 20px rgba(0,0,0,0.55);
+  animation:       logoPulse 2.8s ease-in-out infinite;
+  will-change:     transform;
 }
-
 
 @keyframes logoPulse {
   0%, 100% { transform: scale(1);    }
-  50%       { transform: scale(1.08); }
+  50%       { transform: scale(1.07); }
 }
 
-/* ── Brand text ──────────────────────────────────────────────── */
+/* ── Brand strip ───────────────────────────────────────────────────────────── */
 .brand {
   display:        flex;
   flex-direction: column;
   align-items:    center;
   gap:            6px;
+  z-index:        1;
 }
 
 .brandName {
-  font-family:   'Syne', -apple-system, sans-serif;
-  font-size:     24px;
-  font-weight:   800;
+  font-family:    'Syne', -apple-system, sans-serif;
+  font-size:      22px;
+  font-weight:    800;
   letter-spacing: -0.03em;
-  line-height:   1;
-  background:    linear-gradient(135deg, #FFFFFF 0%, #FCD34D 48%, #F8FAFC 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height:    1;
+  background:     linear-gradient(90deg, #FFFFFF 0%, #FCD34D 30%, #F8FAFC 55%, #FCD34D 80%, #FFFFFF 100%);
+  background-size:             250% auto;
+  -webkit-background-clip:     text;
+  -webkit-text-fill-color:     transparent;
+  background-clip:             text;
+  animation:                   shimmerBrand 3.8s linear infinite;
+  will-change:                 background-position;
 }
 
-.status {
-  font-family:   'DM Sans', -apple-system, sans-serif;
-  font-size:     12px;
-  color:         #6B6B8A;
-  letter-spacing: 0.06em;
+@keyframes shimmerBrand {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 250% center; }
 }
 
-/* Bouncing loader dots */
+.subtitle {
+  font-family:    'DM Sans', -apple-system, sans-serif;
+  font-size:      11px;
+  color:          #3A3A55;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Animated dots ─────────────────────────────────────────────────────────── */
 .dots {
-  display:    inline-flex;
+  display:    flex;
   gap:        5px;
   margin-top: 2px;
 }
@@ -154,26 +261,30 @@
   width:         4px;
   height:        4px;
   border-radius: 50%;
-  background:    #3A3A55;
-  animation:     dotBounce 1.5s ease-in-out infinite;
-  will-change:   transform, opacity;
+  background:    #2A2A48;
+  animation:     dotPulse 1.6s ease-in-out infinite;
+  will-change:   transform, opacity, background-color;
 }
 
-.dot:nth-child(2) { animation-delay: 0.18s; }
-.dot:nth-child(3) { animation-delay: 0.36s; }
+.dot:nth-child(2) { animation-delay: 0.22s; }
+.dot:nth-child(3) { animation-delay: 0.44s; }
 
-@keyframes dotBounce {
-  0%, 80%, 100% { transform: scale(1);    opacity: 0.35; background: #3A3A55; }
-  40%            { transform: scale(1.5); opacity: 1;    background: #8B5CF6; }
+@keyframes dotPulse {
+  0%, 70%, 100% { transform: scale(1);    opacity: 0.25; background: #2A2A48; }
+  35%            { transform: scale(1.55); opacity: 1;    background: #8B5CF6; }
 }
 
-/* Reduced motion — everything static */
+/* ── Reduce motion ─────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .root           { animation: none; }
+  .root               { animation: none; }
+  .scanBeam           { animation: none; }
   .arcOuter,
   .arcMid,
-  .arcInner       { animation: none; }
+  .arcInner           { animation: none; }
   .arcContainer::before { animation: none; }
-  .logoMedallion  { animation: none; }
-  .dot            { animation: none; opacity: 0.5; }
+  .sonarRing,
+  .sonarRing2         { animation: none; opacity: 0.3; }
+  .logoMedallion      { animation: none; }
+  .brandName          { animation: none; background-position: 0% center; }
+  .dot                { animation: none; opacity: 0.4; }
 }

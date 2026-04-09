@@ -86,16 +86,16 @@ const RegisterPage = () => {
 
   return (
     /* AuthBackground is mounted in AuthLayout — not rendered here */
-    <div className="w-full flex min-h-[100dvh]">
+    <div className="w-full flex flex-col md:flex-row md:min-h-[100dvh]">
 
       {/* Desktop left branding panel */}
       <LeftPanel variant="register" />
 
-      {/* Form panel — start-aligned on mobile so 4-field form scrolls naturally */}
-      <div className="flex flex-col items-center justify-start md:justify-center w-full md:w-1/2 min-h-[100dvh] px-5 pt-7 pb-6">
+      {/* Form panel — natural height on mobile, full-height centered on desktop */}
+      <div className="flex flex-col items-center justify-start md:justify-center w-full md:w-1/2 md:min-h-[100dvh] px-5 pt-10 pb-10 md:py-0">
 
         {/* Mobile hero (typing effect) — hidden on desktop */}
-        <div className="md:hidden w-full max-w-sm mb-5">
+        <div className="md:hidden w-full max-w-[360px] mb-6">
           <MobileHero
             lines={["Ta première", "crêpe t'attend."]}
             subtitle="Rejoins la famille Crêpe Time en quelques secondes."
@@ -103,7 +103,7 @@ const RegisterPage = () => {
         </div>
 
         {/* Glow-border form card */}
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-[360px]">
           <GlowCard>
             <form
               onSubmit={handleSubmit(onSubmit)}
@@ -283,8 +283,6 @@ const RegisterPage = () => {
           </GlowCard>
         </div>
 
-        {/* Safe-area bottom padding */}
-        <div style={{ paddingBottom: "max(16px, env(safe-area-inset-bottom))" }} />
       </div>
     </div>
   );
