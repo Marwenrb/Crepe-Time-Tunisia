@@ -1,65 +1,95 @@
+import { useState } from "react";
 import { BRAND } from "@/config/brand";
+import BrandSignature from "@/components/shared/BrandSignature";
 import styles from "./PageLoader.module.css";
 
-/**
- * PageLoader v4.0 — Aurora Dial
- *
- * Next-level premium loader matching Crêpe Time's Liquid Dark aesthetic.
- *
- * Composition:
- *   Scan beam → triple arcs (violet CW · gold CCW · white CW)
- *   → dual sonar rings → white logo medallion → shimmer brand text
- *
- * All animation is CSS-only (no Framer Motion) — optimal performance.
- * GPU-composited: transform + opacity exclusively.
- */
-const PageLoader = () => (
-  <div className={styles.root} role="status" aria-label="Chargement…">
+const FALLBACK_LOGO = "/logo.png";
 
-    {/* ── Arc system + logo ── */}
-    <div className={styles.arcContainer}>
+const EXPERIENCE_CHIPS = [
+  "Freshly folded",
+  "Nabeul delivery",
+  "Sweet ritual",
+] as const;
 
-      {/* Radar sweep beam (behind all arcs) */}
-      <div className={styles.scanBeam} aria-hidden="true" />
+const PageLoader = () => {
+  const [src, setSrc] = useState<string>(BRAND.logo);
+  const [showFallback, setShowFallback] = useState(false);
 
-      {/* Triple concentric arcs */}
-      <div className={styles.arcOuter} aria-hidden="true" />
-      <div className={styles.arcMid}   aria-hidden="true" />
-      <div className={styles.arcInner} aria-hidden="true" />
+  return (
+    <div
+      className={styles.root}
+      role="status"
+      aria-live="polite"
+      aria-label={`Chargement de ${BRAND.name}`}
+    >
+      <div className={styles.stage}>
+        <span className={styles.badge}>Crafting the next bite</span>
 
-      {/* Logo + dual sonar rings */}
-      <div className={styles.logoCenter}>
-        <div className={styles.logoWrap}>
-          <span className={styles.sonarRing}  aria-hidden="true" />
-          <span className={styles.sonarRing2} aria-hidden="true" />
-          <div className={styles.logoMedallion}>
-            <img
-              src={BRAND.logo}
-              alt={BRAND.name}
-              width={40}
-              height={40}
-              style={{ objectFit: "contain", objectPosition: "center" }}
-              loading="eager"
-              decoding="async"
-            />
+        <div className={styles.visual} aria-hidden="true">
+          <div className={styles.visualGlow} />
+          <div className={`${styles.orbit} ${styles.orbitOuter}`}>
+            <span className={`${styles.spark} ${styles.sparkOne}`} />
+            <span className={`${styles.spark} ${styles.sparkTwo}`} />
+          </div>
+          <div className={`${styles.orbit} ${styles.orbitMid}`} />
+          <div className={`${styles.orbit} ${styles.orbitInner}`}>
+            <span className={`${styles.spark} ${styles.sparkThree}`} />
+          </div>
+
+          <div className={styles.logoDock}>
+            <div className={styles.logoShell}>
+              {!showFallback && (
+                <img
+                  src={src}
+                  alt={BRAND.name}
+                  width={96}
+                  height={96}
+                  className={styles.logoImage}
+                  loading="eager"
+                  decoding="async"
+                  onError={() => {
+                    if (src !== FALLBACK_LOGO) {
+                      setSrc(FALLBACK_LOGO);
+                      return;
+                    }
+
+                    setShowFallback(true);
+                  }}
+                />
+              )}
+
+              {showFallback && <span className={styles.logoFallback}>CT</span>}
+            </div>
           </div>
         </div>
+
+        <div className={styles.brandBlock}>
+          <BrandSignature
+            size="md"
+            align="center"
+            surface="glass"
+            interactive={false}
+          />
+        </div>
+
+        <p className={styles.statusText}>
+          Preparation de votre experience gourmande, avec une arrivee qui doit deja donner faim.
+        </p>
+
+        <div className={styles.progressTrack} aria-hidden="true">
+          <span className={styles.progressLine} />
+        </div>
+
+        <div className={styles.chips} aria-hidden="true">
+          {EXPERIENCE_CHIPS.map((chip) => (
+            <span key={chip} className={styles.chip}>
+              {chip}
+            </span>
+          ))}
+        </div>
       </div>
-
     </div>
-
-    {/* ── Brand strip ── */}
-    <div className={styles.brand}>
-      <span className={styles.brandName}>Cr&#234;pe Time</span>
-      <span className={styles.subtitle}>Nabeul · Tunisia</span>
-      <div className={styles.dots} aria-hidden="true">
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-        <span className={styles.dot} />
-      </div>
-    </div>
-
-  </div>
-);
+  );
+};
 
 export default PageLoader;

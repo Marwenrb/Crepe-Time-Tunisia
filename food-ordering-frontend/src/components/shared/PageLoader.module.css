@@ -1,290 +1,417 @@
-/* ─── PageLoader.module.css v4.0 — Aurora Dial ───────────────────────────── */
-/* Next-level premium loader: scan beam · triple arcs · sonar ring · shimmer  */
-
-/* ── Root overlay ──────────────────────────────────────────────────────────── */
 .root {
-  position:        fixed;
-  inset:           0;
-  z-index:         9999;
-  background:      #0C0C1E;
-  display:         flex;
-  flex-direction:  column;
-  align-items:     center;
-  justify-content: center;
-  gap:             28px;
-  animation:       loaderEnter 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-  overflow:        hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(124, 58, 237, 0.26) 0%, transparent 32%),
+    radial-gradient(circle at 82% 18%, rgba(212, 175, 55, 0.18) 0%, transparent 26%),
+    radial-gradient(circle at 50% 110%, rgba(65, 18, 110, 0.44) 0%, transparent 40%),
+    linear-gradient(180deg, #130a21 0%, #0c0818 55%, #07040d 100%);
 }
 
-/* Background nebula — very subtle, static */
-.root::before {
-  content:       '';
-  position:      absolute;
-  width:         480px;
-  height:        480px;
-  top:           50%;
-  left:          50%;
-  transform:     translate(-50%, -60%);
-  border-radius: 50%;
-  background:    radial-gradient(
-    circle,
-    rgba(91, 33, 182, 0.14) 0%,
-    rgba(91, 33, 182, 0.05) 40%,
-    transparent 70%
-  );
+.root::before,
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   pointer-events: none;
+}
+
+.root::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100px 100px;
+  mask-image: radial-gradient(circle at center, black 28%, transparent 90%);
+  opacity: 0.35;
 }
 
 .root::after {
-  content:       '';
-  position:      absolute;
-  width:         320px;
-  height:        320px;
-  bottom:        30%;
-  right:         20%;
-  border-radius: 50%;
-  background:   radial-gradient(
-    circle,
-    rgba(245, 158, 11, 0.07) 0%,
-    transparent 65%
-  );
-  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 42%, rgba(4, 2, 8, 0.74) 100%);
 }
 
-@keyframes loaderEnter {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1);    }
-}
-
-/* ── Arc container ─────────────────────────────────────────────────────────── */
-.arcContainer {
+.stage {
   position: relative;
-  width:    148px;
-  height:   148px;
-  z-index:  1;
-}
-
-/* Breathing glow corona — behind all arcs */
-.arcContainer::before {
-  content:        '';
-  position:       absolute;
-  inset:          -32px;
-  border-radius:  50%;
-  background:     radial-gradient(
-    circle,
-    rgba(124, 58, 237, 0.16) 0%,
-    rgba(124, 58, 237, 0.06) 45%,
-    transparent 68%
-  );
-  animation:      coronaBreath 3.6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes coronaBreath {
-  0%, 100% { opacity: 0.6; transform: scale(1);    }
-  50%       { opacity: 1;   transform: scale(1.12); }
-}
-
-/* ── Scan beam (radar sweep) ───────────────────────────────────────────────── */
-.scanBeam {
-  position:      absolute;
-  inset:         -6px;
-  border-radius: 50%;
-  background:    conic-gradient(
-    from 0deg,
-    transparent       0deg,
-    rgba(139,92,246,0.14) 25deg,
-    rgba(139,92,246,0.08) 55deg,
-    transparent       90deg
-  );
-  animation:     scanRotate 3.2s linear infinite;
-  will-change:   transform;
-}
-
-@keyframes scanRotate {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
-}
-
-/* ── Outer arc — violet, clockwise ────────────────────────────────────────── */
-.arcOuter {
-  position:           absolute;
-  inset:              0;
-  border-radius:      50%;
-  border:             3px solid transparent;
-  border-top-color:   #7C3AED;
-  border-right-color: rgba(124, 58, 237, 0.25);
-  animation:          arcSpin 1.6s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  will-change:        transform;
-}
-
-/* ── Mid arc — gold, counter-clockwise ───────────────────────────────────── */
-.arcMid {
-  position:            absolute;
-  inset:               18px;
-  border-radius:       50%;
-  border:              2.5px solid transparent;
-  border-bottom-color: #F59E0B;
-  border-left-color:   rgba(245, 158, 11, 0.22);
-  animation:           arcSpin 1.0s cubic-bezier(0.5, 0, 0.5, 1) infinite reverse;
-  will-change:         transform;
-}
-
-/* ── Inner arc — white-dim, clockwise ─────────────────────────────────────── */
-.arcInner {
-  position:           absolute;
-  inset:              38px;
-  border-radius:      50%;
-  border:             2px solid transparent;
-  border-top-color:   rgba(255, 255, 255, 0.28);
-  border-right-color: rgba(255, 255, 255, 0.07);
-  animation:          arcSpin 0.68s linear infinite;
-  will-change:        transform;
-}
-
-@keyframes arcSpin {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(360deg); }
-}
-
-/* ── Logo + sonar center ───────────────────────────────────────────────────── */
-.logoCenter {
-  position:        absolute;
-  inset:           0;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  z-index:         2;
-}
-
-.logoWrap {
-  position:        relative;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-}
-
-/* Sonar ring — expands outward from medallion */
-.sonarRing {
-  position:      absolute;
-  inset:         -6px;
-  border-radius: 20px;
-  border:        1.5px solid rgba(139, 92, 246, 0.55);
-  animation:     sonarPulse 2.6s ease-out infinite;
-  will-change:   transform, opacity;
-  pointer-events: none;
-}
-
-@keyframes sonarPulse {
-  0%   { transform: scale(1);   opacity: 0.75; }
-  100% { transform: scale(1.9); opacity: 0;    }
-}
-
-/* Offset second sonar ring */
-.sonarRing2 {
-  position:      absolute;
-  inset:         -6px;
-  border-radius: 20px;
-  border:        1px solid rgba(245, 158, 11, 0.35);
-  animation:     sonarPulse 2.6s ease-out 1.3s infinite;
-  will-change:   transform, opacity;
-  pointer-events: none;
-}
-
-.logoMedallion {
-  width:           52px;
-  height:          52px;
-  border-radius:   15px;
-  background:      #FFFFFF;
-  display:         flex;
-  align-items:     center;
-  justify-content: center;
-  overflow:        hidden;
-  box-shadow:
-    0 0 0 1.5px rgba(139,92,246,0.5),
-    0 0 32px rgba(124,58,237,0.5),
-    0 6px 20px rgba(0,0,0,0.55);
-  animation:       logoPulse 2.8s ease-in-out infinite;
-  will-change:     transform;
-}
-
-@keyframes logoPulse {
-  0%, 100% { transform: scale(1);    }
-  50%       { transform: scale(1.07); }
-}
-
-/* ── Brand strip ───────────────────────────────────────────────────────────── */
-.brand {
-  display:        flex;
+  z-index: 1;
+  width: min(100%, 430px);
+  display: flex;
   flex-direction: column;
-  align-items:    center;
-  gap:            6px;
-  z-index:        1;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 24px 24px;
+  border-radius: 32px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(24, 16, 43, 0.9) 0%, rgba(11, 8, 21, 0.94) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  animation: stageEnter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.2), rgba(212, 175, 55, 0.08), rgba(124, 58, 237, 0.14));
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.badge {
+  position: relative;
+  z-index: 1;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 248, 225, 0.82);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.visual {
+  position: relative;
+  width: min(100%, 250px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.visualGlow {
+  position: absolute;
+  inset: 24px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(212, 175, 55, 0.12) 45%, transparent 72%);
+  filter: blur(18px);
+  animation: glowPulse 3.8s ease-in-out infinite;
+}
+
+.orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.orbitOuter {
+  inset: 0;
+  border-color: rgba(212, 175, 55, 0.26);
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.06);
+  animation: orbitSpin 7s linear infinite;
+}
+
+.orbitMid {
+  inset: 22px;
+  border-color: rgba(124, 58, 237, 0.24);
+  border-style: dashed;
+  animation: orbitSpinReverse 5.4s linear infinite;
+}
+
+.orbitInner {
+  inset: 42px;
+  border-color: rgba(255, 255, 255, 0.12);
+  animation: orbitSpin 3.6s linear infinite;
+}
+
+.spark {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff8e1 0%, #d4af37 60%, rgba(212, 175, 55, 0) 100%);
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.55);
+}
+
+.sparkOne {
+  top: 18px;
+  left: calc(50% - 4px);
+}
+
+.sparkTwo {
+  right: 22px;
+  bottom: 54px;
+  background: radial-gradient(circle, #ede9fe 0%, #8b5cf6 60%, rgba(139, 92, 246, 0) 100%);
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.55);
+}
+
+.sparkThree {
+  left: 18px;
+  bottom: 14px;
+  width: 7px;
+  height: 7px;
+}
+
+.logoDock {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  padding: 2px;
+  border-radius: 38px;
+  overflow: hidden;
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.logoDock::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  background:
+    conic-gradient(
+      from 0deg,
+      #d4af37,
+      transparent 20%,
+      #7c3aed 40%,
+      transparent 58%,
+      #f5deb0 80%,
+      #d4af37
+    );
+  animation: orbitSpin 4.4s linear infinite;
+}
+
+.logoShell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 36px;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f7f3ea 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 14px 32px rgba(10, 7, 18, 0.22);
+}
+
+.logoImage {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  object-position: center;
+  animation: logoFloat 2.8s ease-in-out infinite;
+}
+
+.logoFallback {
+  font-family: "Syne", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: #3b0764;
+}
+
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .brandName {
-  font-family:    'Syne', -apple-system, sans-serif;
-  font-size:      22px;
-  font-weight:    800;
-  letter-spacing: -0.03em;
-  line-height:    1;
-  background:     linear-gradient(90deg, #FFFFFF 0%, #FCD34D 30%, #F8FAFC 55%, #FCD34D 80%, #FFFFFF 100%);
-  background-size:             250% auto;
-  -webkit-background-clip:     text;
-  -webkit-text-fill-color:     transparent;
-  background-clip:             text;
-  animation:                   shimmerBrand 3.8s linear infinite;
-  will-change:                 background-position;
+  font-family: "Syne", sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #fff5d6 55%, #e8c96a 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-@keyframes shimmerBrand {
-  0%   { background-position: 0%   center; }
-  100% { background-position: 250% center; }
+.tagline {
+  color: rgba(212, 175, 55, 0.92);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
 }
 
-.subtitle {
-  font-family:    'DM Sans', -apple-system, sans-serif;
-  font-size:      11px;
-  color:          #3A3A55;
+.statusText {
+  margin: 0;
+  max-width: 28ch;
+  color: rgba(255, 255, 255, 0.66);
+  text-align: center;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.progressTrack {
+  position: relative;
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progressTrack::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+}
+
+.progressLine {
+  display: block;
+  width: 44%;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(124, 58, 237, 0.4) 0%, #d4af37 48%, rgba(255, 255, 255, 0.92) 100%);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  animation: progressSlide 1.9s ease-in-out infinite;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-/* ── Animated dots ─────────────────────────────────────────────────────────── */
-.dots {
-  display:    flex;
-  gap:        5px;
-  margin-top: 2px;
+@keyframes stageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.dot {
-  width:         4px;
-  height:        4px;
-  border-radius: 50%;
-  background:    #2A2A48;
-  animation:     dotPulse 1.6s ease-in-out infinite;
-  will-change:   transform, opacity, background-color;
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
 }
 
-.dot:nth-child(2) { animation-delay: 0.22s; }
-.dot:nth-child(3) { animation-delay: 0.44s; }
+@keyframes orbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
 
-@keyframes dotPulse {
-  0%, 70%, 100% { transform: scale(1);    opacity: 0.25; background: #2A2A48; }
-  35%            { transform: scale(1.55); opacity: 1;    background: #8B5CF6; }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* ── Reduce motion ─────────────────────────────────────────────────────────── */
+@keyframes orbitSpinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes progressSlide {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+@media (max-width: 480px) {
+  .stage {
+    padding: 24px 18px 20px;
+    border-radius: 28px;
+  }
+
+  .badge {
+    font-size: 0.64rem;
+    letter-spacing: 0.15em;
+  }
+
+  .visual {
+    width: min(100%, 220px);
+  }
+
+  .logoDock {
+    width: 102px;
+    height: 102px;
+    border-radius: 32px;
+  }
+
+  .logoShell {
+    border-radius: 30px;
+  }
+
+  .logoImage {
+    width: 76px;
+    height: 76px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .root               { animation: none; }
-  .scanBeam           { animation: none; }
-  .arcOuter,
-  .arcMid,
-  .arcInner           { animation: none; }
-  .arcContainer::before { animation: none; }
-  .sonarRing,
-  .sonarRing2         { animation: none; opacity: 0.3; }
-  .logoMedallion      { animation: none; }
-  .brandName          { animation: none; background-position: 0% center; }
-  .dot                { animation: none; opacity: 0.4; }
+  .stage,
+  .visualGlow,
+  .orbitOuter,
+  .orbitMid,
+  .orbitInner,
+  .logoDock::before,
+  .logoImage,
+  .progressLine {
+    animation: none;
+  }
 }

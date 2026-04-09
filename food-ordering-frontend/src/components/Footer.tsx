@@ -1,5 +1,6 @@
-﻿import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from "lucide-react";
+import { Phone, MessageCircle, Instagram, Facebook, MapPin, Heart, Code2 } from "lucide-react";
 import { BRAND } from "@/config/brand";
+import BrandSignature from "@/components/shared/BrandSignature";
 
 const CONTACT = {
   phone: "+216 25 799 066",
@@ -24,15 +25,6 @@ const SOCIAL_LINKS = [
 ] as const;
 
 const FOOTER_KEYFRAMES = `
-  @keyframes ft-rotate-border {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  @keyframes ft-glow-breathe {
-    0%, 100% { opacity: 0.85; }
-    50%      { opacity: 1; }
-  }
-  .ft-logo-ring { animation: ft-glow-breathe 3.5s ease-in-out infinite; will-change: opacity; }
   @keyframes ft-line-pulse {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
@@ -41,7 +33,6 @@ const FOOTER_KEYFRAMES = `
     0%   { opacity: 0.5; transform: translateX(-30%); }
     100% { opacity: 1; transform: translateX(30%); }
   }
-
 `;
 
 const Footer = () => {
@@ -54,7 +45,6 @@ const Footer = () => {
     >
       <style>{FOOTER_KEYFRAMES}</style>
 
-      {/* Top gold accent line */}
       <div
         aria-hidden="true"
         className="absolute top-0 inset-x-0 h-px"
@@ -64,85 +54,21 @@ const Footer = () => {
       />
 
       <div className="container mx-auto px-5 sm:px-6 pt-8 sm:pt-10 pb-6">
-        {/* ═══ Top: Brand + Contact + Social grid ═══ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 text-center">
-
-          {/* ── Brand column — matching Header logo ring ── */}
           <div className="flex flex-col items-center gap-3">
-            <div className="flex items-center gap-3">
-              {/* Rotating conic-gradient ring — same as Header */}
-              <div className="relative flex-shrink-0">
-                <div
-                  className="ft-logo-ring relative rounded-2xl overflow-hidden"
-                  style={{ padding: 2 }}
-                >
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      position: "absolute",
-                      inset: "-120%",
-                      background:
-                        "conic-gradient(from 0deg, #D4AF37, transparent 18%, #7C3AED 38%, transparent 58%, #EDD060 78%, #D4AF37)",
-                      animation: "ft-rotate-border 4s linear infinite",
-                      willChange: "transform",
-                    }}
-                  />
-                  <div className="relative h-11 w-11 rounded-xl overflow-hidden bg-white">
-                    <img
-                      src={BRAND.logo}
-                      alt={BRAND.name}
-                      width={44}
-                      height={44}
-                      className="h-full w-full object-cover object-center"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        const el = e.target as HTMLImageElement;
-                        el.src = "/logo.png";
-                        el.onerror = () => {
-                          el.style.display = "none";
-                          el.parentElement?.querySelector(".ft-logo-fb")?.classList.remove("hidden");
-                        };
-                      }}
-                    />
-                    <div className="ft-logo-fb hidden absolute inset-0 bg-crepe-gold flex items-center justify-center text-crepe-purple font-bold text-xs">
-                      CT
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Brand text — matching Header style */}
-              <div className="flex flex-col min-w-0">
-                <span
-                  className="text-base sm:text-lg md:text-xl font-bold tracking-tight leading-tight"
-                  style={{
-                    background: "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 60%, #E5C76B 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
-                  }}
-                >
-                  {BRAND.name}
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-semibold tracking-[0.25em] text-crepe-gold uppercase leading-tight opacity-90">
-                  {BRAND.tagline}
-                </span>
-              </div>
-            </div>
-
-            <p className="text-white/50 text-xs leading-relaxed max-w-[220px] text-center mt-1">
-              L&apos;art de la crêpe à Nabeul — saveurs authentiques, ingrédients frais, livré chez vous.
-            </p>
+            <BrandSignature
+              size="md"
+              align="center"
+              surface="glass"
+              description="L'art de la crepe a Nabeul - saveurs authentiques, ingredients frais, livre chez vous."
+            />
           </div>
 
-          {/* ── Contact column ── */}
           <div className="flex flex-col items-center gap-3">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-0.5">
               Contact
             </span>
             <div className="flex flex-col gap-2.5">
-              {/* Phone */}
               <a
                 href={`tel:${CONTACT.phone.replace(/\s/g, "")}`}
                 className="group/c flex items-center gap-2.5 transition-colors"
@@ -152,7 +78,7 @@ const Footer = () => {
                 </span>
                 <span className="text-[13px] text-white/70 group-hover/c:text-crepe-gold transition-colors duration-200 font-medium">{CONTACT.phone}</span>
               </a>
-              {/* WhatsApp */}
+
               <a
                 href={`https://wa.me/${CONTACT.whatsapp}`}
                 target="_blank"
@@ -164,7 +90,7 @@ const Footer = () => {
                 </span>
                 <span className="text-[13px] text-white/70 group-hover/c:text-crepe-gold transition-colors duration-200 font-medium">WhatsApp</span>
               </a>
-              {/* Address */}
+
               <div className="flex items-center gap-2.5">
                 <span className="flex items-center justify-center h-8 w-8 rounded-full border border-white/15 bg-white/[0.04] shrink-0">
                   <MapPin className="h-3.5 w-3.5 text-white/60" />
@@ -174,7 +100,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* ── Social column ── */}
           <div className="flex flex-col items-center gap-2">
             <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-crepe-gold/80 mb-1">
               Suivez-nous
@@ -186,7 +111,7 @@ const Footer = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${label} — Crêpe Time`}
+                  aria-label={`${label} - ${BRAND.name}`}
                   className="group/s flex items-center justify-center h-10 w-10 rounded-full border border-white/15 hover:border-crepe-gold/60 bg-white/[0.04] hover:bg-crepe-gold/10 transition-all duration-200"
                 >
                   <Icon className="h-[18px] w-[18px] text-white/70 group-hover/s:text-crepe-gold transition-colors duration-200" />
@@ -196,9 +121,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ═══ Divider — premium animated double shimmer with glow ═══ */}
         <div aria-hidden="true" className="my-6 relative flex flex-col items-center gap-[3px]">
-          {/* Soft glow layer */}
           <div
             className="absolute inset-x-[10%] top-1/2 -translate-y-1/2"
             style={{
@@ -208,7 +131,6 @@ const Footer = () => {
               animation: "ft-line-pulse 3s ease-in-out infinite",
             }}
           />
-          {/* Primary shimmer line */}
           <div
             style={{
               width: "100%",
@@ -219,7 +141,6 @@ const Footer = () => {
               willChange: "transform, opacity",
             }}
           />
-          {/* Secondary accent line */}
           <div
             style={{
               width: "50%",
@@ -232,11 +153,10 @@ const Footer = () => {
           />
         </div>
 
-        {/* ═══ Bottom bar ═══ */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-3 text-white/45">
-            <span className="hover:text-crepe-gold/80 cursor-pointer transition-colors">Confidentialité</span>
-            <span aria-hidden="true" className="text-white/20">·</span>
+            <span className="hover:text-crepe-gold/80 cursor-pointer transition-colors">Confidentialite</span>
+            <span aria-hidden="true" className="text-white/20">.</span>
             <span className="hover:text-crepe-gold/80 cursor-pointer transition-colors">Conditions</span>
           </div>
 
@@ -255,7 +175,7 @@ const Footer = () => {
               <Heart className="h-3 w-3 fill-current" />
               <span className="font-medium">Digital Team</span>
             </a>
-            <span aria-hidden="true" className="text-white/20">·</span>
+            <span aria-hidden="true" className="text-white/20">.</span>
             <Code2 className="h-3 w-3 text-white/30" />
           </div>
         </div>

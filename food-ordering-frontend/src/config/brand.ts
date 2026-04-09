@@ -1,14 +1,14 @@
 /**
- * Crêpe Time Tunisia — Official Brand Assets
+ * Crepe Time Tunisia - Official Brand Assets
  * Single source of truth for logo and brand across the project.
  */
 
 export const BRAND = {
-  name: "Crêpe Time",
+  name: "Cr\u00eape Time",
   tagline: "The Sweetest Escape",
-  fullName: "Crêpe Time Tunisia",
+  fullName: "Cr\u00eape Time Tunisia",
 
-  /** Official logo — use this path everywhere */
+  /** Official logo - use this path everywhere */
   logo: "/crepe-time-logo.webp",
 
   /** Favicon for browser tab (SVG preferred, PNG fallback) */
