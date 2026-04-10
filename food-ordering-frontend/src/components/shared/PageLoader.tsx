@@ -53,8 +53,8 @@ const PageLoader = () => {
               <img
                 src={src}
                 alt={BRAND.name}
-                width={84}
-                height={84}
+                width={128}
+                height={128}
                 className={styles.logoImg}
                 loading="eager"
                 decoding="async"

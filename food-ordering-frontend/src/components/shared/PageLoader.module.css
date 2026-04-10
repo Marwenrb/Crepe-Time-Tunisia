@@ -79,6 +79,7 @@
   position: absolute;
   inset: 16px; /* 160 - 2×16 = 128px disc, fits inside r=70 ring */
   border-radius: 50%;
+  overflow: hidden;
   background: radial-gradient(circle at center, #1A0D30 0%, #06040C 100%);
   display: flex;
   align-items: center;
@@ -90,9 +91,9 @@
 }
 
 .logoImg {
-  width: 84px;
-  height: 84px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
 }
 
