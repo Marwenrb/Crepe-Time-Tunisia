@@ -8,13 +8,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import LeftPanel    from "@/components/auth/LeftPanel";
-import MobileHero   from "@/components/auth/MobileHero";
 import AuthInput    from "@/components/ui/AuthInput";
 import AuthButton   from "@/components/ui/AuthButton";
 import AuthFormCard from "@/components/auth/AuthFormCard";
 
-/* ── Google icon (official colours) ──────────────────────────── */
+/* ── Google icon ──────────────────────────────────────────────── */
 const GoogleIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -85,249 +83,230 @@ const SignInPage = () => {
     }
   };
 
-  /* ── Render ───────────────────────────────────────────────── */
+  /* ── Render ─────────────────────────────────────────────────── */
   return (
-    <div className="w-full flex flex-col md:flex-row md:min-h-[100dvh]">
+    <div
+      className="flex-1 flex flex-col items-center justify-center px-5 py-12"
+      style={{ minHeight: "100dvh" }}
+    >
+      <div className="w-full" style={{ maxWidth: 420 }}>
 
-      {/* Desktop branding panel (42%) */}
-      <LeftPanel variant="signin" />
+        {/* ── Page heading ──────────────────────────────────── */}
+        <div className="text-center ct-field-1" style={{ marginBottom: 32 }}>
+          <h1
+            style={{
+              fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
+              fontSize:      "clamp(40px, 7vw, 56px)",
+              fontWeight:    300,
+              letterSpacing: "0.02em",
+              color:         "#E5C76B",
+              lineHeight:    1.05,
+              margin:        0,
+            }}
+          >
+            Bon retour
+          </h1>
+          <p
+            style={{
+              fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+              fontSize:      13,
+              fontStyle:     "italic",
+              color:         "rgba(255,255,255,0.35)",
+              marginTop:     10,
+              letterSpacing: "0.06em",
+              lineHeight:    1.5,
+            }}
+          >
+            Connectez-vous pour commander
+          </p>
+        </div>
 
-      {/* Mobile atmospheric strip */}
-      <MobileHero />
+        {/* ── UIverse spinning-border card ─────────────────── */}
+        <AuthFormCard>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            autoComplete="off"
+            aria-busy={isLoading}
+            aria-label="Formulaire de connexion"
+            className="flex flex-col gap-4"
+          >
 
-      {/* Form panel (58% on desktop, full on mobile) */}
-      <div
-        className="flex-1 flex flex-col items-center justify-start md:justify-center px-5 xs:px-6 pt-10 pb-10 md:py-12 md:min-h-[100dvh]"
-        style={{
-          background: "radial-gradient(ellipse 80% 45% at 50% 0%, rgba(76,29,149,0.12) 0%, transparent 65%)",
-        }}
-      >
-        <div className="w-full" style={{ maxWidth: 400 }}>
+            {/* Google OAuth */}
+            <div className="ct-field-2">
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={isGoogleLoading}
+                aria-label="Continuer avec Google"
+                className="flex items-center justify-center gap-2.5 w-full transition-all duration-200 focus-visible:outline-none cursor-pointer"
+                style={{
+                  background:    "rgba(255,255,255,0.03)",
+                  border:        "1px solid rgba(212,175,55,0.28)",
+                  borderRadius:  10,
+                  minHeight:     48,
+                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                  fontSize:      14,
+                  fontWeight:    400,
+                  color:         "rgba(255,255,255,0.65)",
+                  letterSpacing: "0.03em",
+                  padding:       "0 20px",
+                }}
+                onMouseEnter={(e) => {
+                  const t = e.currentTarget;
+                  t.style.background  = "rgba(212,175,55,0.07)";
+                  t.style.borderColor = "rgba(212,175,55,0.58)";
+                  t.style.color       = "rgba(255,255,255,0.85)";
+                }}
+                onMouseLeave={(e) => {
+                  const t = e.currentTarget;
+                  t.style.background  = "rgba(255,255,255,0.03)";
+                  t.style.borderColor = "rgba(212,175,55,0.28)";
+                  t.style.color       = "rgba(255,255,255,0.65)";
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.outline       = "2px solid rgba(212,175,55,0.4)";
+                  e.currentTarget.style.outlineOffset = "2px";
+                }}
+                onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
+              >
+                {isGoogleLoading
+                  ? <Loader2 size={16} className="animate-spin" aria-hidden="true" />
+                  : <GoogleIcon />}
+                Continuer avec Google
+              </button>
+            </div>
 
-          {/* Page heading — floats above the card */}
-          <div className="ct-field-1" style={{ marginBottom: 24 }}>
-            <h1
-              style={{
-                fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
-                fontSize:      "clamp(34px, 5vw, 46px)",
-                fontWeight:    300,
-                letterSpacing: "0.02em",
-                color:         "#E5C76B",
-                lineHeight:    1.1,
-                margin:        0,
-              }}
-            >
-              Bon retour
-            </h1>
+            {/* Divider */}
+            <div className="flex items-center gap-3 ct-field-3">
+              <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.16)" }} />
+              <span
+                style={{
+                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                  fontSize:      11,
+                  color:         "rgba(212,175,55,0.38)",
+                  letterSpacing: "0.14em",
+                  userSelect:    "none",
+                }}
+              >
+                ou
+              </span>
+              <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.16)" }} />
+            </div>
+
+            {/* Email */}
+            <div className="ct-field-4">
+              <AuthInput
+                id="email"
+                type="email"
+                label="Adresse email"
+                icon={<Mail size={16} />}
+                error={errors.email?.message}
+                autoComplete="email"
+                aria-describedby={errors.email ? "email-error" : undefined}
+                {...register("email")}
+              />
+            </div>
+
+            {/* Password */}
+            <div className="ct-field-5">
+              <AuthInput
+                id="password"
+                type={showPassword ? "text" : "password"}
+                label="Mot de passe"
+                icon={<Lock size={16} />}
+                error={errors.password?.message}
+                autoComplete="current-password"
+                aria-describedby={errors.password ? "password-error" : undefined}
+                suffix={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                    style={{
+                      background: "none", border: "none", cursor: "pointer",
+                      color: "rgba(212,175,55,0.45)", padding: "4px",
+                      display: "flex", alignItems: "center",
+                      minWidth: 44, minHeight: 44, justifyContent: "center",
+                      transition: "color 160ms ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.85)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.45)";
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                }
+                {...register("password")}
+              />
+            </div>
+
+            {/* Forgot password */}
+            <div className="text-right -mt-1 ct-field-6">
+              <Link
+                to="/sign-in"
+                style={{
+                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
+                  fontSize:      12,
+                  color:         "rgba(212,175,55,0.50)",
+                  letterSpacing: "0.04em",
+                  textDecoration: "none",
+                  transition:    "color 160ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "rgba(212,175,55,0.85)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "rgba(212,175,55,0.50)";
+                }}
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
+
+            {/* Submit */}
+            <div className="ct-field-7">
+              <AuthButton loading={isLoading}>
+                {isLoading ? "Connexion…" : "Se connecter"}
+              </AuthButton>
+            </div>
+
+            {/* Switch to register */}
             <p
+              className="text-center"
               style={{
                 fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
                 fontSize:      13,
-                fontWeight:    400,
                 color:         "rgba(255,255,255,0.38)",
-                marginTop:     7,
-                letterSpacing: "0.04em",
-                lineHeight:    1.5,
+                letterSpacing: "0.02em",
               }}
             >
-              Connectez-vous pour commander
-            </p>
-          </div>
-
-          {/* ── UIverse spinning-border card ──────────────────── */}
-          <AuthFormCard>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete="off"
-              aria-busy={isLoading}
-              aria-label="Formulaire de connexion"
-              className="flex flex-col gap-4"
-            >
-
-              {/* Google OAuth */}
-              <div className="ct-field-2">
-                <button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  disabled={isGoogleLoading}
-                  aria-label="Continuer avec Google"
-                  className="flex items-center justify-center gap-2.5 w-full transition-all duration-200 focus-visible:outline-none cursor-pointer"
-                  style={{
-                    background:    "rgba(255,255,255,0.03)",
-                    border:        "1px solid rgba(212,175,55,0.28)",
-                    borderRadius:  10,
-                    minHeight:     48,
-                    fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                    fontSize:      14,
-                    fontWeight:    400,
-                    color:         "rgba(255,255,255,0.65)",
-                    letterSpacing: "0.03em",
-                    padding:       "0 20px",
-                  }}
-                  onMouseEnter={(e) => {
-                    const t = e.currentTarget;
-                    t.style.background  = "rgba(212,175,55,0.07)";
-                    t.style.borderColor = "rgba(212,175,55,0.58)";
-                    t.style.color       = "rgba(255,255,255,0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    const t = e.currentTarget;
-                    t.style.background  = "rgba(255,255,255,0.03)";
-                    t.style.borderColor = "rgba(212,175,55,0.28)";
-                    t.style.color       = "rgba(255,255,255,0.65)";
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.outline       = "2px solid rgba(212,175,55,0.4)";
-                    e.currentTarget.style.outlineOffset = "2px";
-                  }}
-                  onBlur={(e) => { e.currentTarget.style.outline = "none"; }}
-                >
-                  {isGoogleLoading
-                    ? <Loader2 size={16} className="animate-spin" aria-hidden="true" />
-                    : <GoogleIcon />}
-                  Continuer avec Google
-                </button>
-              </div>
-
-              {/* Divider */}
-              <div className="flex items-center gap-3 ct-field-3">
-                <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.16)" }} />
-                <span
-                  style={{
-                    fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                    fontSize:      11,
-                    color:         "rgba(212,175,55,0.38)",
-                    letterSpacing: "0.14em",
-                    userSelect:    "none",
-                  }}
-                >
-                  ou
-                </span>
-                <div className="flex-1 h-px" style={{ background: "rgba(212,175,55,0.16)" }} />
-              </div>
-
-              {/* Email */}
-              <div className="ct-field-4">
-                <AuthInput
-                  id="email"
-                  type="email"
-                  label="Adresse email"
-                  icon={<Mail size={16} />}
-                  error={errors.email?.message}
-                  autoComplete="email"
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                  {...register("email")}
-                />
-              </div>
-
-              {/* Password */}
-              <div className="ct-field-5">
-                <AuthInput
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  label="Mot de passe"
-                  icon={<Lock size={16} />}
-                  error={errors.password?.message}
-                  autoComplete="current-password"
-                  aria-describedby={errors.password ? "password-error" : undefined}
-                  suffix={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
-                      style={{
-                        background:     "none",
-                        border:         "none",
-                        cursor:         "pointer",
-                        color:          "rgba(212,175,55,0.45)",
-                        padding:        "4px",
-                        display:        "flex",
-                        alignItems:     "center",
-                        minWidth:       44,
-                        minHeight:      44,
-                        justifyContent: "center",
-                        transition:     "color 160ms ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.85)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLButtonElement).style.color = "rgba(212,175,55,0.45)";
-                      }}
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  }
-                  {...register("password")}
-                />
-              </div>
-
-              {/* Forgot password */}
-              <div className="text-right -mt-1 ct-field-6">
-                <Link
-                  to="/sign-in"
-                  style={{
-                    fontFamily:     "var(--font-ui, 'Jost', sans-serif)",
-                    fontSize:       12,
-                    color:          "rgba(212,175,55,0.50)",
-                    letterSpacing:  "0.04em",
-                    textDecoration: "none",
-                    transition:     "color 160ms ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = "rgba(212,175,55,0.85)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = "rgba(212,175,55,0.50)";
-                  }}
-                >
-                  Mot de passe oublié ?
-                </Link>
-              </div>
-
-              {/* Submit */}
-              <div className="ct-field-7">
-                <AuthButton loading={isLoading}>
-                  {isLoading ? "Connexion…" : "Se connecter"}
-                </AuthButton>
-              </div>
-
-              {/* Switch to register */}
-              <p
-                className="text-center"
+              Nouveau sur Crêpe Time ?{" "}
+              <Link
+                to="/register"
                 style={{
-                  fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-                  fontSize:      13,
-                  color:         "rgba(255,255,255,0.38)",
-                  letterSpacing: "0.02em",
+                  color:          "#D4AF37",
+                  fontWeight:     500,
+                  textDecoration: "none",
+                  transition:     "color 160ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#E5C76B";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#D4AF37";
                 }}
               >
-                Nouveau sur Crêpe Time ?{" "}
-                <Link
-                  to="/register"
-                  style={{
-                    color:          "#D4AF37",
-                    fontWeight:     500,
-                    textDecoration: "none",
-                    transition:     "color 160ms ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = "#E5C76B";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = "#D4AF37";
-                  }}
-                >
-                  Créer un compte
-                </Link>
-              </p>
+                Créer un compte
+              </Link>
+            </p>
 
-            </form>
-          </AuthFormCard>
+          </form>
+        </AuthFormCard>
 
-        </div>
       </div>
-
     </div>
   );
 };

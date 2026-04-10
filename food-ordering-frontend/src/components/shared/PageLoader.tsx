@@ -1,19 +1,10 @@
 import { useState } from "react";
 import { BRAND } from "@/config/brand";
-import BrandSignature from "@/components/shared/BrandSignature";
 import styles from "./PageLoader.module.css";
-
-const FALLBACK_LOGO = "/logo.png";
-
-const EXPERIENCE_CHIPS = [
-  "Freshly folded",
-  "Nabeul delivery",
-  "Sweet ritual",
-] as const;
 
 const PageLoader = () => {
   const [src, setSrc] = useState<string>(BRAND.logo);
-  const [showFallback, setShowFallback] = useState(false);
+  const [fallback, setFallback] = useState(false);
 
   return (
     <div
@@ -22,72 +13,41 @@ const PageLoader = () => {
       aria-live="polite"
       aria-label={`Chargement de ${BRAND.name}`}
     >
-      <div className={styles.stage}>
-        <span className={styles.badge}>Crafting the next bite</span>
-
-        <div className={styles.visual} aria-hidden="true">
-          <div className={styles.visualGlow} />
-          <div className={`${styles.orbit} ${styles.orbitOuter}`}>
-            <span className={`${styles.spark} ${styles.sparkOne}`} />
-            <span className={`${styles.spark} ${styles.sparkTwo}`} />
-          </div>
-          <div className={`${styles.orbit} ${styles.orbitMid}`} />
-          <div className={`${styles.orbit} ${styles.orbitInner}`}>
-            <span className={`${styles.spark} ${styles.sparkThree}`} />
-          </div>
-
-          <div className={styles.logoDock}>
-            <div className={styles.logoShell}>
-              {!showFallback && (
-                <img
-                  src={src}
-                  alt={BRAND.name}
-                  width={96}
-                  height={96}
-                  className={styles.logoImage}
-                  loading="eager"
-                  decoding="async"
-                  onError={() => {
-                    if (src !== FALLBACK_LOGO) {
-                      setSrc(FALLBACK_LOGO);
-                      return;
-                    }
-
-                    setShowFallback(true);
-                  }}
-                />
-              )}
-
-              {showFallback && <span className={styles.logoFallback}>CT</span>}
-            </div>
-          </div>
+      {/* scene */}
+      <div className={styles.scene}>
+        {/* logo halo */}
+        <div className={styles.logoWrap} aria-hidden="true">
+          {!fallback ? (
+            <img
+              src={src}
+              alt={BRAND.name}
+              width={78}
+              height={78}
+              className={styles.logoImg}
+              loading="eager"
+              decoding="async"
+              onError={() => {
+                if (src !== "/logo.png") { setSrc("/logo.png"); return; }
+                setFallback(true);
+              }}
+            />
+          ) : (
+            <span className={styles.logoFb}>CT</span>
+          )}
         </div>
 
-        <div className={styles.brandBlock}>
-          <BrandSignature
-            size="md"
-            align="center"
-            surface="glass"
-            interactive={false}
-          />
-        </div>
+        {/* gold divider */}
+        <div className={styles.line} aria-hidden="true" />
 
-        <p className={styles.statusText}>
-          Preparation de votre experience gourmande, avec une arrivee qui doit deja donner faim.
-        </p>
+        {/* brand name */}
+        <p className={styles.brand}>Crêpe Time</p>
 
-        <div className={styles.progressTrack} aria-hidden="true">
-          <span className={styles.progressLine} />
-        </div>
-
-        <div className={styles.chips} aria-hidden="true">
-          {EXPERIENCE_CHIPS.map((chip) => (
-            <span key={chip} className={styles.chip}>
-              {chip}
-            </span>
-          ))}
-        </div>
+        {/* tagline */}
+        <p className={styles.tagline}>The Sweetest Escape</p>
       </div>
+
+      {/* bottom edge gold accent */}
+      <span className={styles.edge} aria-hidden="true" />
     </div>
   );
 };

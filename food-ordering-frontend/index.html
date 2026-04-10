@@ -82,297 +82,152 @@
 
     <!-- ─── Inline critical CSS — prevents layout shift before JS hydrates ── -->
     <style>
-      /* ── Preloader ─────────────────────────────────────────────────────────── */
+      /* ═══════════════════════════════════════════════════════
+         CINEMATIC REVEAL LOADER — Crêpe Time Tunisia
+         Magazine-cover editorial: logo halo → gold line → name
+         No card, no orbits, no progress bar. Pure luxury.
+         ═══════════════════════════════════════════════════════ */
       #ct-preloader {
         position: fixed;
         inset: 0;
         z-index: 9999;
-        display: grid;
-        place-items: center;
-        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background: #07040D;
         overflow: hidden;
-        background:
-          radial-gradient(circle at 18% 20%, rgba(124,58,237,0.26) 0%, transparent 32%),
-          radial-gradient(circle at 82% 18%, rgba(212,175,55,0.18) 0%, transparent 26%),
-          radial-gradient(circle at 50% 110%, rgba(65,18,110,0.44) 0%, transparent 40%),
-          linear-gradient(180deg, #130A21 0%, #0C0818 55%, #07040D 100%);
-        transition: opacity 0.35s ease, visibility 0.35s ease;
+        transition: opacity 0.52s cubic-bezier(0.4,0,0.2,1), visibility 0.52s ease;
       }
-      #ct-preloader::before,
+      /* violet nebula — top right */
+      #ct-preloader::before {
+        content: '';
+        position: absolute;
+        top: -18%; right: -12%;
+        width: 62vmin; height: 62vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(76,29,149,0.18) 0%, transparent 68%);
+        pointer-events: none;
+      }
+      /* gold nebula — bottom left */
       #ct-preloader::after {
         content: '';
         position: absolute;
-        inset: 0;
+        bottom: -14%; left: -8%;
+        width: 52vmin; height: 52vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(212,175,55,0.085) 0%, transparent 68%);
         pointer-events: none;
-      }
-      #ct-preloader::before {
-        background:
-          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 100px 100px;
-        mask-image: radial-gradient(circle at center, black 28%, transparent 90%);
-        opacity: 0.35;
-      }
-      #ct-preloader::after {
-        background: radial-gradient(circle at center, transparent 42%, rgba(4,2,8,0.74) 100%);
       }
       #ct-preloader.ct-hidden {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
       }
-      .ct-preloader-card {
+      /* ── scene wrapper ─────────────────────────────────────── */
+      .ct-loader-scene {
         position: relative;
         z-index: 1;
-        width: min(100%, 380px);
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
-        padding: 26px 22px 22px;
-        border-radius: 30px;
-        overflow: hidden;
-        background: linear-gradient(180deg, rgba(24,16,43,0.9) 0%, rgba(11,8,21,0.94) 100%);
-        border: 1px solid rgba(255,255,255,0.08);
-        box-shadow:
-          0 30px 80px rgba(0,0,0,0.52),
-          inset 0 1px 0 rgba(255,255,255,0.08);
-        backdrop-filter: blur(16px);
-        animation: ct-stage-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        text-align: center;
+        padding: 0 24px;
       }
-      .ct-preloader-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        padding: 1px;
-        background: linear-gradient(140deg, rgba(255,255,255,0.2), rgba(212,175,55,0.08), rgba(124,58,237,0.14));
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-        pointer-events: none;
-      }
-      .ct-preloader-badge {
-        position: relative;
-        z-index: 1;
-        padding: 8px 14px;
-        border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.04);
-        color: rgba(255,248,225,0.82);
-        font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-      .ct-preloader-visual {
-        position: relative;
-        width: min(100%, 220px);
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-      }
-      .ct-preloader-glow {
-        position: absolute;
-        inset: 24px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(124,58,237,0.28) 0%, rgba(212,175,55,0.12) 45%, transparent 72%);
-        filter: blur(18px);
-        animation: ct-glow-pulse 3.8s ease-in-out infinite;
-      }
-      .ct-preloader-orbit {
-        position: absolute;
-        border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.06);
-      }
-      .ct-preloader-orbit-outer {
-        inset: 0;
-        border-color: rgba(212,175,55,0.26);
-        box-shadow: inset 0 0 0 1px rgba(212,175,55,0.06);
-        animation: ct-orbit 7s linear infinite;
-      }
-      .ct-preloader-orbit-mid {
-        inset: 20px;
-        border-color: rgba(124,58,237,0.24);
-        border-style: dashed;
-        animation: ct-orbit-reverse 5.4s linear infinite;
-      }
-      .ct-preloader-orbit-inner {
-        inset: 40px;
-        border-color: rgba(255,255,255,0.12);
-        animation: ct-orbit 3.6s linear infinite;
-      }
-      .ct-preloader-spark {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: radial-gradient(circle, #FFF8E1 0%, #D4AF37 60%, rgba(212,175,55,0) 100%);
-        box-shadow: 0 0 18px rgba(212,175,55,0.55);
-      }
-      .ct-preloader-spark-one {
-        top: 16px;
-        left: calc(50% - 4px);
-      }
-      .ct-preloader-spark-two {
-        left: 16px;
-        bottom: 12px;
-        width: 7px;
-        height: 7px;
-        background: radial-gradient(circle, #EDE9FE 0%, #8B5CF6 60%, rgba(139,92,246,0) 100%);
-        box-shadow: 0 0 16px rgba(139,92,246,0.55);
-      }
-      .ct-preloader-dock {
-        position: relative;
+      /* ── logo halo circle ──────────────────────────────────── */
+      .ct-loader-logo {
         width: 108px;
         height: 108px;
-        padding: 2px;
-        border-radius: 34px;
-        overflow: hidden;
-        box-shadow:
-          0 18px 46px rgba(0,0,0,0.34),
-          0 0 0 1px rgba(255,255,255,0.06);
-      }
-      .ct-preloader-dock::before {
-        content: '';
-        position: absolute;
-        inset: -120%;
-        background:
-          conic-gradient(
-            from 0deg,
-            #D4AF37,
-            transparent 20%,
-            #7C3AED 40%,
-            transparent 58%,
-            #F5DEB0 80%,
-            #D4AF37
-          );
-        animation: ct-orbit 4.4s linear infinite;
-      }
-      .ct-preloader-logo-shell {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        border-radius: 32px;
-        background: linear-gradient(180deg, #FFFFFF 0%, #F7F3EA 100%);
+        border-radius: 50%;
+        background: linear-gradient(160deg, #FFFFFF 0%, #F5F0E8 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,0.8),
-          0 14px 32px rgba(10,7,18,0.22);
+          0 0 0 1px   rgba(212,175,55,0.24),
+          0 0  52px   rgba(212,175,55,0.14),
+          0 0 100px   rgba(76,29,149,0.10),
+          0 24px 64px rgba(0,0,0,0.58);
+        animation: ct-logo-in 720ms cubic-bezier(0.34,1.56,0.64,1) 80ms both;
       }
-      .ct-preloader-logo {
-        width: 80px;
-        height: 80px;
+      .ct-loader-logo-img {
+        width: 78px;
+        height: 78px;
         object-fit: contain;
-        object-position: center;
-        animation: ct-logo-float 2.8s ease-in-out infinite;
       }
-      .ct-preloader-brand {
+      /* ── gold divider ──────────────────────────────────────── */
+      .ct-loader-line {
+        width: 70px;
+        height: 1px;
+        margin: 28px auto 22px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(212,175,55,0.72) 40%,
+          rgba(229,199,107,0.90) 50%,
+          rgba(212,175,55,0.72) 60%,
+          transparent 100%
+        );
+        transform-origin: center;
+        animation: ct-line-grow 900ms cubic-bezier(0.22,1,0.36,1) 620ms both;
+      }
+      /* ── brand name ────────────────────────────────────────── */
+      .ct-loader-brand {
         margin: 0;
-        font-family: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        font-size: clamp(28px, 5vw, 36px);
-        font-weight: 800;
-        letter-spacing: -0.05em;
-        line-height: 0.95;
-        background: linear-gradient(135deg, #FFFFFF 0%, #FFF5D6 55%, #E8C96A 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
+        font-family: 'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
+        font-size: clamp(30px, 8vw, 46px);
+        font-weight: 300;
+        letter-spacing: 0.30em;
+        text-transform: uppercase;
+        color: #E5C76B;
+        line-height: 1;
+        padding-right: 0.30em;
+        animation: ct-text-up 750ms cubic-bezier(0.22,1,0.36,1) 460ms both;
       }
-      .ct-preloader-tagline {
-        margin: -4px 0 0;
-        color: rgba(212,175,55,0.92);
-        font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        font-size: 11px;
-        font-weight: 700;
+      /* ── tagline ───────────────────────────────────────────── */
+      .ct-loader-tagline {
+        margin: 14px 0 0;
+        font-family: 'Jost', 'DM Sans', -apple-system, sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        font-style: italic;
         letter-spacing: 0.24em;
         text-transform: uppercase;
+        color: rgba(212,175,55,0.40);
+        padding-right: 0.24em;
+        animation: ct-text-up 650ms ease-out 860ms both;
       }
-      .ct-preloader-progress {
-        position: relative;
-        width: 100%;
-        height: 9px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.06);
-      }
-      .ct-preloader-progress::before {
-        content: '';
+      /* ── bottom edge gold line ─────────────────────────────── */
+      .ct-loader-edge {
         position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        bottom: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(212,175,55,0.13) 48%,
+          transparent 100%
+        );
+        transform-origin: left;
+        animation: ct-line-grow 1400ms ease-out 1000ms both;
       }
-      .ct-preloader-progress > span {
-        display: block;
-        width: 44%;
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, rgba(124,58,237,0.4) 0%, #D4AF37 48%, rgba(255,255,255,0.92) 100%);
-        box-shadow: 0 0 20px rgba(212,175,55,0.4);
-        animation: ct-progress-slide 1.9s ease-in-out infinite;
+      /* ── keyframes ─────────────────────────────────────────── */
+      @keyframes ct-logo-in {
+        from { opacity: 0; transform: scale(0.80); }
+        to   { opacity: 1; transform: scale(1);    }
       }
-      .ct-preloader-ring,
-      .ct-preloader-emoji,
-      .ct-preloader-text {
-        display: none !important;
+      @keyframes ct-line-grow {
+        from { transform: scaleX(0); opacity: 0; }
+        to   { transform: scaleX(1); opacity: 1; }
       }
-      @keyframes ct-stage-enter {
-        from {
-          opacity: 0;
-          transform: translateY(18px) scale(0.98);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-      @keyframes ct-glow-pulse {
-        0%, 100% {
-          opacity: 0.55;
-          transform: scale(0.96);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.04);
-        }
-      }
-      @keyframes ct-orbit {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-      @keyframes ct-orbit-reverse {
-        from { transform: rotate(360deg); }
-        to { transform: rotate(0deg); }
-      }
-      @keyframes ct-logo-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-      }
-      @keyframes ct-progress-slide {
-        0% { transform: translateX(-120%); }
-        100% { transform: translateX(260%); }
+      @keyframes ct-text-up {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0);    }
       }
       @media (prefers-reduced-motion: reduce) {
-        .ct-preloader-card,
-        .ct-preloader-glow,
-        .ct-preloader-orbit-outer,
-        .ct-preloader-orbit-mid,
-        .ct-preloader-orbit-inner,
-        .ct-preloader-dock::before,
-        .ct-preloader-logo,
-        .ct-preloader-progress > span {
-          animation: none;
-        }
+        .ct-loader-logo,
+        .ct-loader-line,
+        .ct-loader-brand,
+        .ct-loader-tagline,
+        .ct-loader-edge { animation: none; }
       }
       /* Hero section: tall enough on every breakpoint to contain overlay content */
       #root { min-height: 100vh; display: flex; flex-direction: column; }
@@ -456,38 +311,22 @@
     </script>
   </head>
   <body>
-    <!-- ─── HTML Preloader (visible before React mounts) ─── -->
-    <div id="ct-preloader" aria-hidden="true">
-      <div class="ct-preloader-card">
-        <span class="ct-preloader-badge">Crafting the next bite</span>
-        <div class="ct-preloader-visual">
-          <div class="ct-preloader-glow"></div>
-          <div class="ct-preloader-orbit ct-preloader-orbit-outer">
-            <span class="ct-preloader-spark ct-preloader-spark-one"></span>
-          </div>
-          <div class="ct-preloader-orbit ct-preloader-orbit-mid"></div>
-          <div class="ct-preloader-orbit ct-preloader-orbit-inner">
-            <span class="ct-preloader-spark ct-preloader-spark-two"></span>
-          </div>
-          <div class="ct-preloader-dock">
-            <div class="ct-preloader-logo-shell">
-              <img
-                class="ct-preloader-logo"
-                src="/crepe-time-logo.webp"
-                onerror="this.onerror=null;this.src='/logo.png';"
-                alt=""
-              />
-            </div>
-          </div>
+    <!-- ─── Cinematic Reveal Loader — magazine editorial style ─── -->
+    <div id="ct-preloader" aria-hidden="true" aria-label="Chargement de Crêpe Time Tunisia">
+      <div class="ct-loader-scene">
+        <div class="ct-loader-logo">
+          <img
+            class="ct-loader-logo-img"
+            src="/crepe-time-logo.webp"
+            onerror="this.onerror=null;this.src='/logo.png';"
+            alt=""
+          />
         </div>
-        <p class="ct-preloader-brand">Cr&ecirc;pe Time</p>
-        <p class="ct-preloader-tagline">The Sweetest Escape</p>
-        <div class="ct-preloader-progress"><span></span></div>
+        <div class="ct-loader-line"></div>
+        <p class="ct-loader-brand">Cr&ecirc;pe Time</p>
+        <p class="ct-loader-tagline">The Sweetest Escape</p>
       </div>
-      <div class="ct-preloader-ring">
-        <div class="ct-preloader-emoji">🥞</div>
-      </div>
-      <p class="ct-preloader-text">Crêpe Time</p>
+      <span class="ct-loader-edge"></span>
     </div>
 
     <div id="root"></div>
