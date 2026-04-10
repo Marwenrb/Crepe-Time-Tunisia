@@ -1,34 +1,30 @@
 import { Outlet } from "react-router-dom";
 import AuthBackground from "@/components/auth/AuthBackground";
-import AuthFooter     from "@/components/auth/AuthFooter";
+import Footer          from "@/components/Footer";
 
 /**
- * AuthLayout v4.0 — Dark Luxury Artisan
+ * AuthLayout v5.0 — Auth pages with full site Footer
  *
- * Wraps /sign-in and /register:
- *   - NO global Header (auth pages own their branding via LeftPanel / MobileHero)
- *   - AuthFooter — lightweight brand signature (no card/box, free-standing)
- *   - AuthBackground mounted once here, persists across both auth routes
+ * Structure:
+ *  - AuthBackground: fixed, full-screen atmospheric backdrop
+ *  - flex-col: page content (flex-1) + Footer (anchored bottom)
+ *  - NO Header, NO AuthFooter — replaced by the real site Footer
  */
 const AuthLayout = () => (
   <div
     className="relative w-full"
     style={{ background: "var(--depth-1, #0C0C1E)" }}
   >
-    {/* Full-screen atmospheric background (fixed, behind everything) */}
     <AuthBackground />
 
-    {/* Content column: page + signature footer */}
     <div className="relative z-10 flex flex-col min-h-[100dvh]">
-      {/* Page content fills available space */}
-      <div className="flex-1">
+      {/* Page content expands to fill all space above the footer */}
+      <div className="flex-1 flex flex-col">
         <Outlet />
       </div>
 
-      {/* Brand signature footer — mobile only (LeftPanel owns brand on desktop) */}
-      <div className="md:hidden">
-        <AuthFooter />
-      </div>
+      {/* Full site footer — identical to homepage */}
+      <Footer />
     </div>
   </div>
 );

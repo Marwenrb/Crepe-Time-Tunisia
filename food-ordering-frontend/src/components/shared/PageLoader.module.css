@@ -1,7 +1,8 @@
-/* ═══════════════════════════════════════════════════════════════
-   PageLoader — Cinematic reveal. Mirrors index.html preloader
-   exactly so the transition between HTML → React is seamless.
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   PageLoader — Gold Ring Inscription
+   Mirrors the HTML preloader exactly for seamless transition.
+   SVG stroke-dashoffset ring draw → staggered brand letters.
+   ═══════════════════════════════════════════════════════════════════ */
 
 .root {
   position: fixed;
@@ -11,33 +12,29 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: #07040D;
+  background: #06040C;
   overflow: hidden;
 }
-
-/* violet nebula — top-right */
 .root::before {
   content: "";
   position: absolute;
-  top: -18%; right: -12%;
-  width: 62vmin; height: 62vmin;
+  top: -20%; right: -14%;
+  width: 65vmin; height: 65vmin;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(76,29,149,0.18) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(76,29,149,0.22) 0%, transparent 65%);
   pointer-events: none;
 }
-
-/* gold nebula — bottom-left */
 .root::after {
   content: "";
   position: absolute;
-  bottom: -14%; left: -8%;
-  width: 52vmin; height: 52vmin;
+  bottom: -16%; left: -10%;
+  width: 55vmin; height: 55vmin;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(212,175,55,0.085) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 65%);
   pointer-events: none;
 }
 
-/* ── scene ─────────────────────────────────────────────────────── */
+/* ── Scene ──────────────────────────────────────────────────────── */
 .scene {
   position: relative;
   z-index: 1;
@@ -45,29 +42,56 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0 24px;
 }
 
-/* ── logo halo ──────────────────────────────────────────────────── */
-.logoWrap {
-  width: 108px;
-  height: 108px;
+/* ── Ring container ─────────────────────────────────────────────── */
+.ringWrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  animation: pop 700ms cubic-bezier(0.34,1.56,0.64,1) 80ms both;
+}
+
+.ringSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ringTrack { stroke: rgba(212,175,55,0.09); }
+
+/* circumference = 2π × 70 = 439.82 */
+.ringStroke {
+  stroke-dasharray: 439.82;
+  stroke-dashoffset: 439.82;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  stroke-linecap: round;
+  animation: ringDraw 2.2s cubic-bezier(0.22,1,0.36,1) 280ms both;
+}
+
+.ringDot { animation: pop 400ms ease-out 2200ms both; }
+
+/* ── Logo disk ──────────────────────────────────────────────────── */
+.logoCircle {
+  position: absolute;
+  inset: 16px; /* 160 - 2×16 = 128px disc, fits inside r=70 ring */
   border-radius: 50%;
   background: linear-gradient(160deg, #ffffff 0%, #f5f0e8 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
-    0 0  0  1px  rgba(212,175,55, 0.24),
-    0 0  52px    rgba(212,175,55, 0.14),
-    0 0  100px   rgba(76, 29,149, 0.10),
-    0 24px 64px  rgba(0,  0,  0,  0.58);
-  animation: logoIn 720ms cubic-bezier(0.34,1.56,0.64,1) 80ms both;
+    0 0  0  1px  rgba(212,175,55, 0.22),
+    0 0  40px    rgba(212,175,55, 0.14),
+    0 20px 52px  rgba(0,  0,  0,  0.58);
 }
 
 .logoImg {
-  width: 78px;
-  height: 78px;
+  width: 84px;
+  height: 84px;
   object-fit: contain;
   object-position: center;
 }
@@ -76,91 +100,98 @@
   font-family: "Syne", sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
-  letter-spacing: -0.04em;
   color: #4C1D95;
 }
 
-/* ── gold divider ───────────────────────────────────────────────── */
-.line {
-  width: 70px;
-  height: 1px;
-  margin: 28px auto 22px;
-  background: linear-gradient(
-    90deg,
-    transparent    0%,
-    rgba(212,175,55,0.72) 40%,
-    rgba(229,199,107,0.90) 50%,
-    rgba(212,175,55,0.72) 60%,
-    transparent    100%
-  );
-  transform-origin: center;
-  animation: lineGrow 900ms cubic-bezier(0.22,1,0.36,1) 620ms both;
-}
-
-/* ── brand name ─────────────────────────────────────────────────── */
-.brand {
-  margin: 0;
+/* ── Brand letters ──────────────────────────────────────────────── */
+.letters {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-top: 26px;
   font-family: "Cormorant Garamond", "Georgia", "Times New Roman", serif;
-  font-size: clamp(30px, 8vw, 46px);
+  font-size: clamp(26px, 8vw, 42px);
   font-weight: 300;
-  letter-spacing: 0.30em;
-  text-transform: uppercase;
   color: #E5C76B;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
   line-height: 1;
-  padding-right: 0.30em;
-  animation: textUp 750ms cubic-bezier(0.22,1,0.36,1) 460ms both;
+  padding-right: 0.24em; /* compensate last-char spacing */
 }
 
-/* ── tagline ────────────────────────────────────────────────────── */
+.letter {
+  display: inline-block;
+  opacity: 0;
+  animation: letterUp 450ms cubic-bezier(0.22,1,0.36,1)
+    calc(var(--i, 0) * 58ms + 1900ms) both;
+}
+
+.letterSp { width: 0.34em; }
+
+/* ── Tagline ─────────────────────────────────────────────────────── */
 .tagline {
-  margin: 14px 0 0;
+  margin: 13px 0 0;
   font-family: "Jost", "DM Sans", sans-serif;
   font-size: 10px;
   font-weight: 400;
   font-style: italic;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(212,175,55,0.40);
-  padding-right: 0.24em;
-  animation: textUp 650ms ease-out 860ms both;
+  color: rgba(212,175,55,0.38);
+  padding-right: 0.26em;
+  animation: fadeIn 700ms ease-out 2700ms both;
 }
 
-/* ── bottom edge ────────────────────────────────────────────────── */
+/* ── Bottom edge ─────────────────────────────────────────────────── */
 .edge {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(
     90deg,
-    transparent            0%,
-    rgba(212,175,55,0.13) 48%,
+    transparent             0%,
+    rgba(212,175,55,0.14) 50%,
     transparent            100%
   );
   transform-origin: left;
-  animation: lineGrow 1400ms ease-out 1000ms both;
+  animation: grow 1.5s ease-out 1200ms both;
 }
 
-/* ── keyframes ──────────────────────────────────────────────────── */
-@keyframes logoIn {
-  from { opacity: 0; transform: scale(0.80); }
+/* ── Keyframes ───────────────────────────────────────────────────── */
+@keyframes ringDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.82); }
   to   { opacity: 1; transform: scale(1);    }
 }
 
-@keyframes lineGrow {
+@keyframes letterUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes grow {
   from { transform: scaleX(0); opacity: 0; }
   to   { transform: scaleX(1); opacity: 1; }
 }
 
-@keyframes textUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-/* ── reduced motion ─────────────────────────────────────────────── */
+/* ── Reduced motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .logoWrap,
-  .line,
-  .brand,
+  .ringWrap,
+  .ringStroke,
+  .ringDot,
+  .letter,
   .tagline,
-  .edge { animation: none; }
+  .edge {
+    animation: none;
+    opacity: 1;
+  }
+  .ringStroke { stroke-dashoffset: 0; }
 }

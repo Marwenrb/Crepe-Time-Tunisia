@@ -82,152 +82,105 @@
 
     <!-- ─── Inline critical CSS — prevents layout shift before JS hydrates ── -->
     <style>
-      /* ═══════════════════════════════════════════════════════
-         CINEMATIC REVEAL LOADER — Crêpe Time Tunisia
-         Magazine-cover editorial: logo halo → gold line → name
-         No card, no orbits, no progress bar. Pure luxury.
-         ═══════════════════════════════════════════════════════ */
+            /* ═══════════════════════════════════════════════════════════
+         GOLD RING INSCRIPTION LOADER — Crêpe Time Tunisia
+         SVG stroke-dashoffset ring draws clockwise → staggered letters
+         Awwwards-level cinematic — no card, no bar, pure craft.
+         Ring circumference r=70: 2π×70 = 439.82
+         ═══════════════════════════════════════════════════════════ */
+
       #ct-preloader {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        background: #07040D;
-        overflow: hidden;
-        transition: opacity 0.52s cubic-bezier(0.4,0,0.2,1), visibility 0.52s ease;
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; align-items: center; justify-content: center; flex-direction: column;
+        background: #06040C; overflow: hidden;
+        transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), visibility 0.55s ease;
       }
-      /* violet nebula — top right */
       #ct-preloader::before {
-        content: '';
-        position: absolute;
-        top: -18%; right: -12%;
-        width: 62vmin; height: 62vmin;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(76,29,149,0.18) 0%, transparent 68%);
+        content: ''; position: absolute;
+        top: -20%; right: -14%; width: 65vmin; height: 65vmin; border-radius: 50%;
+        background: radial-gradient(circle, rgba(76,29,149,0.22) 0%, transparent 65%);
         pointer-events: none;
       }
-      /* gold nebula — bottom left */
       #ct-preloader::after {
-        content: '';
-        position: absolute;
-        bottom: -14%; left: -8%;
-        width: 52vmin; height: 52vmin;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(212,175,55,0.085) 0%, transparent 68%);
+        content: ''; position: absolute;
+        bottom: -16%; left: -10%; width: 55vmin; height: 55vmin; border-radius: 50%;
+        background: radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 65%);
         pointer-events: none;
       }
-      #ct-preloader.ct-hidden {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
+      #ct-preloader.ct-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+      .ct-ld-scene {
+        position: relative; z-index: 1;
+        display: flex; flex-direction: column; align-items: center; text-align: center;
       }
-      /* ── scene wrapper ─────────────────────────────────────── */
-      .ct-loader-scene {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 0 24px;
+      .ct-ld-ring-wrap {
+        position: relative; width: 160px; height: 160px;
+        animation: ct-ld-pop 700ms cubic-bezier(0.34,1.56,0.64,1) 80ms both;
       }
-      /* ── logo halo circle ──────────────────────────────────── */
-      .ct-loader-logo {
-        width: 108px;
-        height: 108px;
-        border-radius: 50%;
+      .ct-ld-ring-svg {
+        position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
+      }
+      .ct-ld-ring-track { stroke: rgba(212,175,55,0.09); }
+      .ct-ld-ring-stroke {
+        stroke-dasharray: 439.82; stroke-dashoffset: 439.82;
+        transform: rotate(-90deg); transform-origin: center; stroke-linecap: round;
+        animation: ct-ring-draw 2.2s cubic-bezier(0.22,1,0.36,1) 280ms both;
+      }
+      .ct-ld-ring-dot { animation: ct-ld-pop 400ms ease-out 2200ms both; }
+      .ct-ld-logo-circle {
+        position: absolute; inset: 16px; border-radius: 50%;
         background: linear-gradient(160deg, #FFFFFF 0%, #F5F0E8 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: flex; align-items: center; justify-content: center;
         box-shadow:
-          0 0 0 1px   rgba(212,175,55,0.24),
-          0 0  52px   rgba(212,175,55,0.14),
-          0 0 100px   rgba(76,29,149,0.10),
-          0 24px 64px rgba(0,0,0,0.58);
-        animation: ct-logo-in 720ms cubic-bezier(0.34,1.56,0.64,1) 80ms both;
+          0 0 0 1px rgba(212,175,55,0.22),
+          0 0 40px rgba(212,175,55,0.14),
+          0 20px 52px rgba(0,0,0,0.58);
       }
-      .ct-loader-logo-img {
-        width: 78px;
-        height: 78px;
-        object-fit: contain;
+      .ct-ld-logo-img { width: 84px; height: 84px; object-fit: contain; }
+      .ct-ld-letters {
+        display: flex; align-items: baseline; justify-content: center;
+        margin-top: 26px;
+        font-family: 'Cormorant Garamond', 'Georgia', serif;
+        font-size: clamp(26px, 8vw, 42px);
+        font-weight: 300; color: #E5C76B; letter-spacing: 0.24em;
+        text-transform: uppercase; line-height: 1; padding-right: 0.24em;
       }
-      /* ── gold divider ──────────────────────────────────────── */
-      .ct-loader-line {
-        width: 70px;
-        height: 1px;
-        margin: 28px auto 22px;
-        background: linear-gradient(90deg,
-          transparent 0%,
-          rgba(212,175,55,0.72) 40%,
-          rgba(229,199,107,0.90) 50%,
-          rgba(212,175,55,0.72) 60%,
-          transparent 100%
-        );
-        transform-origin: center;
-        animation: ct-line-grow 900ms cubic-bezier(0.22,1,0.36,1) 620ms both;
+      .ct-ld-l {
+        display: inline-block; opacity: 0;
+        animation: ct-ld-letter 450ms cubic-bezier(0.22,1,0.36,1)
+          calc(var(--i, 0) * 58ms + 1900ms) both;
       }
-      /* ── brand name ────────────────────────────────────────── */
-      .ct-loader-brand {
-        margin: 0;
-        font-family: 'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
-        font-size: clamp(30px, 8vw, 46px);
-        font-weight: 300;
-        letter-spacing: 0.30em;
-        text-transform: uppercase;
-        color: #E5C76B;
-        line-height: 1;
-        padding-right: 0.30em;
-        animation: ct-text-up 750ms cubic-bezier(0.22,1,0.36,1) 460ms both;
+      .ct-ld-l--sp { width: 0.34em; }
+      .ct-ld-tagline {
+        margin: 13px 0 0;
+        font-family: 'Jost', 'DM Sans', sans-serif;
+        font-size: 10px; font-weight: 400; font-style: italic;
+        letter-spacing: 0.26em; text-transform: uppercase;
+        color: rgba(212,175,55,0.38); padding-right: 0.26em;
+        animation: ct-ld-fadein 700ms ease-out 2700ms both;
       }
-      /* ── tagline ───────────────────────────────────────────── */
-      .ct-loader-tagline {
-        margin: 14px 0 0;
-        font-family: 'Jost', 'DM Sans', -apple-system, sans-serif;
-        font-size: 10px;
-        font-weight: 400;
-        font-style: italic;
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: rgba(212,175,55,0.40);
-        padding-right: 0.24em;
-        animation: ct-text-up 650ms ease-out 860ms both;
+      .ct-ld-edge {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.14) 50%, transparent 100%);
+        transform-origin: left; animation: ct-ld-grow 1.5s ease-out 1200ms both;
       }
-      /* ── bottom edge gold line ─────────────────────────────── */
-      .ct-loader-edge {
-        position: absolute;
-        bottom: 0; left: 0; right: 0;
-        height: 1px;
-        background: linear-gradient(90deg,
-          transparent 0%,
-          rgba(212,175,55,0.13) 48%,
-          transparent 100%
-        );
-        transform-origin: left;
-        animation: ct-line-grow 1400ms ease-out 1000ms both;
-      }
-      /* ── keyframes ─────────────────────────────────────────── */
-      @keyframes ct-logo-in {
-        from { opacity: 0; transform: scale(0.80); }
+      @keyframes ct-ring-draw { to { stroke-dashoffset: 0; } }
+      @keyframes ct-ld-pop {
+        from { opacity: 0; transform: scale(0.82); }
         to   { opacity: 1; transform: scale(1);    }
       }
-      @keyframes ct-line-grow {
+      @keyframes ct-ld-letter {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes ct-ld-fadein { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes ct-ld-grow {
         from { transform: scaleX(0); opacity: 0; }
         to   { transform: scaleX(1); opacity: 1; }
       }
-      @keyframes ct-text-up {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0);    }
-      }
       @media (prefers-reduced-motion: reduce) {
-        .ct-loader-logo,
-        .ct-loader-line,
-        .ct-loader-brand,
-        .ct-loader-tagline,
-        .ct-loader-edge { animation: none; }
+        .ct-ld-ring-wrap, .ct-ld-ring-stroke, .ct-ld-ring-dot,
+        .ct-ld-l, .ct-ld-tagline, .ct-ld-edge { animation: none; opacity: 1; }
+        .ct-ld-ring-stroke { stroke-dashoffset: 0; }
       }
       /* Hero section: tall enough on every breakpoint to contain overlay content */
       #root { min-height: 100vh; display: flex; flex-direction: column; }
@@ -311,22 +264,42 @@
     </script>
   </head>
   <body>
-    <!-- ─── Cinematic Reveal Loader — magazine editorial style ─── -->
+        <!-- ─── Gold Ring Inscription Loader ─── -->
     <div id="ct-preloader" aria-hidden="true" aria-label="Chargement de Crêpe Time Tunisia">
-      <div class="ct-loader-scene">
-        <div class="ct-loader-logo">
-          <img
-            class="ct-loader-logo-img"
-            src="/crepe-time-logo.webp"
-            onerror="this.onerror=null;this.src='/logo.png';"
-            alt=""
-          />
+      <div class="ct-ld-scene">
+        <div class="ct-ld-ring-wrap">
+          <svg class="ct-ld-ring-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ringGrad" x1="160" y1="0" x2="0" y2="160" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="#E5C76B"/>
+                <stop offset="50%"  stop-color="#D4AF37"/>
+                <stop offset="100%" stop-color="rgba(212,175,55,0.3)"/>
+              </linearGradient>
+            </defs>
+            <circle cx="80" cy="80" r="70" class="ct-ld-ring-track" stroke-width="1"/>
+            <circle cx="80" cy="80" r="70" class="ct-ld-ring-stroke" stroke="url(#ringGrad)" stroke-width="1.5"/>
+            <circle cx="80" cy="10" r="3.5" class="ct-ld-ring-dot" fill="rgba(229,199,107,0.75)"/>
+          </svg>
+          <div class="ct-ld-logo-circle">
+            <img class="ct-ld-logo-img" src="/crepe-time-logo.webp"
+                 onerror="this.onerror=null;this.src='/logo.png';" alt="Crêpe Time"/>
+          </div>
         </div>
-        <div class="ct-loader-line"></div>
-        <p class="ct-loader-brand">Cr&ecirc;pe Time</p>
-        <p class="ct-loader-tagline">The Sweetest Escape</p>
+        <div class="ct-ld-letters" aria-label="Crêpe Time">
+          <span class="ct-ld-l" style="--i:0">C</span>
+          <span class="ct-ld-l" style="--i:1">r</span>
+          <span class="ct-ld-l" style="--i:2">&ecirc;</span>
+          <span class="ct-ld-l" style="--i:3">p</span>
+          <span class="ct-ld-l" style="--i:4">e</span>
+          <span class="ct-ld-l ct-ld-l--sp" style="--i:5">&nbsp;</span>
+          <span class="ct-ld-l" style="--i:6">T</span>
+          <span class="ct-ld-l" style="--i:7">i</span>
+          <span class="ct-ld-l" style="--i:8">m</span>
+          <span class="ct-ld-l" style="--i:9">e</span>
+        </div>
+        <p class="ct-ld-tagline">The Sweetest Escape</p>
       </div>
-      <span class="ct-loader-edge"></span>
+      <span class="ct-ld-edge"></span>
     </div>
 
     <div id="root"></div>

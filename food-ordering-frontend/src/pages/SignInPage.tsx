@@ -4,13 +4,58 @@ import { z } from "zod";
 import { useQueryClient } from "react-query";
 import * as authApi from "@/api/authApi";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import AuthInput    from "@/components/ui/AuthInput";
 import AuthButton   from "@/components/ui/AuthButton";
 import AuthFormCard from "@/components/auth/AuthFormCard";
+
+/* ── 2-line typewriter hook (StrictMode-safe) ────────────────── */
+function use2LineTypewriter(line1: string, line2: string) {
+  const [text1, setText1] = useState("");
+  const [text2, setText2] = useState("");
+  const [phase, setPhase] = useState<"line1" | "line2" | "done">("line1");
+  const cancelRef = useRef(false);
+
+  useEffect(() => {
+    cancelRef.current = false;
+    setText1(""); setText2(""); setPhase("line1");
+
+    const type = (
+      full: string,
+      setter: (s: string) => void,
+      startDelay: number,
+      onDone: () => void,
+    ) => {
+      const tid = setTimeout(() => {
+        let i = 0;
+        const tick = () => {
+          if (cancelRef.current) return;
+          i++;
+          setter(full.slice(0, i));
+          if (i < full.length) setTimeout(tick, 52);
+          else onDone();
+        };
+        tick();
+      }, startDelay);
+      return tid;
+    };
+
+    const t1 = type(line1, setText1, 320, () => {
+      if (cancelRef.current) return;
+      setPhase("line2");
+      type(line2, setText2, 260, () => {
+        if (!cancelRef.current) setPhase("done");
+      });
+    });
+
+    return () => { cancelRef.current = true; clearTimeout(t1); };
+  }, [line1, line2]);
+
+  return { text1, text2, phase };
+}
 
 /* ── Google icon ──────────────────────────────────────────────── */
 const GoogleIcon = () => (
@@ -38,6 +83,11 @@ const SignInPage = () => {
   const [isLoading,       setIsLoading]       = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showPassword,    setShowPassword]    = useState(false);
+
+  const { text1, text2, phase } = use2LineTypewriter(
+    "Bon retour",
+    "Connectez-vous pour commander",
+  );
 
   /* ── Google OAuth ─────────────────────────────────────────── */
   const handleGoogleSignIn = async () => {
@@ -86,38 +136,45 @@ const SignInPage = () => {
   /* ── Render ─────────────────────────────────────────────────── */
   return (
     <div
-      className="flex-1 flex flex-col items-center justify-center px-5 py-12"
+      className="flex-1 flex flex-col items-center justify-center px-4 py-10 sm:px-6 sm:py-14"
       style={{ minHeight: "100dvh" }}
     >
       <div className="w-full" style={{ maxWidth: 420 }}>
 
-        {/* ── Page heading ──────────────────────────────────── */}
-        <div className="text-center ct-field-1" style={{ marginBottom: 32 }}>
+        {/* ── Typewriter heading ─────────────────────────────── */}
+        <div className="text-center ct-field-1" style={{ marginBottom: 28 }}>
           <h1
+            aria-label="Bon retour"
             style={{
               fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
-              fontSize:      "clamp(40px, 7vw, 56px)",
+              fontSize:      "clamp(36px, 9vw, 56px)",
               fontWeight:    300,
               letterSpacing: "0.02em",
               color:         "#E5C76B",
               lineHeight:    1.05,
               margin:        0,
+              minHeight:     "1.15em",
             }}
           >
-            Bon retour
+            {text1}
+            {phase === "line1" && <span className="ct-tw-cursor">|</span>}
           </h1>
+
           <p
+            aria-label="Connectez-vous pour commander"
             style={{
               fontFamily:    "var(--font-ui, 'Jost', sans-serif)",
-              fontSize:      13,
+              fontSize:      "clamp(12px, 3.2vw, 14px)",
               fontStyle:     "italic",
               color:         "rgba(255,255,255,0.35)",
               marginTop:     10,
               letterSpacing: "0.06em",
               lineHeight:    1.5,
+              minHeight:     "1.5em",
             }}
           >
-            Connectez-vous pour commander
+            {text2}
+            {phase === "line2" && <span className="ct-tw-cursor">|</span>}
           </p>
         </div>
 

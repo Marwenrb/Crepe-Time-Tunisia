@@ -238,3 +238,15 @@
   --auth-gold-ring:    rgba(212, 175, 55, 0.10);
   --auth-gold-glow:    0 0 0 3px rgba(212, 175, 55, 0.10), inset 0 1px 0 rgba(255,255,255,0.03);
 }
+
+/* ── Typewriter cursor ───────────────────────────────────────── */
+@keyframes ct-tw-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.ct-tw-cursor {
+  display: inline-block;
+  color: rgba(212, 175, 55, 0.80);
+  animation: ct-tw-blink 1s step-end infinite;
+  margin-left: 2px;
+}
