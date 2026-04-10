@@ -25,8 +25,12 @@ const SOCIAL_LINKS = [
 
 const FOOTER_KEYFRAMES = `
   @keyframes ft-logo-float {
-    0%, 100% { transform: translateY(0px);   filter: drop-shadow(0 0 10px rgba(212,175,55,0.32)); }
-    50%       { transform: translateY(-4px);  filter: drop-shadow(0 0 22px rgba(212,175,55,0.58)); }
+    0%, 100% { transform: translateY(0px);  box-shadow: 0 0 0 1px rgba(212,175,55,0.18), 0 0 24px rgba(212,175,55,0.22), 0 8px 28px rgba(0,0,0,0.55); }
+    50%       { transform: translateY(-5px); box-shadow: 0 0 0 1px rgba(212,175,55,0.38), 0 0 40px rgba(212,175,55,0.42), 0 16px 40px rgba(0,0,0,0.55); }
+  }
+  @keyframes ft-ring-spin {
+    from { transform: rotate(0deg);   }
+    to   { transform: rotate(360deg); }
   }
   @keyframes ft-line-pulse {
     0%, 100% { opacity: 0.5; }
@@ -61,36 +65,48 @@ const Footer = () => {
 
           {/* ── Brand column — frameless gold identity ── */}
           <div className="flex flex-col items-center gap-3">
-            {/* Logo: raw, no frame, no ring, no bg-box — floats freely */}
-            <img
-              src={BRAND.logo}
-              alt={BRAND.name}
-              width={56}
-              height={56}
-              loading="lazy"
-              decoding="async"
+            {/* Logo: circle with dark bg + gold ring, logo fills circle (no empty space) */}
+            <div
               style={{
-                width: 56,
-                height: 56,
-                objectFit: "contain",
-                animation: "ft-logo-float 4s ease-in-out infinite",
-                willChange: "transform, filter",
+                width: 72, height: 72,
+                borderRadius: "50%",
+                overflow: "hidden",
+                flexShrink: 0,
+                background: "radial-gradient(circle at 40% 35%, #1E0D38 0%, #06040C 100%)",
+                animation: "ft-logo-float 4.5s ease-in-out infinite",
+                willChange: "transform, box-shadow",
               }}
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
+            >
+              <img
+                src={BRAND.logo}
+                alt={BRAND.name}
+                width={72}
+                height={72}
+                loading="lazy"
+                decoding="async"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+            </div>
 
             {/* Brand name — luxury editorial style */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1.5">
               <span
                 style={{
                   fontFamily:    "var(--font-luxury, 'Cormorant Garamond', Georgia, serif)",
-                  fontSize:      "clamp(22px, 5vw, 28px)",
+                  fontSize:      "clamp(24px, 5.5vw, 30px)",
                   fontWeight:    300,
-                  letterSpacing: "0.06em",
+                  letterSpacing: "0.08em",
                   lineHeight:    1,
-                  background:    "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 55%, #E5C76B 100%)",
+                  background:    "linear-gradient(135deg, #FFFFFF 0%, #FFF8E1 45%, #E5C76B 80%, #D4AF37 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor:  "transparent",
                   backgroundClip: "text",
@@ -99,15 +115,25 @@ const Footer = () => {
                 {BRAND.name}
               </span>
 
+              {/* Thin gold separator under name */}
+              <div
+                aria-hidden="true"
+                style={{
+                  width: 40, height: 1,
+                  background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent)",
+                  borderRadius: 1,
+                }}
+              />
+
               <span
                 style={{
                   fontFamily:    "var(--font-ui, 'Jost', 'DM Sans', sans-serif)",
                   fontSize:      9,
                   fontWeight:    400,
                   fontStyle:     "italic",
-                  letterSpacing: "0.26em",
+                  letterSpacing: "0.30em",
                   textTransform: "uppercase" as const,
-                  color:         "rgba(212,175,55,0.55)",
+                  color:         "rgba(212,175,55,0.60)",
                   lineHeight:    1,
                 }}
               >
